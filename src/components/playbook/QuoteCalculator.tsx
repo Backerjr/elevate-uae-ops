@@ -101,7 +101,10 @@ Thank you for choosing Ahmed Travel! ✈️
           {/* Tour Type */}
           <div className="space-y-2">
             <Label>Tour Type</Label>
-            <Select value={tourType} onValueChange={(v: any) => setTourType(v)}>
+            <Select
+              value={tourType}
+              onValueChange={(v) => setTourType(v as 'full-dubai' | 'full-abudhabi' | 'half-dubai')}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select tour type" />
               </SelectTrigger>

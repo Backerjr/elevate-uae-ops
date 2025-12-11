@@ -17,7 +17,7 @@ const categoryIcons: Record<string, string> = {
   'emergency': '🚨',
 };
 
-const categoryColors: Record<string, any> = {
+const categoryColors: Record<string, string> = {
   'inquiry': 'info',
   'culture': 'success',
   'price': 'gold',
