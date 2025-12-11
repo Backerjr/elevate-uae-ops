@@ -80,11 +80,21 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </p>
           
           <div className="flex flex-wrap gap-3">
-            <Button variant="gold" size="lg" onClick={() => onNavigate('calculator')}>
+            <Button 
+              variant="gold" 
+              size="lg" 
+              onClick={() => onNavigate('calculator')}
+              className="shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-105"
+            >
               <Calculator className="h-4 w-4 mr-2" />
               Start Quoting
             </Button>
-            <Button variant="glass-dark" size="lg" onClick={() => onNavigate('tours')}>
+            <Button 
+              variant="glass-dark" 
+              size="lg" 
+              onClick={() => onNavigate('tours')}
+              className="hover:bg-sidebar-accent/90 transition-all duration-300"
+            >
               <BookOpen className="h-4 w-4 mr-2" />
               Explore Tours
             </Button>
@@ -102,16 +112,16 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           <Card 
             key={stat.label} 
             variant="elevated" 
-            className="animate-slide-up"
+            className="animate-spring-in hover:shadow-elevated transition-all duration-300 cursor-pointer group"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-xl bg-muted ${stat.color}`}>
+                <div className={`p-3 rounded-xl bg-muted ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
                   <stat.icon className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-3xl font-display font-bold">{stat.value}</p>
+                  <p className="text-3xl font-display font-bold group-hover:text-primary transition-colors">{stat.value}</p>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                 </div>
               </div>
@@ -155,7 +165,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             {trainingModules.map((module, index) => (
               <div 
                 key={module.title}
-                className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors cursor-pointer animate-slide-up"
+                className="p-4 rounded-lg bg-muted/50 hover:bg-muted hover:shadow-soft transition-all duration-300 cursor-pointer animate-slide-up hover:scale-[1.02]"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => onNavigate(module.tab)}
               >

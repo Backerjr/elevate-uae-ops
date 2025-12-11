@@ -191,7 +191,7 @@ Thank you for choosing Ahmed Travel! ✈️
                   key={attr.id}
                   variant={selectedAttractions.includes(attr.id) ? 'gold' : 'outline'}
                   size="sm"
-                  className="justify-start text-xs h-auto py-2"
+                  className="justify-start text-xs h-auto py-2 transition-all duration-200 hover:scale-105 hover:shadow-soft"
                   onClick={() => {
                     setSelectedAttractions(prev =>
                       prev.includes(attr.id)
@@ -250,7 +250,7 @@ Thank you for choosing Ahmed Travel! ✈️
 
                 <Button 
                   variant="gold" 
-                  className="w-full mt-4"
+                  className="w-full mt-4 shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-105"
                   onClick={copyQuote}
                 >
                   {copied ? (

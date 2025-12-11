@@ -84,6 +84,7 @@ export function ScriptLibrary() {
           variant={filterCategory === null ? 'gold' : 'outline'}
           size="sm"
           onClick={() => setFilterCategory(null)}
+          className="transition-all duration-200 hover:scale-105 hover:shadow-soft"
         >
           <Filter className="h-3.5 w-3.5 mr-1.5" />
           All
@@ -94,6 +95,7 @@ export function ScriptLibrary() {
             variant={filterCategory === cat ? 'gold' : 'outline'}
             size="sm"
             onClick={() => setFilterCategory(cat)}
+            className="transition-all duration-200 hover:scale-105 hover:shadow-soft"
           >
             {categoryIcons[cat]} {cat.charAt(0).toUpperCase() + cat.slice(1)}
           </Button>
@@ -106,7 +108,7 @@ export function ScriptLibrary() {
           <Card 
             key={script.id} 
             variant="elevated"
-            className="animate-slide-up cursor-pointer group hover:scale-[1.01] transition-all duration-300"
+            className="animate-slide-up cursor-pointer group hover:scale-[1.02] hover:shadow-elevated transition-all duration-300"
             style={{ animationDelay: `${index * 0.05}s` }}
             onClick={() => copyScript(script)}
           >
