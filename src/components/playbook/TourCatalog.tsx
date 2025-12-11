@@ -88,7 +88,7 @@ function TourCard({ tour, isExpanded, onToggle, delay }: TourCardProps) {
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-2">
             <div className="flex flex-wrap gap-1.5">
-              <Badge variant={tour.category as any}>{categoryLabels[tour.category]}</Badge>
+              <Badge variant={tour.category}>{categoryLabels[tour.category]}</Badge>
               <Badge variant={marginColors[tour.margin]}>
                 {tour.margin === 'high' ? '💰 High Margin' : tour.margin === 'medium' ? 'Med Margin' : 'Budget'}
               </Badge>
