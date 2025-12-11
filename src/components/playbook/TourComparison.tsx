@@ -11,28 +11,29 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { tours, type Tour } from '@/data/playbook-data';
 import { Scale, X, Plus, Check } from 'lucide-react';
+import { addTour, removeTour, getAvailableTours, MAX_TOURS_TO_COMPARE } from '@/lib/tour-comparison-utils';
 
 export function TourComparison() {
   const [selectedTours, setSelectedTours] = useState<Tour[]>([]);
   const [selectingTour, setSelectingTour] = useState<string>('');
 
-  const addTourToComparison = (tourId: string) => {
-    const tour = tours.find(t => t.id === tourId);
-    if (tour && !selectedTours.find(t => t.id === tourId) && selectedTours.length < 3) {
-      setSelectedTours([...selectedTours, tour]);
+  const handleAddTour = (tourId: string) => {
+    const updatedTours = addTour(tourId, tours, selectedTours);
+    if (updatedTours) {
+      setSelectedTours(updatedTours);
       setSelectingTour('');
     }
   };
 
-  const removeTourFromComparison = (tourId: string) => {
-    setSelectedTours(selectedTours.filter(t => t.id !== tourId));
+  const handleRemoveTour = (tourId: string) => {
+    setSelectedTours(removeTour(tourId, selectedTours));
   };
 
-  const clearComparison = () => {
+  const handleClearComparison = () => {
     setSelectedTours([]);
   };
 
-  const availableTours = tours.filter(t => !selectedTours.find(st => st.id === t.id));
+  const availableTours = getAvailableTours(tours, selectedTours);
 
   return (
     <div className="space-y-6">
@@ -44,12 +45,12 @@ export function TourComparison() {
             Tour Comparison
           </h2>
           <p className="text-muted-foreground mt-1">
-            Compare up to 3 tours side-by-side to help clients choose
+            Compare up to {MAX_TOURS_TO_COMPARE} tours side-by-side to help clients choose
           </p>
         </div>
 
         <div className="flex gap-2">
-          <Select value={selectingTour} onValueChange={addTourToComparison}>
+          <Select value={selectingTour} onValueChange={handleAddTour}>
             <SelectTrigger className="w-64">
               <SelectValue placeholder="Add tour to compare..." />
             </SelectTrigger>
@@ -62,7 +63,7 @@ export function TourComparison() {
             </SelectContent>
           </Select>
           {selectedTours.length > 0 && (
-            <Button variant="outline" size="icon" onClick={clearComparison}>
+            <Button variant="outline" size="icon" onClick={handleClearComparison}>
               <X className="h-4 w-4" />
             </Button>
           )}
@@ -100,7 +101,7 @@ export function TourComparison() {
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    onClick={() => removeTourFromComparison(tour.id)}
+                    onClick={() => handleRemoveTour(tour.id)}
                     className="hover:bg-destructive/10 hover:text-destructive"
                   >
                     <X className="h-4 w-4" />
@@ -159,7 +160,7 @@ export function TourComparison() {
           ))}
 
           {/* Add More Placeholder */}
-          {selectedTours.length < 3 && (
+          {selectedTours.length < MAX_TOURS_TO_COMPARE && (
             <Card 
               variant="muted" 
               className="flex items-center justify-center min-h-[400px] cursor-pointer hover:bg-muted/80 transition-colors"

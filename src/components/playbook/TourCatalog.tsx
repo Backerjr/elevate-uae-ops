@@ -4,70 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { tours, type Tour } from '@/data/playbook-data';
 import { Clock, MapPin, Users, Star, ChevronDown, ChevronUp, Lightbulb, AlertCircle } from 'lucide-react';
-
-const categoryLabels: Record<string, string> = {
-  'dubai': 'Dubai Tours',
-  'abu-dhabi': 'Abu Dhabi',
-  'desert': 'Desert Safari',
-  'adventure': 'Adventure',
-  'cruise': 'Cruises',
-  'experience': 'Experiences',
-};
-
-const marginColors = {
-  high: 'success',
-  medium: 'warning',
-  low: 'muted',
-} as const;
-
-export function TourCatalog() {
-  const [expandedTour, setExpandedTour] = useState<string | null>(null);
-  const [filterCategory, setFilterCategory] = useState<string | null>(null);
-
-  const filteredTours = filterCategory 
-    ? tours.filter(tour => tour.category === filterCategory)
-    : tours;
-
-  const categories = Array.from(new Set(tours.map(t => t.category)));
-
-  return (
-    <div className="space-y-6">
-      {/* Category Filters */}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant={filterCategory === null ? 'gold' : 'outline'}
-          size="sm"
-          onClick={() => setFilterCategory(null)}
-        >
-          All Tours
-        </Button>
-        {categories.map(cat => (
-          <Button
-            key={cat}
-            variant={filterCategory === cat ? 'gold' : 'outline'}
-            size="sm"
-            onClick={() => setFilterCategory(cat)}
-          >
-            {categoryLabels[cat]}
-          </Button>
-        ))}
-      </div>
-
-      {/* Tour Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filteredTours.map((tour, index) => (
-          <TourCard 
-            key={tour.id} 
-            tour={tour} 
-            isExpanded={expandedTour === tour.id}
-            onToggle={() => setExpandedTour(expandedTour === tour.id ? null : tour.id)}
-            delay={index}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+import { categoryLabels, marginColors } from '@/lib/tour-catalog-utils';
 
 interface TourCardProps {
   tour: Tour;
@@ -210,5 +147,54 @@ function TourCard({ tour, isExpanded, onToggle, delay }: TourCardProps) {
         </Button>
       </CardContent>
     </Card>
+  );
+}
+
+export function TourCatalog() {
+  const [expandedTour, setExpandedTour] = useState<string | null>(null);
+  const [filterCategory, setFilterCategory] = useState<string | null>(null);
+
+  const filteredTours = filterCategory 
+    ? tours.filter(tour => tour.category === filterCategory)
+    : tours;
+
+  const categories = Array.from(new Set(tours.map(t => t.category)));
+
+  return (
+    <div className="space-y-6">
+      {/* Category Filters */}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={filterCategory === null ? 'gold' : 'outline'}
+          size="sm"
+          onClick={() => setFilterCategory(null)}
+        >
+          All Tours
+        </Button>
+        {categories.map(cat => (
+          <Button
+            key={cat}
+            variant={filterCategory === cat ? 'gold' : 'outline'}
+            size="sm"
+            onClick={() => setFilterCategory(cat)}
+          >
+            {categoryLabels[cat]}
+          </Button>
+        ))}
+      </div>
+
+      {/* Tour Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {filteredTours.map((tour, index) => (
+          <TourCard 
+            key={tour.id} 
+            tour={tour} 
+            isExpanded={expandedTour === tour.id}
+            onToggle={() => setExpandedTour(expandedTour === tour.id ? null : tour.id)}
+            delay={index}
+          />
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,31 +1,12 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { whatsappScripts, type WhatsAppScript } from '@/data/playbook-data';
+import { whatsappScripts } from '@/data/playbook-data';
 import { MessageSquare, Copy, Check, Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-
-const categoryIcons: Record<string, string> = {
-  'inquiry': '💬',
-  'culture': '🕌',
-  'price': '💰',
-  'objection': '🤝',
-  'upsell': '⬆️',
-  'confirmation': '✅',
-  'emergency': '🚨',
-};
-
-const categoryColors: Record<string, string> = {
-  'inquiry': 'info',
-  'culture': 'success',
-  'price': 'gold',
-  'objection': 'warning',
-  'upsell': 'default',
-  'confirmation': 'success',
-  'emergency': 'destructive',
-};
+import { categoryIcons, categoryColors, copyScriptToClipboard } from '@/lib/script-library-utils';
 
 export function ScriptLibrary() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -45,11 +26,12 @@ export function ScriptLibrary() {
 
   const categories = Array.from(new Set(whatsappScripts.map(s => s.category)));
 
-  const copyScript = (script: WhatsAppScript) => {
-    navigator.clipboard.writeText(script.script);
-    setCopiedId(script.id);
-    toast.success('Script copied! Ready to paste in WhatsApp');
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopyScript = (script: typeof whatsappScripts[0]) => {
+    copyScriptToClipboard(
+      script,
+      (id) => setCopiedId(id || null),
+      (message) => toast.success(message)
+    );
   };
 
   return (
@@ -110,7 +92,7 @@ export function ScriptLibrary() {
             variant="elevated"
             className="animate-slide-up cursor-pointer group hover:scale-[1.02] hover:shadow-elevated transition-all duration-300"
             style={{ animationDelay: `${index * 0.05}s` }}
-            onClick={() => copyScript(script)}
+            onClick={() => handleCopyScript(script)}
           >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
@@ -129,7 +111,7 @@ export function ScriptLibrary() {
                   className="opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={(e) => {
                     e.stopPropagation();
-                    copyScript(script);
+                    handleCopyScript(script);
                   }}
                 >
                   {copiedId === script.id ? (

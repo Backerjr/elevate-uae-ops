@@ -14,15 +14,9 @@ import {
   Menu
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { type NavigationProps, type NavItem } from '@/lib/navigation-utils';
 
-export type TabId = 'dashboard' | 'tours' | 'calculator' | 'scripts' | 'pricing' | 'reference';
-
-interface NavigationProps {
-  activeTab: TabId;
-  onTabChange: (tab: TabId) => void;
-}
-
-const navItems: { id: TabId; label: string; icon: React.ReactNode; badge?: string }[] = [
+const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
   { id: 'tours', label: 'Tour Catalog', icon: <Map className="h-5 w-5" /> },
   { id: 'calculator', label: 'Quote Builder', icon: <Calculator className="h-5 w-5" />, badge: 'Smart' },
@@ -162,9 +156,4 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
       )} />
     </>
   );
-}
-
-export function useNavigation() {
-  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
-  return { activeTab, setActiveTab };
 }

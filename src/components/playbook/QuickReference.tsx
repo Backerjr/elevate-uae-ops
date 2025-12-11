@@ -1,27 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { sopRules, cheatCodes, brandPillars } from '@/data/playbook-data';
-import { AlertTriangle, Lightbulb, Heart, Shield, Zap, Target } from 'lucide-react';
-
-const importanceColors = {
-  critical: 'destructive',
-  important: 'warning',
-  standard: 'muted',
-} as const;
-
-const categoryIcons: Record<string, React.ReactNode> = {
-  policy: <Shield className="h-4 w-4" />,
-  process: <Zap className="h-4 w-4" />,
-  communication: <Heart className="h-4 w-4" />,
-  safety: <AlertTriangle className="h-4 w-4" />,
-};
-
-const cheatTypeColors = {
-  value: 'success',
-  margin: 'gold',
-  budget: 'info',
-  upsell: 'default',
-} as const;
+import { AlertTriangle, Lightbulb, Target } from 'lucide-react';
+import { importanceColors, categoryIcons, cheatTypeColors } from '@/lib/quick-reference-utils';
 
 export function QuickReference() {
   return (
@@ -56,7 +37,7 @@ export function QuickReference() {
       <Card variant="elevated">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-primary" />
+            <Lightbulb className="h-5 w-5 text-primary" />
             Essential SOPs
           </CardTitle>
           <CardDescription>Critical policies and procedures to memorize</CardDescription>

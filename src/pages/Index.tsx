@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Navigation, useNavigation, type TabId } from '@/components/playbook/Navigation';
+import { Navigation } from '@/components/playbook/Navigation';
+import { useNavigation } from '@/hooks/use-navigation';
+import type { TabId } from '@/lib/navigation-utils';
 import { Dashboard } from '@/components/playbook/Dashboard';
 import { TourCatalog } from '@/components/playbook/TourCatalog';
 import { QuoteCalculator } from '@/components/playbook/QuoteCalculator';
