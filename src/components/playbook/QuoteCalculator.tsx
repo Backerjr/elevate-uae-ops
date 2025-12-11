@@ -23,17 +23,25 @@ export function QuoteCalculator() {
   const calculation = useMemo(() => {
     if (!selectedVehicle || !selectedZone) return null;
 
+    const rateKey =
+      selectedVehicle.capacity <= 4
+        ? 'seater4'
+        : selectedVehicle.capacity <= 7
+          ? 'seater7'
+          : selectedVehicle.capacity <= 12
+            ? 'seater12'
+            : selectedVehicle.capacity <= 22
+              ? 'seater22'
+              : selectedVehicle.capacity <= 35
+                ? 'seater35'
+                : 'seater50';
+    const pickupRate = selectedZone.rates[rateKey] ?? selectedZone.rates.seater7 ?? 0;
+
     const vehicleRate = tourType === 'full-dubai' 
       ? selectedVehicle.fullDayDubai 
       : tourType === 'full-abudhabi'
         ? selectedVehicle.fullDayAbuDhabi
         : selectedVehicle.halfDayDubai;
-
-    const pickupRate = vehicle === '7-Seater' 
-      ? selectedZone.rates.seater7 
-      : vehicle === '12-Seater'
-        ? selectedZone.rates.seater12
-        : selectedZone.rates.seater22;
 
     const attractionsCost = selectedAttractions.reduce((sum, id) => {
       const attr = attractions.find(a => a.id === id);
@@ -52,7 +60,7 @@ export function QuoteCalculator() {
       total,
       perPerson,
     };
-  }, [selectedVehicle, selectedZone, tourType, selectedAttractions, guests, vehicle]);
+  }, [selectedVehicle, selectedZone, tourType, selectedAttractions, guests]);
 
   const copyQuote = () => {
     if (!calculation) return;

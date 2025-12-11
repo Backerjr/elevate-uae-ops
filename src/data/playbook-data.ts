@@ -1,5 +1,4 @@
-// Ahmed Travel | New Hire Training Playbook Data
-// Complete data model for the UAE travel operations training system
+// Ahmed Travel | New Hire Training Playbook Data (30% retail markup applied)
 
 export interface Tour {
   id: string;
@@ -161,17 +160,63 @@ export const tours: Tour[] = [
 export interface VehicleRate {
   vehicle: string;
   capacity: number;
-  fullDayDubai: number;
-  fullDayAbuDhabi: number;
-  halfDayDubai: number;
-  extraHourMin: number;
-  extraHourMax: number;
+  fullDayDubai: number; // 10 Hours
+  halfDayDubai: number; // 5 Hours
+  fullDayAbuDhabi: number; // 10 Hours
+  transferDXB: number; // Airport Transfer Base
+  extraHourMin?: number;
+  extraHourMax?: number;
 }
 
 export const vehicleRates: VehicleRate[] = [
-  { vehicle: '7-Seater', capacity: 7, fullDayDubai: 720, fullDayAbuDhabi: 999, halfDayDubai: 456, extraHourMin: 80, extraHourMax: 100 },
-  { vehicle: '12-Seater', capacity: 12, fullDayDubai: 960, fullDayAbuDhabi: 1100, halfDayDubai: 470, extraHourMin: 100, extraHourMax: 130 },
-  { vehicle: '22-Seater', capacity: 22, fullDayDubai: 1040, fullDayAbuDhabi: 1900, halfDayDubai: 640, extraHourMin: 130, extraHourMax: 160 }
+  {
+    vehicle: 'Lexus ES350 (Luxury Sedan)',
+    capacity: 4,
+    fullDayDubai: 650,
+    halfDayDubai: 420,
+    fullDayAbuDhabi: 780,
+    transferDXB: 115
+  },
+  {
+    vehicle: '7 Seater (Standard)',
+    capacity: 7,
+    fullDayDubai: 585,
+    halfDayDubai: 310,
+    fullDayAbuDhabi: 650,
+    transferDXB: 115
+  },
+  {
+    vehicle: 'Toyota Hiace (12 Seater)',
+    capacity: 12,
+    fullDayDubai: 620,
+    halfDayDubai: 325,
+    fullDayAbuDhabi: 685,
+    transferDXB: 145
+  },
+  {
+    vehicle: 'Toyota Coaster (22 Seater)',
+    capacity: 22,
+    fullDayDubai: 845,
+    halfDayDubai: 520,
+    fullDayAbuDhabi: 975,
+    transferDXB: 310
+  },
+  {
+    vehicle: 'Luxury Coach (35 Seater)',
+    capacity: 35,
+    fullDayDubai: 975,
+    halfDayDubai: 585,
+    fullDayAbuDhabi: 1105,
+    transferDXB: 310
+  },
+  {
+    vehicle: 'Grand Coach (50 Seater)',
+    capacity: 50,
+    fullDayDubai: 1105,
+    halfDayDubai: 715,
+    fullDayAbuDhabi: 1235,
+    transferDXB: 310
+  }
 ];
 
 export interface Zone {
@@ -179,39 +224,58 @@ export interface Zone {
   name: string;
   areas: string[];
   rates: {
+    seater4?: number;
     seater7: number;
     seater12: number;
     seater22: number;
+    seater35?: number;
+    seater50?: number;
   };
 }
 
 export const zones: Zone[] = [
-  { zone: 1, name: 'Central Dubai', areas: ['Deira', 'Bur Dubai'], rates: { seater7: 136, seater12: 176, seater22: 480 } },
-  { zone: 2, name: 'Downtown & Beach', areas: ['Downtown', 'SZR', 'Jumeirah'], rates: { seater7: 144, seater12: 184, seater22: 504 } },
-  { zone: 3, name: 'Marina & Palm', areas: ['Marina', 'Palm Jumeirah', 'Barsha'], rates: { seater7: 168, seater12: 192, seater22: 560 } },
-  { zone: 4, name: 'South Dubai', areas: ['DIP', 'Jebel Ali', 'Dubai South'], rates: { seater7: 288, seater12: 304, seater22: 656 } },
-  { zone: 5, name: 'Desert Resorts', areas: ['Al Maha', 'Bab Al Shams'], rates: { seater7: 384, seater12: 480, seater22: 656 } }
+  {
+    zone: 1,
+    name: 'Old Dubai',
+    areas: ['Deira', 'Bur Dubai', 'Qusais', 'Al Nahda'],
+    rates: { seater4: 115, seater7: 115, seater12: 145, seater22: 390, seater35: 425, seater50: 520 }
+  },
+  {
+    zone: 2,
+    name: 'Central Dubai',
+    areas: ['DIFC', 'Sheikh Zayed Rd', 'Downtown', 'Jumeirah 1-3', 'Business Bay'],
+    rates: { seater4: 120, seater7: 120, seater12: 150, seater22: 410, seater35: 455, seater50: 585 }
+  },
+  {
+    zone: 3,
+    name: 'New Dubai',
+    areas: ['Al Barsha', 'Marina', 'JBR', 'Palm Jumeirah', 'Media City', 'Bluewaters'],
+    rates: { seater4: 145, seater7: 140, seater12: 160, seater22: 455, seater35: 550, seater50: 645 }
+  },
+  {
+    zone: 4,
+    name: 'Far Dubai',
+    areas: ['Jebel Ali', 'Dubai Parks', 'DIP', 'Expo City'],
+    rates: { seater4: 230, seater7: 235, seater12: 250, seater22: 535, seater35: 615, seater50: 685 }
+  }
 ];
 
 export interface Attraction {
   id: string;
   name: string;
-  publicRate: number;
   sellPrice: number;
-  category: 'observation' | 'theme-park' | 'show' | 'aquarium' | 'museum';
-  location: 'dubai' | 'abu-dhabi';
-  notes?: string;
+  netPrice: number;
+  category: 'adventure' | 'culture' | 'luxury' | 'family';
 }
 
 export const attractions: Attraction[] = [
-  { id: 'burj-khalifa', name: 'Burj Khalifa (Non-Prime)', publicRate: 159, sellPrice: 254, category: 'observation', location: 'dubai' },
-  { id: 'dubai-aquarium', name: 'Dubai Aquarium Explorer', publicRate: 199, sellPrice: 318, category: 'aquarium', location: 'dubai' },
-  { id: 'aquaventure', name: 'Atlantis Aquaventure', publicRate: 299, sellPrice: 478, category: 'theme-park', location: 'dubai' },
-  { id: 'sky-views', name: 'Sky Views Observatory', publicRate: 85, sellPrice: 136, category: 'observation', location: 'dubai' },
-  { id: 'view-palm', name: 'The View at The Palm', publicRate: 100, sellPrice: 160, category: 'observation', location: 'dubai' },
-  { id: 'dubai-frame', name: 'Dubai Frame', publicRate: 50, sellPrice: 80, category: 'observation', location: 'dubai' },
-  { id: 'la-perle', name: 'La Perle (Silver)', publicRate: 369, sellPrice: 590, category: 'show', location: 'dubai' },
-  { id: 'seaworld', name: 'SeaWorld Abu Dhabi', publicRate: 375, sellPrice: 600, category: 'theme-park', location: 'abu-dhabi' }
+  { id: 'dtt-buggy', name: 'DTT Buggy Experience (1Hr)', sellPrice: 1040, netPrice: 845, category: 'adventure' },
+  { id: 'dhow-marina', name: 'Dhow Cruise Marina (Upper Deck)', sellPrice: 195, netPrice: 120, category: 'luxury' },
+  { id: 'ferrari-tix', name: 'Ferrari World Ticket', sellPrice: 450, netPrice: 385, category: 'adventure' },
+  { id: 'burj-124', name: 'Burj Khalifa (124/125)', sellPrice: 235, netPrice: 205, category: 'culture' },
+  { id: 'museum-future', name: 'Museum of the Future', sellPrice: 195, netPrice: 165, category: 'culture' },
+  { id: 'aura-pool', name: 'Aura Skypool (Morning)', sellPrice: 325, netPrice: 260, category: 'luxury' },
+  { id: 'frame', name: 'Dubai Frame', sellPrice: 75, netPrice: 60, category: 'culture' }
 ];
 
 export interface ComboPackage {
@@ -219,17 +283,53 @@ export interface ComboPackage {
   name: string;
   items: string[];
   totalPrice: number;
-  savings: number;
-  idealFor: string[];
-  margin: 'high' | 'medium';
+  savings: string;
+  tag: 'Best Seller' | 'VIP' | 'Family';
+  idealFor?: string[];
+  margin?: 'high' | 'medium' | 'low';
 }
 
 export const comboPackages: ComboPackage[] = [
-  { id: 'burj-aquarium', name: 'Burj Khalifa + Aquarium', items: ['Burj Khalifa', 'Dubai Aquarium Explorer'], totalPrice: 572, savings: 50, idealFor: ['First-timers', 'Families'], margin: 'medium' },
-  { id: 'aquaventure-cruise', name: 'Atlantis + Marina Cruise', items: ['Atlantis Aquaventure', 'Marina Dhow Cruise'], totalPrice: 956, savings: 75, idealFor: ['Couples', 'Luxury seekers'], margin: 'high' },
-  { id: 'frame-safari', name: 'Dubai Frame + Desert Safari', items: ['Dubai Frame', 'Premium Desert Safari'], totalPrice: 640, savings: 60, idealFor: ['Budget-conscious', 'Adventure + Culture'], margin: 'medium' },
-  { id: 'qasr-seaworld', name: 'Qasr Al Watan + SeaWorld', items: ['Qasr Al Watan', 'SeaWorld Abu Dhabi'], totalPrice: 1200, savings: 100, idealFor: ['Families', 'Abu Dhabi focus'], margin: 'high' },
-  { id: 'ski-laperle', name: 'Ski Dubai + La Perle', items: ['Ski Dubai', 'La Perle Show'], totalPrice: 1022, savings: 80, idealFor: ['Unique experiences', 'Entertainment lovers'], margin: 'high' }
+  {
+    id: 'abu-dhabi-ferrari',
+    name: 'Abu Dhabi + Ferrari World',
+    items: ['Private Transfer', 'Ferrari World Tix', 'Grand Mosque Visit', 'Dates Market'],
+    totalPrice: 1105,
+    savings: '10%',
+    tag: 'Best Seller',
+    idealFor: ['Families', 'Adventure seekers', 'Thrill fans'],
+    margin: 'high'
+  },
+  {
+    id: 'full-day-dubai',
+    name: 'Full Day Dubai Ultimate',
+    items: ['Bastakiya', 'Abra Ride', 'Gold Souq', 'Dubai Frame (Photo)', 'Atlantis (Photo)'],
+    totalPrice: 650,
+    savings: 'Custom',
+    tag: 'Family',
+    idealFor: ['Families', 'Culture lovers', 'First-timers'],
+    margin: 'medium'
+  },
+  {
+    id: 'dhow-dinner',
+    name: 'Marina Dhow Dinner',
+    items: ['90 Min Cruise', 'Intl Buffet', 'Tanura Dance', 'Private Transfer'],
+    totalPrice: 260,
+    savings: 'AED 50',
+    tag: 'Family',
+    idealFor: ['Couples', 'Families', 'Romantic evenings'],
+    margin: 'medium'
+  },
+  {
+    id: 'buggy-safari',
+    name: 'Dune Buggy Safari',
+    items: ['1hr Buggy (Self Drive)', 'Sand Boarding', 'Camel Ride', 'Refreshments'],
+    totalPrice: 1235,
+    savings: 'Adventure',
+    tag: 'VIP',
+    idealFor: ['Adventure seekers', 'VIP', 'Friends'],
+    margin: 'high'
+  }
 ];
 
 export interface WhatsAppScript {
@@ -242,60 +342,60 @@ export interface WhatsAppScript {
 
 export const whatsappScripts: WhatsAppScript[] = [
   {
-    id: 'unique-experience',
-    category: 'inquiry',
-    scenario: 'Curious / Wants Something Unique',
-    script: "You might love our sunrise hot air balloon or dune buggy experience — both are unforgettable Dubai moments. Shall I check availability?",
-    tags: ['adventure', 'unique', 'first-contact']
-  },
-  {
-    id: 'culture-focused',
-    category: 'culture',
-    scenario: 'Culture-Focused Client',
-    script: "Abu Dhabi offers a beautiful mix of culture — Mosque, Qasr Al Watan, and Louvre. Would you like me to secure tomorrow's seats?",
-    tags: ['culture', 'abu-dhabi', 'history']
-  },
-  {
-    id: 'price-inquiry',
-    category: 'price',
-    scenario: 'Price Inquiry',
-    script: "Pricing depends on your hotel zone and date, but we always provide premium service at great value. Would you like a quote including pickup?",
-    tags: ['pricing', 'quote', 'value']
-  },
-  {
-    id: 'budget-conscious',
+    id: 'price-doubt',
     category: 'objection',
-    scenario: 'Client Says Too Expensive',
-    script: "I understand budget matters! Our sharing-basis tours offer the same premium experience at better value. Would you like to explore those options?",
-    tags: ['objection', 'budget', 'sharing']
+    scenario: 'Price Doubt Killer',
+    script: "I know you'll find cheaper out there—I won't lie. But you won't find *me* out there. I make sure everything runs smooth, no last-minute stress, and I'm always one message away. That's the difference. 🤝",
+    tags: ['closing', 'trust']
   },
   {
-    id: 'family-package',
-    category: 'upsell',
-    scenario: 'Family Traveling Together',
-    script: "For families, I'd recommend our private vehicle option — more comfort, flexible timing, and your own guide. Shall I create a family package quote?",
-    tags: ['family', 'upsell', 'private']
-  },
-  {
-    id: 'booking-confirm',
+    id: 'booking-hype',
     category: 'confirmation',
-    scenario: 'Confirming Booking',
-    script: "Your booking is confirmed! ✨ Our driver will contact you 30 minutes before pickup. Please keep your phone accessible. Have an amazing experience!",
-    tags: ['confirmation', 'logistics']
+    scenario: 'Booking Confirmation Hype',
+    script: "Alright, we're locked in! 🔒 I'll personally follow up to make sure your experience is as smooth as your dune ride's gonna be. You're in good hands. 🚙✨",
+    tags: ['confirmation', 'excitement']
   },
   {
-    id: 'no-show-policy',
-    category: 'emergency',
-    scenario: 'Client Missed Tour / No-Show',
-    script: "We're sorry you couldn't make it. As per our policy, no-shows are non-refundable, but we'd love to reschedule for a future date. How can I help?",
-    tags: ['no-show', 'policy', 'rebooking']
+    id: 'snooze-lose',
+    category: 'upsell',
+    scenario: "The 'You Snooze, You Lose' Follow-Up",
+    script: "Hey hey—quick heads-up, spots are filling fast, so if you're still thinking about it, let me know. I'd hate for you to miss out on a perfect day just 'cause we waited too long. ⏳",
+    tags: ['urgency', 'follow-up']
   },
   {
-    id: 'weather-delay',
-    category: 'emergency',
-    scenario: 'Weather / Safety Cancellation',
-    script: "Due to weather conditions, today's hot air balloon is cancelled for safety. We'll offer a full refund or free rebooking. Which would you prefer?",
-    tags: ['weather', 'cancellation', 'safety']
+    id: 'luxury-vibes',
+    category: 'upsell',
+    scenario: 'Luxury Vibes Guest (Classy)',
+    script: "For my premium guests, I always recommend this one—everything's done right, smooth, and no surprises. If you're looking for comfort and quality, this is the one. 🥂",
+    tags: ['vip', 'luxury']
+  },
+  {
+    id: 'vip-flattery',
+    category: 'upsell',
+    scenario: 'VIP Guest with Flattery',
+    script: "I saved this option just for you, because honestly? It fits your style. It's classy, private, and guaranteed to impress—just like you. Let me know if I should lock it in.",
+    tags: ['vip', 'persuasion']
+  },
+  {
+    id: 'post-exp',
+    category: 'confirmation',
+    scenario: 'Post-Experience Follow-Up',
+    script: "Hey! Hope you had the best time today. Just checking in to see how everything went. And hey—if you need anything else while you're in Dubai, you already know who to message. 📲",
+    tags: ['follow-up', 'relationship']
+  },
+  {
+    id: 'inq-general',
+    category: 'inquiry',
+    scenario: 'General Inquiry (Intro)',
+    script: "Hi there! I'm [Name] from Ahmed Travel. You tell me what you want, I'll make it happen—no pressure, no chaos. I'll handle everything, you just enjoy. What dates are you looking at? 🗓️",
+    tags: ['opener', 'friendly']
+  },
+  {
+    id: 'mosque-dress',
+    category: 'culture',
+    scenario: 'Mosque Dress Code',
+    script: "Important for the Grand Mosque 🕌: \n• Ladies: Long sleeves, ankle-length trousers/skirt, and headscarf required.\n• Gents: Long trousers (no shorts) and sleeved shirts.\n\nLet me know if you need help arranging abayas!",
+    tags: ['info', 'guidelines']
   }
 ];
 

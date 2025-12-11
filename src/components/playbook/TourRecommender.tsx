@@ -84,12 +84,14 @@ function getRecommendations(answers: Record<string, string>): Recommendation {
 
   const recommendedCombos = comboPackages.filter(combo => {
     if (answers.budget === 'budget' && combo.margin === 'high') return false;
-    if (answers.group === 'family' && combo.idealFor.includes('Families')) return true;
+    if (answers.group === 'family' && combo.idealFor?.some(i => i.includes('Family'))) return true;
     if (answers.interest === 'culture' && combo.items.some(i => i.includes('Qasr') || i.includes('Abu Dhabi'))) return true;
+    if (!combo.idealFor?.length) return true;
     return combo.idealFor.some(ideal => 
       (answers.group === 'couple' && ideal.includes('Couple')) ||
       (answers.budget === 'budget' && ideal.includes('Budget')) ||
-      (answers.interest === 'adventure' && ideal.includes('Adventure'))
+      (answers.interest === 'adventure' && ideal.includes('Adventure')) ||
+      (answers.interest === 'luxury' && ideal.includes('VIP'))
     );
   }).slice(0, 2);
 

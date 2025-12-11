@@ -11,9 +11,9 @@ export function PricingMatrix() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Car className="h-5 w-5 text-primary" />
-            Vehicle Rate Sheet (60% Markup Applied)
+            Vehicle Rate Sheet (30% Markup Applied)
           </CardTitle>
-          <CardDescription>2025-2026 pricing for private transfers</CardDescription>
+          <CardDescription>2025-2026 retail pricing for private transfers</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -25,7 +25,7 @@ export function PricingMatrix() {
                   <th className="text-right py-3 font-semibold">Full Day Dubai</th>
                   <th className="text-right py-3 font-semibold">Full Day Abu Dhabi</th>
                   <th className="text-right py-3 font-semibold">Half Day Dubai</th>
-                  <th className="text-right py-3 font-semibold">Extra Hour</th>
+                  <th className="text-right py-3 font-semibold">Transfer (DXB)</th>
                 </tr>
               </thead>
               <tbody>
@@ -42,8 +42,8 @@ export function PricingMatrix() {
                     <td className="py-3 text-right">
                       <Badge variant="info">AED {v.halfDayDubai}</Badge>
                     </td>
-                    <td className="py-3 text-right text-muted-foreground">
-                      {v.extraHourMin}-{v.extraHourMax}
+                    <td className="py-3 text-right">
+                      <Badge variant="default">AED {v.transferDXB}</Badge>
                     </td>
                   </tr>
                 ))}
@@ -60,7 +60,7 @@ export function PricingMatrix() {
             <MapPin className="h-5 w-5 text-primary" />
             Zone-Based Pickup Pricing
           </CardTitle>
-          <CardDescription>60% markup applied — verify guest hotel before quoting</CardDescription>
+          <CardDescription>30% markup applied — verify guest hotel before quoting</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -69,9 +69,13 @@ export function PricingMatrix() {
                 <tr className="border-b border-border">
                   <th className="text-left py-3 font-semibold">Zone</th>
                   <th className="text-left py-3 font-semibold">Areas</th>
-                  <th className="text-right py-3 font-semibold">7-Seater</th>
-                  <th className="text-right py-3 font-semibold">12-Seater</th>
-                  <th className="text-right py-3 font-semibold">22-Seater</th>
+                  {['seater4', 'seater7', 'seater12', 'seater22', 'seater35', 'seater50']
+                    .filter(key => zones.some(z => z.rates[key as keyof typeof zones[number]['rates']] !== undefined))
+                    .map(key => (
+                      <th key={key} className="text-right py-3 font-semibold">
+                        {key.replace('seater', '')}-Seater
+                      </th>
+                    ))}
                 </tr>
               </thead>
               <tbody>
@@ -86,9 +90,13 @@ export function PricingMatrix() {
                       <span className="font-medium">{z.name}</span>
                       <p className="text-xs text-muted-foreground">{z.areas.join(', ')}</p>
                     </td>
-                    <td className="py-3 text-right">AED {z.rates.seater7}</td>
-                    <td className="py-3 text-right">AED {z.rates.seater12}</td>
-                    <td className="py-3 text-right">AED {z.rates.seater22}</td>
+                    {['seater4', 'seater7', 'seater12', 'seater22', 'seater35', 'seater50']
+                      .filter(key => zones.some(zone => zone.rates[key as keyof typeof zone['rates']] !== undefined))
+                      .map(key => (
+                        <td key={key} className="py-3 text-right">
+                          {z.rates[key as keyof typeof z.rates] ? `AED ${z.rates[key as keyof typeof z.rates]}` : '—'}
+                        </td>
+                      ))}
                   </tr>
                 ))}
               </tbody>
@@ -106,14 +114,21 @@ export function PricingMatrix() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Ticket className="h-5 w-5 text-primary" />
-            Third-Party Attractions (60% Markup)
+            Third-Party Attractions (30% Markup)
           </CardTitle>
           <CardDescription>Per-person ticket prices with profit margin</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {attractions.map(attr => {
-              const margin = Math.round(((attr.sellPrice - attr.publicRate) / attr.publicRate) * 100);
+              const margin = Math.round(((attr.sellPrice - attr.netPrice) / attr.netPrice) * 100);
+              const categoryBadge = attr.category === 'luxury'
+                ? 'gold'
+                : attr.category === 'adventure'
+                  ? 'adventure'
+                  : attr.category === 'family'
+                    ? 'info'
+                    : 'success';
               return (
                 <div 
                   key={attr.id}
@@ -121,14 +136,14 @@ export function PricingMatrix() {
                 >
                   <div className="flex items-start justify-between">
                     <h4 className="font-medium text-sm">{attr.name}</h4>
-                    <Badge variant={attr.location === 'dubai' ? 'dubai' : 'abu-dhabi'} className="text-xs">
-                      {attr.location === 'dubai' ? 'DXB' : 'AUH'}
+                    <Badge variant={categoryBadge as 'default'} className="text-xs">
+                      {attr.category}
                     </Badge>
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Public Rate:</span>
-                      <span className="line-through text-muted-foreground">AED {attr.publicRate}</span>
+                      <span className="text-muted-foreground">Net Rate:</span>
+                      <span className="text-muted-foreground">AED {attr.netPrice}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Sell Price:</span>
