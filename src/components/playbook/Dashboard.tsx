@@ -2,8 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { tours, vehicleRates, whatsappScripts, comboPackages, brandPillars } from '@/data/playbook-data';
-import productsCatalog from '@/data/products.json';
+import { tours, vehicleRates, whatsappScripts, comboPackages, brandPillars, type Tour } from '@/data/playbook-data';
+import catalogData from '@/data/products.json';
 import { 
   Map, 
   Calculator, 
@@ -23,12 +23,43 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
+  const mapCatalogCategory = (category: string): Tour['category'] => {
+    const normalized = category.toLowerCase();
+    if (normalized.includes('adventure')) return 'adventure';
+    if (normalized.includes('desert')) return 'desert';
+    if (normalized.includes('cruise')) return 'cruise';
+    if (normalized.includes('dubai') || normalized.includes('sightseeing')) return 'dubai';
+    if (normalized.includes('abu')) return 'abu-dhabi';
+    return 'experience';
+  };
+
+  const mappedCatalogTours: Tour[] = catalogData.map((p) => ({
+    id: p.product_id,
+    name: p.product_name,
+    category: mapCatalogCategory(p.category ?? ''),
+    pickup: p.destination_city ?? 'UAE',
+    duration: p.duration_hours ? `${p.duration_hours} hrs` : 'Approx 1-3 hrs',
+    highlights: p.description_short ? [p.description_short] : [],
+    inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
+    requirements: [],
+    proTip: undefined,
+    note: undefined,
+    dressCode: undefined,
+    visualCues: ['🧭'],
+    margin: 'medium',
+    difficulty: 'easy',
+    idealFor: [p.category || 'Guests'],
+    waiverUrl: undefined,
+  }));
+
+  const allTours = [...tours, ...mappedCatalogTours];
+
   const quickStats = [
-    { label: 'Tours Available', value: tours.length, icon: Map, color: 'text-info' },
+    { label: 'Tours Available', value: allTours.length, icon: Map, color: 'text-info' },
     { label: 'Script Templates', value: whatsappScripts.length, icon: MessageSquare, color: 'text-success' },
     { label: 'Combo Packages', value: comboPackages.length, icon: TrendingUp, color: 'text-primary' },
     { label: 'Vehicle Options', value: vehicleRates.length, icon: Calculator, color: 'text-accent' },
-    { label: 'Catalog Products', value: productsCatalog.length, icon: BookOpen, color: 'text-warning' },
+    { label: 'Catalog Products', value: catalogData.length, icon: BookOpen, color: 'text-warning' },
   ];
 
   const trainingModules = [
