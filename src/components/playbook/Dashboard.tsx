@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { tours, vehicleRates, whatsappScripts, comboPackages, brandPillars } from '@/data/playbook-data';
+import productsCatalog from '@/data/products.json';
 import { 
   Map, 
   Calculator, 
@@ -27,6 +28,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     { label: 'Script Templates', value: whatsappScripts.length, icon: MessageSquare, color: 'text-success' },
     { label: 'Combo Packages', value: comboPackages.length, icon: TrendingUp, color: 'text-primary' },
     { label: 'Vehicle Options', value: vehicleRates.length, icon: Calculator, color: 'text-accent' },
+    { label: 'Catalog Products', value: productsCatalog.length, icon: BookOpen, color: 'text-warning' },
   ];
 
   const trainingModules = [
