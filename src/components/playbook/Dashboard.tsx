@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { tours, vehicleRates, whatsappScripts, comboPackages, brandPillars, type Tour } from '@/data/playbook-data';
 import catalogData from '@/data/products.json';
-import { CommunicationLibrary } from './CommunicationLibrary';
+import { QuickReference } from './QuickReference';
 import { 
   Map, 
   Calculator, 
@@ -24,6 +26,8 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
+  const [activeTab, setActiveTab] = useState<'tours' | 'catalog' | 'scripts' | 'combos' | 'vehicles'>('tours');
+
   const mapCatalogCategory = (category: string): Tour['category'] => {
     const normalized = category.toLowerCase();
     if (normalized.includes('adventure')) return 'adventure';
@@ -54,6 +58,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   }));
 
   const allTours = [...tours, ...mappedCatalogTours];
+  const mappedCatalogProducts = catalogData.map((p) => ({
+    id: p.product_id,
+    title: p.product_name ?? p.title ?? 'Catalog Product',
+    category: p.category ?? 'Catalog',
+    price: p.pricing?.[0]?.price_aed,
+    description: p.description_short ?? '',
+    city: p.destination_city ?? 'UAE',
+  }));
 
   const quickStats = [
     { label: 'Tours Available', value: allTours.length, icon: Map, color: 'text-info' },
@@ -93,6 +105,116 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       icon: TrendingUp
     },
   ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'tours':
+        return (
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {tours.map((tour) => (
+              <Card key={tour.id} variant="muted" className="h-full">
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1">
+                      <Badge variant="info">{tour.category}</Badge>
+                      <CardTitle className="text-base">{tour.name}</CardTitle>
+                    </div>
+                    <span className="text-lg font-semibold text-primary">{tour.duration}</span>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {tour.highlights?.[0] && (
+                    <p className="text-sm text-muted-foreground line-clamp-2">{tour.highlights[0]}</p>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        );
+      case 'catalog':
+        return (
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {mappedCatalogProducts.map((prod) => {
+              const badgeVariant =
+                prod.category.toLowerCase().includes('adventure') ? 'warning' :
+                prod.category.toLowerCase().includes('luxury') ? 'gold' :
+                'info';
+              return (
+                <Card key={prod.id} variant="muted" className="h-full">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-1">
+                        <Badge variant={badgeVariant}>{prod.category}</Badge>
+                        <CardTitle className="text-base">{prod.title}</CardTitle>
+                        <p className="text-xs text-muted-foreground">{prod.city}</p>
+                      </div>
+                      {prod.price !== undefined && (
+                        <span className="text-lg font-semibold text-primary">AED {prod.price}</span>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {prod.description && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">{prod.description}</p>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        );
+      case 'scripts':
+        return <QuickReference />;
+      case 'combos':
+        return (
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {comboPackages.map((combo) => (
+              <Card key={combo.id} variant="elevated">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">{combo.name}</CardTitle>
+                  <CardDescription>{combo.items.join(' + ')}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <Badge variant="gold">AED {combo.totalPrice}</Badge>
+                  <Badge variant="success">{combo.margin}</Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        );
+      case 'vehicles':
+        return (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-3 font-semibold">Vehicle</th>
+                  <th className="text-left py-3 font-semibold">Capacity</th>
+                  <th className="text-right py-3 font-semibold">Full Day Dubai</th>
+                  <th className="text-right py-3 font-semibold">Full Day Abu Dhabi</th>
+                  <th className="text-right py-3 font-semibold">Half Day Dubai</th>
+                  <th className="text-right py-3 font-semibold">Transfer (DXB)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vehicleRates.map((v) => (
+                  <tr key={v.vehicle} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
+                    <td className="py-3 font-medium">{v.vehicle}</td>
+                    <td className="py-3">{v.capacity} guests</td>
+                    <td className="py-3 text-right">AED {v.fullDayDubai}</td>
+                    <td className="py-3 text-right">AED {v.fullDayAbuDhabi}</td>
+                    <td className="py-3 text-right">AED {v.halfDayDubai}</td>
+                    <td className="py-3 text-right">AED {v.transferDXB}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -140,56 +262,28 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         <div className="absolute right-20 top-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-float" />
       </div>
 
-      {/* Catalog Snapshot */}
+      {/* Dashboard Tabs */}
       <Card variant="elevated">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            Catalog Snapshot
+            Dashboard Views
           </CardTitle>
-          <CardDescription>Merged legacy tours and latest catalog products</CardDescription>
+          <CardDescription>Switch between core data sets</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {allTours.slice(0, 9).map((tour) => {
-              const badgeVariant =
-                tour.category === 'adventure'
-                  ? 'warning'
-                  : tour.category === 'luxury' || tour.category === 'experience'
-                    ? 'gold'
-                    : 'info';
-              return (
-                <Card key={tour.id} variant="muted" className="h-full">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="space-y-1">
-                        <Badge variant={badgeVariant}>{tour.category}</Badge>
-                        <CardTitle className="text-base">{tour.name}</CardTitle>
-                      </div>
-                      <span className="text-lg font-semibold text-primary">
-                        {tour.duration}
-                      </span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {tour.highlights?.[0] && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">{tour.highlights[0]}</p>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button variant="outline" onClick={() => onNavigate('tours')}>
-              View Full Catalog
-            </Button>
-          </div>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
+            <TabsList className="flex flex-wrap gap-2">
+              <TabsTrigger value="tours">Tours Available</TabsTrigger>
+              <TabsTrigger value="catalog">Catalog Products</TabsTrigger>
+              <TabsTrigger value="scripts">Script Templates</TabsTrigger>
+              <TabsTrigger value="combos">Combo Packages</TabsTrigger>
+              <TabsTrigger value="vehicles">Vehicle Options</TabsTrigger>
+            </TabsList>
+            <div className="pt-4">{renderContent()}</div>
+          </Tabs>
         </CardContent>
       </Card>
-
-      {/* Sales Tools */}
-      <CommunicationLibrary />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {quickStats.map((stat, index) => (
