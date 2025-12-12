@@ -218,48 +218,44 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-hero p-8 md:p-12">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOCAxOC04LjA1OSAxOC0xOC04LjA1OS0xOC0xOC0xOHptMCAzMmMtNy43MzIgMC0xNC02LjI2OC0xNC0xNHM2LjI2OC0xNCAxNC0xNCAxNCA2LjI2OCAxNCAxNC02LjI2OCAxNC0xNCAxNHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L2c+PC9zdmc+')] opacity-30" />
-        
-        <div className="relative z-10">
-          <Badge variant="gold" className="mb-4">
-            <Sparkles className="h-3 w-3 mr-1" />
+      {/* Hero Header */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 p-8 md:p-12">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent" />
+        <div className="absolute -right-20 -bottom-20 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl" />
+        <div className="relative z-10 space-y-6 max-w-4xl">
+          <Badge variant="gold" className="mb-2 inline-flex items-center gap-2 backdrop-blur-lg bg-white/10 border border-white/10">
+            <Sparkles className="h-3 w-3" />
             Training Playbook v2025.12
           </Badge>
-          
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-sidebar-foreground mb-3">
-            Welcome to Ahmed Travel
-          </h1>
-          <p className="text-sidebar-foreground/80 max-w-xl mb-6">
-            Master high-touch, luxury travel experiences in the UAE. This playbook is your foundation for quoting fluently, upselling naturally, and coordinating seamless journeys.
-          </p>
-          
-          <div className="flex flex-wrap gap-3">
-            <Button 
-              variant="gold" 
-              size="lg" 
-              onClick={() => onNavigate('calculator')}
-              className="shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-105"
-            >
-              <Calculator className="h-4 w-4 mr-2" />
-              Start Quoting
-            </Button>
-            <Button 
-              variant="glass-dark" 
-              size="lg" 
-              onClick={() => onNavigate('tours')}
-              className="hover:bg-sidebar-accent/90 transition-all duration-300"
-            >
-              <BookOpen className="h-4 w-4 mr-2" />
-              Explore Tours
-            </Button>
+
+          <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 md:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.35)]">
+            <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white drop-shadow-lg">
+              Curating the Extraordinary.
+            </h1>
+            <p className="text-lg text-gray-300 max-w-2xl leading-relaxed mt-3">
+              Your command center for crafting world-class UAE journeys. Quote faster, upsell smarter, and deliver perfection.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mt-6">
+              <Button
+                size="lg"
+                onClick={() => onNavigate('calculator')}
+                className="bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 transition-all"
+              >
+                <Calculator className="h-4 w-4 mr-2" />
+                Start Quoting
+              </Button>
+              <Button
+                size="lg"
+                onClick={() => onNavigate('tours')}
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Explore Tours
+              </Button>
+            </div>
           </div>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute right-20 top-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-float" />
       </div>
 
       {/* Dashboard Tabs */}
