@@ -106,7 +106,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         <div className="absolute right-20 top-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-float" />
       </div>
 
-      {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {quickStats.map((stat, index) => (
           <Card 
