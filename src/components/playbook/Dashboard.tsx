@@ -15,7 +15,9 @@ import {
   BookOpen,
   Zap
 } from 'lucide-react';
-import type { TabId } from './Navigation';
+import './Dashboard.css';
+
+type TabId = 'tours' | 'calculator' | 'scripts' | 'pricing' | 'reference';
 
 interface DashboardProps {
   onNavigate: (tab: TabId) => void;
@@ -111,8 +113,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           <Card 
             key={stat.label} 
             variant="elevated" 
-            className="animate-spring-in hover:shadow-elevated transition-all duration-300 cursor-pointer group"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            className={`animate-spring-in hover:shadow-elevated transition-all duration-300 cursor-pointer group delay-${index}`}
           >
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -164,8 +165,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             {trainingModules.map((module, index) => (
               <div 
                 key={module.title}
-                className="p-4 rounded-lg bg-muted/50 hover:bg-muted hover:shadow-soft transition-all duration-300 cursor-pointer animate-slide-up hover:scale-[1.02]"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className={`p-4 rounded-lg bg-muted/50 hover:bg-muted hover:shadow-soft transition-all duration-300 cursor-pointer animate-slide-up hover:scale-[1.02] delay-${index}`}
                 onClick={() => onNavigate(module.tab)}
               >
                 <div className="flex items-start gap-3">
