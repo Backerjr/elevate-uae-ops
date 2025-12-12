@@ -12,12 +12,12 @@ export default defineConfig(({ mode }) => ({
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./src/frontend"),
     },
   },
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./src/test/setup.ts",
+    setupFiles: "./src/frontend/test/setup.ts",
   },
 }));
