@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { tours, vehicleRates, whatsappScripts, comboPackages, brandPillars, type Tour } from '@/data/playbook-data';
 import catalogData from '@/data/products.json';
+import { CommunicationLibrary } from './CommunicationLibrary';
 import { 
   Map, 
   Calculator, 
@@ -35,7 +36,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   const mappedCatalogTours: Tour[] = catalogData.map((p) => ({
     id: p.product_id,
-    name: p.product_name,
+    name: p.product_name ?? p.title ?? "Catalog Product",
     category: mapCatalogCategory(p.category ?? ''),
     pickup: p.destination_city ?? 'UAE',
     duration: p.duration_hours ? `${p.duration_hours} hrs` : 'Approx 1-3 hrs',
@@ -138,6 +139,57 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute right-20 top-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-float" />
       </div>
+
+      {/* Catalog Snapshot */}
+      <Card variant="elevated">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-primary" />
+            Catalog Snapshot
+          </CardTitle>
+          <CardDescription>Merged legacy tours and latest catalog products</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {allTours.slice(0, 9).map((tour) => {
+              const badgeVariant =
+                tour.category === 'adventure'
+                  ? 'warning'
+                  : tour.category === 'luxury' || tour.category === 'experience'
+                    ? 'gold'
+                    : 'info';
+              return (
+                <Card key={tour.id} variant="muted" className="h-full">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-1">
+                        <Badge variant={badgeVariant}>{tour.category}</Badge>
+                        <CardTitle className="text-base">{tour.name}</CardTitle>
+                      </div>
+                      <span className="text-lg font-semibold text-primary">
+                        {tour.duration}
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {tour.highlights?.[0] && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">{tour.highlights[0]}</p>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+          <div className="mt-4 flex justify-end">
+            <Button variant="outline" onClick={() => onNavigate('tours')}>
+              View Full Catalog
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Sales Tools */}
+      <CommunicationLibrary />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {quickStats.map((stat, index) => (
