@@ -1,0 +1,1195 @@
+import json
+from pathlib import Path
+
+# --------------------------------------------------------
+# Tour Catalog JSONL Builder
+# --------------------------------------------------------
+# This script consolidates all segments (Batch 2: Segments A & B,
+# Batch 3: Segments C, D, E) into a single JSONL file for ingestion. If there is duplicated info ignore it
+
+# --------------------------------------------------------
+
+# --------------------------------------------------------
+# Batch 2 — Segment A
+# Quad Bikes, Dune Buggies, Long Camel Ride, Horse Ride
+# --------------------------------------------------------
+
+batch2_segment_a = [
+    # Quad Bike Desert Experience (all variants as tiers)
+    {
+        "product_id": "RaynaTours_QuadBikeExperience_2023",
+        "product_name": "Quad Bike Desert Experience",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Adventure",
+        "description_short": "Quad bike self-drive experience in the Dubai desert with multiple duration and vehicle configurations.",
+        "description_long": (
+            "A self-drive quad biking adventure offered at Rayna’s desert camp area. Guests can choose between single or "
+            "double quad bikes for either a 30-minute or 60-minute session. The activity is supervised by trained marshals "
+            "and conducted in a designated safe riding zone separate from the main camp. Safety gear is provided and riders "
+            "receive basic operation instructions before starting the experience."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Safety briefing and instructions",
+            "Helmet and basic protective gear",
+            "Supervised quad biking in a designated desert zone",
+            "Option for single or double bike",
+        ],
+        "exclusions": [
+            "Hotel transfers unless purchased with a safari",
+            "Food and beverages",
+            "Extended riding time beyond selected duration",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Quad Bike Single – 30 Minutes",
+                "price_aed": 150,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Quad Bike Single – 60 Minutes",
+                "price_aed": 250,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Quad Bike Double – 30 Minutes",
+                "price_aed": 200,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Quad Bike Double – 60 Minutes",
+                "price_aed": 300,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Riders must be 16 years or older for single quads; younger children may ride only as passengers on double bikes. "
+            "Activity is undertaken at the guest’s own risk and is subject to safety briefing compliance. No refunds for unused "
+            "time or early termination."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+
+    # Dune Buggy Desert Adventure (all variants as tiers)
+    {
+        "product_id": "RaynaTours_DuneBuggyAdventure_2023",
+        "product_name": "Dune Buggy Desert Adventure",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Adventure",
+        "description_short": "High-powered dune buggy ride in the Dubai desert with multiple engine capacities and seating options.",
+        "description_long": (
+            "A powerful off-road buggy driving experience conducted in the open desert near Rayna’s camp area. Guests can "
+            "choose between 800cc and 1000cc buggies, available in 2-seater or 4-seater formats, with 30-minute or 60-minute "
+            "durations. A safety marshal guides the convoy and riders receive full instructions and helmets before the start."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Helmet and safety instructions",
+            "Supervised buggy driving session",
+            "Choice of buggy engine (800cc or 1000cc)",
+            "Choice of 2-seater or 4-seater buggy",
+        ],
+        "exclusions": [
+            "Hotel transfers unless purchased with a safari",
+            "Food and beverages",
+            "Extra riding time beyond booked duration",
+        ],
+        "pricing": [
+            {
+                "tier_name": "800cc Dune Buggy – 2-Seater – 30 Minutes",
+                "price_aed": 350,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "800cc Dune Buggy – 2-Seater – 60 Minutes",
+                "price_aed": 600,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "1000cc Dune Buggy – 4-Seater – 30 Minutes",
+                "price_aed": 650,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "1000cc Dune Buggy – 4-Seater – 60 Minutes",
+                "price_aed": 900,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Drivers must be at least 18 years old and present a valid ID. Passengers must follow seatbelt and safety rules. "
+            "Activity is subject to weather and sand conditions. No refunds for unused time."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+
+    # Extended Camel Ride
+    {
+        "product_id": "RaynaTours_CamelRideLong_2023",
+        "product_name": "Extended Camel Ride",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Adventure",
+        "description_short": "Extended camel trekking experience in the desert lasting approximately 10 minutes.",
+        "description_long": (
+            "A longer camel ride experience available at Rayna’s desert camp where guests enjoy a 10-minute trek atop a "
+            "traditionally saddled camel, supervised by trained camel handlers. This activity offers a more immersive desert "
+            "feel compared to the short complimentary ride included in safaris."
+        ),
+        "duration_hours": 0.17,
+        "inclusions": [
+            "Camel ride for approximately 10 minutes",
+            "Handler supervision and assistance",
+        ],
+        "exclusions": [
+            "Hotel transfers",
+            "Food and beverages",
+            "Safari activities",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Extended Camel Ride – Per Person",
+                "price_aed": 10,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Guests must follow handler instructions at all times. Suitable for most ages but not recommended for individuals "
+            "with severe mobility issues. Non-refundable once redeemed."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+
+    # Horse Ride
+    {
+        "product_id": "RaynaTours_HorseRide_2023",
+        "product_name": "Horse Riding Experience",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Adventure",
+        "description_short": "Guided horse ride at the desert camp, ideal for photos and a short equestrian experience.",
+        "description_long": (
+            "A supervised horse riding experience available at the desert camp where guests are assisted by trained staff for "
+            "mounting, balancing and riding in a controlled area. This activity is typically used for photos and a short "
+            "equestrian moment rather than long-distance riding."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Supervised horse ride",
+            "Assistance from handlers",
+        ],
+        "exclusions": [
+            "Hotel transfers",
+            "Food and beverages",
+            "Extended riding time",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Horse Ride – Per Person",
+                "price_aed": 20,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Guests ride under supervision only. Not recommended for guests with back issues or limited mobility. "
+            "Non-refundable after redemption."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+]
+
+
+# --------------------------------------------------------
+# Batch 2 — Segment B
+# VIP Majlis, Shisha at Table, Alcohol Coupons,
+# Premium Food Upgrade, Falcon Photo, Photoshoot Package
+# --------------------------------------------------------
+
+batch2_segment_b = [
+    {
+        "product_id": "RaynaTours_VIPMajlisSharing_2023",
+        "product_name": "VIP Majlis – Sharing",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Luxury",
+        "description_short": "Shared VIP Majlis seating upgrade at Rayna’s desert camp with premium comfort.",
+        "description_long": (
+            "An upgraded seating experience at the desert camp offering premium cushions, enhanced comfort and a designated "
+            "VIP area. Guests share the VIP Majlis section with other premium customers. Ideal for travelers who want a more "
+            "exclusive ambiance than standard camp seating."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Access to VIP seating area",
+            "Premium seating set-up",
+        ],
+        "exclusions": [
+            "Food served at table (available separately)",
+            "Private Majlis section",
+            "Alcohol",
+        ],
+        "pricing": [
+            {
+                "tier_name": "VIP Majlis – Sharing (Per Person)",
+                "price_aed": 30,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Seats are shared with other guests. Upgrade is non-refundable once redeemed. Availability is subject to camp occupancy."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "RaynaTours_VIPMajlisPrivate_2023",
+        "product_name": "VIP Majlis – Private",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Luxury",
+        "description_short": "Private VIP Majlis seating with exclusive lounge-style comfort at the desert camp.",
+        "description_long": (
+            "A fully private VIP Majlis arrangement reserved exclusively for the guest’s group. This premium setup includes a "
+            "more secluded space, upscale seating and an elevated level of comfort, ideal for families, couples and small groups "
+            "seeking privacy within the camp environment."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Private Majlis seating area",
+            "Premium cushions and décor",
+        ],
+        "exclusions": [
+            "Food served at table (available separately)",
+            "Alcoholic beverages",
+        ],
+        "pricing": [
+            {
+                "tier_name": "VIP Majlis – Private (Per Group)",
+                "price_aed": 150,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Reserved exclusively per group. Non-refundable after confirmation unless canceled 24 hours before. Subject to availability."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "RaynaTours_ShishaAtTable_2023",
+        "product_name": "Shisha at Table – Premium Upgrade",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Culinary",
+        "description_short": "Premium flavored shisha served directly at the guest’s table at the camp.",
+        "description_long": (
+            "An upgraded shisha service where premium flavored hookah is brought to the guest’s Majlis seating table instead "
+            "of using the standard shisha area. Provides added comfort and convenience for guests who prefer private or "
+            "relaxed use within their seating zone."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Premium flavored shisha served at table",
+        ],
+        "exclusions": [
+            "Multiple refills (additional charges may apply)",
+            "VIP Majlis unless purchased",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Shisha at Table – Per Shisha",
+                "price_aed": 50,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Only permitted in designated seating areas. Guests must follow safety rules. Non-refundable once prepared."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "RaynaTours_AlcoholCoupons_2023",
+        "product_name": "Alcohol Coupons",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Culinary",
+        "description_short": "Alcoholic beverage coupon redeemable at the desert camp bar.",
+        "description_long": (
+            "Guests may purchase alcohol coupons that can be exchanged for selected alcoholic beverages at Rayna’s camp bar, "
+            "subject to availability and UAE regulations. Commonly redeemed for beer or house spirits as per the camp’s menu."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "One alcoholic beverage coupon",
+        ],
+        "exclusions": [
+            "Multiple drinks unless more coupons purchased",
+            "Premium branded alcohol",
+        ],
+        "pricing": [
+            {
+                "tier_name": "1 Alcohol Coupon",
+                "price_aed": 40,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Only adults above legal drinking age can redeem coupons. Non-refundable once purchased. Alcohol service may be "
+            "restricted on dry days."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "RaynaTours_PremiumFoodUpgrade_2023",
+        "product_name": "Premium Dining Upgrade",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Culinary",
+        "description_short": "Upgrade from standard buffet to premium dining with enhanced BBQ and live grill selection.",
+        "description_long": (
+            "A dining upgrade offering higher-quality dishes, enhanced live BBQ grill options and additional menu items "
+            "compared to the standard safari buffet. Designed for guests who prefer a more refined culinary offering during "
+            "the safari evening experience."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Premium dinner menu",
+            "Enhanced BBQ selection",
+            "Live grill items",
+        ],
+        "exclusions": [
+            "VIP seating (sold separately)",
+            "Alcoholic drinks",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Premium Dinner Upgrade – Per Person",
+                "price_aed": 30,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": "Upgrade applies to one evening dining session. Non-refundable once meal is prepared.",
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "RaynaTours_FalconPhoto_2023",
+        "product_name": "Falcon Photo Experience",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Cultural",
+        "description_short": "Photo opportunity with a trained desert falcon inside the camp.",
+        "description_long": (
+            "Guests can hold or pose with a trained falcon for a souvenir photo during the safari camp experience. The activity "
+            "is managed by a professional falcon handler and typically takes place near a designated photo area."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Falcon handling assistance",
+            "Photo opportunity with falcon",
+        ],
+        "exclusions": [
+            "Printed photos (if offered separately)",
+            "Hotel transfers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Falcon Photo – Per Person",
+                "price_aed": 10,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Guests must follow handler instructions when holding the falcon. Non-refundable once performed."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "RaynaTours_PhotoshootPackage_2023",
+        "product_name": "Professional Desert Photoshoot",
+        "supplier_name": "Rayna Tours",
+        "destination_city": "Dubai",
+        "category": "Luxury",
+        "description_short": "Professional photoshoot service at the desert camp with digital delivery options.",
+        "description_long": (
+            "A premium photography service where a camp photographer takes curated photos of guests around scenic desert "
+            "angles and designated photo spots. Edited images are delivered digitally or through printed packages depending "
+            "on availability."
+        ),
+        "duration_hours": None,
+        "inclusions": [
+            "Photographer service",
+            "Multiple posed and candid shots",
+        ],
+        "exclusions": [
+            "Printed photos unless purchased",
+            "Video packages unless offered",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Photoshoot Package – Base Rate",
+                "price_aed": 20,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            }
+        ],
+        "booking_policy": (
+            "Guests receive only the purchased photo count. Additional photos may require extra payment. "
+            "Non-refundable once session begins."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+]
+
+
+# --------------------------------------------------------
+# Batch 3 — Segment C
+# Atlantis: Aquaventure, Lost Chambers, Combo, Dolphins
+# --------------------------------------------------------
+
+batch3_segment_c = [
+    {
+        "product_id": "Atlantis_AquaventureDayPass_2023",
+        "product_name": "Aquaventure Waterpark – Day Pass",
+        "supplier_name": "Atlantis The Palm",
+        "destination_city": "Dubai",
+        "category": "Water Sports",
+        "description_short": "Full-day access to Aquaventure Waterpark with unlimited rides and attractions.",
+        "description_long": (
+            "A full-day ticket granting access to all major rides, slides and attractions at Aquaventure Waterpark. Guests "
+            "enjoy record-breaking water slides, river rapids, children’s play areas and multiple beach zones within the "
+            "Atlantis complex. Ticket options vary by peak and off-peak days, as well as adult and child rates."
+        ),
+        "duration_hours": 8,
+        "inclusions": [
+            "Full-day access to Aquaventure Waterpark",
+            "Unlimited use of rides and attractions",
+            "Beach access",
+        ],
+        "exclusions": [
+            "Towels (available for rent)",
+            "Lockers (available for additional fee)",
+            "Food and beverages",
+            "Dolphin or aquarium experiences",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – Standard Day",
+                "price_aed": 299,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Standard Day",
+                "price_aed": 259,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Adult – Peak Day",
+                "price_aed": 349,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Peak Day",
+                "price_aed": 309,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Tickets are non-refundable after issuance. Children must be accompanied by an adult. Height restrictions apply "
+            "for specific rides. Peak days are determined by Atlantis and may vary."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "Atlantis_LostChambersAquarium_2023",
+        "product_name": "Lost Chambers Aquarium – General Entry",
+        "supplier_name": "Atlantis The Palm",
+        "destination_city": "Dubai",
+        "category": "Family",
+        "description_short": "Entry ticket to Lost Chambers Aquarium featuring marine exhibits and underwater tunnels.",
+        "description_long": (
+            "A general admission ticket to The Lost Chambers Aquarium, home to more than 65,000 marine creatures displayed in "
+            "immersive underwater tunnels and themed chambers. Suitable for families and guests of all ages. Various exhibits "
+            "highlight marine conservation and aquatic ecosystems."
+        ),
+        "duration_hours": 2,
+        "inclusions": [
+            "Entry to Lost Chambers Aquarium",
+            "Access to multiple marine exhibits",
+        ],
+        "exclusions": [
+            "Aquaventure Waterpark access",
+            "Behind-the-scenes tours",
+            "Photos and videos",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – General Entry",
+                "price_aed": 140,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – General Entry",
+                "price_aed": 100,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Tickets are non-refundable once used. Children must be accompanied by an adult. Aquarium capacity rules apply "
+            "during peak times."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "Atlantis_AquaventureCombo_2023",
+        "product_name": "Aquaventure + Lost Chambers Combo",
+        "supplier_name": "Atlantis The Palm",
+        "destination_city": "Dubai",
+        "category": "Family",
+        "description_short": "Combined day pass granting access to both Aquaventure Waterpark and Lost Chambers Aquarium.",
+        "description_long": (
+            "A bundled attraction ticket providing full-day access to Aquaventure Waterpark as well as a same-day entry to "
+            "Lost Chambers Aquarium. Ideal for families seeking a complete Atlantis experience at better value. Peak and "
+            "standard pricing applies."
+        ),
+        "duration_hours": 10,
+        "inclusions": [
+            "Full-day access to Aquaventure Waterpark",
+            "General entry to Lost Chambers Aquarium",
+        ],
+        "exclusions": [
+            "Meals and beverages",
+            "Towels and lockers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – Standard Combo",
+                "price_aed": 335,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Standard Combo",
+                "price_aed": 290,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Adult – Peak Combo",
+                "price_aed": 389,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Peak Combo",
+                "price_aed": 335,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Non-refundable after issuance. Both experiences must be used on the same day. Height restrictions apply at the waterpark."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "Atlantis_DolphinEncounterShallow_2023",
+        "product_name": "Dolphin Encounter – Shallow Water",
+        "supplier_name": "Atlantis The Palm",
+        "destination_city": "Dubai",
+        "category": "Family",
+        "description_short": "Shallow-water interaction with dolphins suitable for all ages and non-swimmers.",
+        "description_long": (
+            "A family-friendly dolphin experience conducted in waist-deep water where guests can interact, touch and pose "
+            "with bottlenose dolphins. Professional marine animal specialists guide the session and provide safety "
+            "instructions. Suitable for non-swimmers and young children."
+        ),
+        "duration_hours": 1,
+        "inclusions": [
+            "Shallow water dolphin interaction",
+            "Safety briefing",
+            "Wetsuit and flotation vest",
+            "Professional instructor guidance",
+        ],
+        "exclusions": [
+            "Photos and videos (sold separately)",
+            "Food and beverages",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Participant – Standard Day",
+                "price_aed": 650,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Participant – Peak Day",
+                "price_aed": 725,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Children must be accompanied by paying adults. Pregnant guests are not permitted. Non-refundable after booking "
+            "unless cancelled due to weather or operational issues."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "Atlantis_DolphinAdventureDeep_2023",
+        "product_name": "Dolphin Adventure – Deep Water",
+        "supplier_name": "Atlantis The Palm",
+        "destination_city": "Dubai",
+        "category": "Adventure",
+        "description_short": "A deep-water dolphin swim experience for confident swimmers.",
+        "description_long": (
+            "A premium dolphin interaction where guests enter deep water and enjoy advanced activities such as dolphin dorsal "
+            "tows, belly rides and immersive swimming interactions. Participants receive full safety gear and instructions "
+            "before entering the lagoon."
+        ),
+        "duration_hours": 1,
+        "inclusions": [
+            "Deep-water interaction with dolphins",
+            "Wetsuit and flotation gear",
+            "Safety briefing",
+            "Professional marine specialist supervision",
+        ],
+        "exclusions": [
+            "Photos and videos",
+            "Meals",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Participant – Standard Day",
+                "price_aed": 900,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Participant – Peak Day",
+                "price_aed": 1000,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Strong swimming ability required. Children not permitted unless meeting height and swim criteria. "
+            "Non-refundable after confirmation."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+]
+
+
+# --------------------------------------------------------
+# Batch 3 — Segment D
+# Burj Khalifa: 124/125, SKY 148, Lounge, Sunrise+Breakfast
+# --------------------------------------------------------
+
+batch3_segment_d = [
+    {
+        "product_id": "BurjKhalifa_AtTheTop_124125_2023",
+        "product_name": "Burj Khalifa – At The Top (124/125)",
+        "supplier_name": "Emaar",
+        "destination_city": "Dubai",
+        "category": "Sightseeing",
+        "description_short": "General access to Levels 124 and 125 with panoramic city views.",
+        "description_long": (
+            "Standard admission to Burj Khalifa’s At The Top experience, granting access to Levels 124 and 125. Guests enjoy "
+            "uninterrupted panoramic views of Dubai through both indoor and outdoor observation decks, interactive exhibits, "
+            "and high-powered telescopes. Tickets vary by peak and off-peak hours, along with adult and child pricing."
+        ),
+        "duration_hours": 1,
+        "inclusions": [
+            "Access to Levels 124 and 125",
+            "Use of observation decks and interactive exhibits",
+        ],
+        "exclusions": [
+            "Guided tour",
+            "Skip-the-line unless upgraded",
+            "Food and beverages",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – Off-Peak",
+                "price_aed": 169,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Off-Peak",
+                "price_aed": 129,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Adult – Peak Hours",
+                "price_aed": 219,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Peak Hours",
+                "price_aed": 169,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Tickets are timed and non-refundable. Peak hours are determined by Burj Khalifa and may vary during holidays. "
+            "Guests must arrive at least 15 minutes before the scheduled time."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "BurjKhalifa_SKY_148_2023",
+        "product_name": "Burj Khalifa – SKY (Level 148)",
+        "supplier_name": "Emaar",
+        "destination_city": "Dubai",
+        "category": "Luxury",
+        "description_short": "VIP fast-track access to the exclusive Level 148 SKY lounge with luxury hospitality.",
+        "description_long": (
+            "A premium VIP experience granting fast-track entry and access to Burj Khalifa’s SKY Level 148, including an "
+            "elegant lounge area, luxury seating and personalized service. Guests also receive continued access to Levels 124 "
+            "and 125 after completing their SKY experience. Ideal for travelers seeking a high-end, crowd-free visit."
+        ),
+        "duration_hours": 1.5,
+        "inclusions": [
+            "Fast-track entry",
+            "Access to Level 148 lounge",
+            "Refreshing drinks and hospitality service",
+            "Continued access to Levels 124 and 125",
+        ],
+        "exclusions": [
+            "Guided VIP tour unless specified",
+            "Photos and souvenirs",
+        ],
+        "pricing": [
+            {
+                "tier_name": "SKY VIP – Adult",
+                "price_aed": 399,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "SKY VIP – Child",
+                "price_aed": 359,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Strictly time-based admission. Non-refundable after issuance. Lounge capacity is limited; guests may be queued "
+            "briefly before entering Level 148."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "BurjKhalifa_TheLounge_152to154_2023",
+        "product_name": "Burj Khalifa – The Lounge",
+        "supplier_name": "Emaar",
+        "destination_city": "Dubai",
+        "category": "Luxury",
+        "description_short": "Sky-high luxury experience at The Lounge on Levels 152–154 with refreshments.",
+        "description_long": (
+            "A premium elevated lounge experience located on Levels 152–154 of Burj Khalifa, featuring luxury seating, "
+            "curated refreshments and breathtaking skyline views. The experience varies by time slot — including morning "
+            "coffee, afternoon tea or sunset cocktails — offering a refined alternative to standard observation decks."
+        ),
+        "duration_hours": 1.5,
+        "inclusions": [
+            "Access to The Lounge (Levels 152–154)",
+            "Selected refreshments based on time of day",
+        ],
+        "exclusions": [
+            "Access to Levels 124/125 unless specified",
+            "Premium alcoholic beverages",
+        ],
+        "pricing": [
+            {
+                "tier_name": "The Lounge – Morning Session",
+                "price_aed": 269,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "The Lounge – Tea Session",
+                "price_aed": 299,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "The Lounge – Sundowner Session",
+                "price_aed": 389,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Guests must adhere to the dress code for premium lounge access. Tickets are non-refundable. Time slots may vary "
+            "during public holidays."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "BurjKhalifa_SunriseBreakfast_2023",
+        "product_name": "Burj Khalifa – Sunrise + Breakfast",
+        "supplier_name": "Emaar",
+        "destination_city": "Dubai",
+        "category": "Sightseeing",
+        "description_short": "Early-morning admission to Levels 124/125 with a post-sunrise breakfast.",
+        "description_long": (
+            "A special early-morning experience that allows guests to witness sunrise views from Levels 124 and 125 followed "
+            "by a light breakfast at The Café. Available only on selected days, this unique offering is popular among "
+            "photographers, couples and early risers seeking a calmer observation deck environment."
+        ),
+        "duration_hours": 2,
+        "inclusions": [
+            "Sunrise access to Levels 124/125",
+            "Light breakfast at The Café",
+        ],
+        "exclusions": [
+            "SKY Lounge access",
+            "Skip-the-line unless upgraded",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – Sunrise Ticket",
+                "price_aed": 159,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – Sunrise Ticket",
+                "price_aed": 129,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Only available on weekends and special dates. Non-refundable after issuance. Guests must arrive before the "
+            "sunrise time indicated on the ticket."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+]
+
+
+# --------------------------------------------------------
+# Batch 3 — Segment E
+# Yas Island Parks (Ferrari / Warner Bros / Yas Waterworld)
+# + Multi-park combo passes
+# --------------------------------------------------------
+
+batch3_segment_e = [
+    {
+        "product_id": "YasIsland_FerrariWorld_2023",
+        "product_name": "Ferrari World Abu Dhabi – 1 Day Ticket",
+        "supplier_name": "Miral / Yas Island",
+        "destination_city": "Abu Dhabi",
+        "category": "Adventure",
+        "description_short": "Full-day access to Ferrari World Abu Dhabi with record-breaking roller coasters and family rides.",
+        "description_long": (
+            "A 1-day admission pass to Ferrari World Abu Dhabi, home to Formula Rossa and multiple thrilling roller coasters, "
+            "family rides, kid zones and Ferrari-themed experiences. Ideal for thrill seekers, families and car enthusiasts."
+        ),
+        "duration_hours": 8,
+        "inclusions": [
+            "1-day park admission to Ferrari World Abu Dhabi",
+            "Access to all standard rides and attractions",
+        ],
+        "exclusions": [
+            "Meals and beverages",
+            "Fast track / Quick pass",
+            "Hotel transfers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – 1 Day Ticket",
+                "price_aed": 345,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – 1 Day Ticket",
+                "price_aed": 300,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Tickets are generally open-dated within a validity period defined by Yas Island. Non-refundable after activation. "
+            "Height and health restrictions apply on certain rides."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "YasIsland_WarnerBrosWorld_2023",
+        "product_name": "Warner Bros. World Abu Dhabi – 1 Day Ticket",
+        "supplier_name": "Miral / Yas Island",
+        "destination_city": "Abu Dhabi",
+        "category": "Family",
+        "description_short": "Indoor theme park with six immersive lands featuring DC Super Heroes and cartoon characters.",
+        "description_long": (
+            "A 1-day ticket to Warner Bros. World Abu Dhabi, a fully indoor, climate-controlled theme park with six themed "
+            "lands inspired by DC Super Heroes, Looney Tunes and other iconic Warner Bros. franchises. Perfect for families "
+            "and cartoon lovers."
+        ),
+        "duration_hours": 8,
+        "inclusions": [
+            "1-day park admission to Warner Bros. World Abu Dhabi",
+            "Access to all standard rides and shows",
+        ],
+        "exclusions": [
+            "Meals and beverages",
+            "Fast track / Quick pass",
+            "Hotel transfers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – 1 Day Ticket",
+                "price_aed": 345,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – 1 Day Ticket",
+                "price_aed": 300,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Tickets are generally open-dated within the specified validity window. Non-refundable once used. Some rides may "
+            "be temporarily closed for maintenance."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "YasIsland_YasWaterworld_2023",
+        "product_name": "Yas Waterworld – 1 Day Ticket",
+        "supplier_name": "Miral / Yas Island",
+        "destination_city": "Abu Dhabi",
+        "category": "Water Sports",
+        "description_short": "Waterpark day pass with slides, wave pools and family attractions at Yas Waterworld.",
+        "description_long": (
+            "A 1-day admission ticket to Yas Waterworld Abu Dhabi, featuring a wide variety of slides, wave pools, splash "
+            "zones and family-friendly attractions themed around the UAE’s pearl diving heritage."
+        ),
+        "duration_hours": 8,
+        "inclusions": [
+            "1-day park admission to Yas Waterworld",
+            "Access to all standard slides and pools",
+        ],
+        "exclusions": [
+            "Meals and beverages",
+            "Fast track / Quick pass",
+            "Towel and locker rentals",
+            "Hotel transfers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – 1 Day Ticket",
+                "price_aed": 295,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – 1 Day Ticket",
+                "price_aed": 250,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Tickets are non-refundable after use. Ride closures may occur due to maintenance or weather conditions. Height "
+            "restrictions apply on specific attractions."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "YasIsland_2Park1Day_2023",
+        "product_name": "Yas Island – 2 Parks in 1 Day",
+        "supplier_name": "Miral / Yas Island",
+        "destination_city": "Abu Dhabi",
+        "category": "Family",
+        "description_short": "Combo ticket allowing access to any two Yas Island parks in a single day.",
+        "description_long": (
+            "A value combo pass that grants access to any two Yas Island theme parks in one day, typically chosen among "
+            "Ferrari World, Warner Bros. World and Yas Waterworld. Ideal for guests who want to experience more than one "
+            "park with a bundled rate."
+        ),
+        "duration_hours": 10,
+        "inclusions": [
+            "Same-day admission to any two participating Yas Island parks",
+        ],
+        "exclusions": [
+            "Meals and beverages",
+            "Fast track / Quick pass",
+            "Hotel transfers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – 2 Parks 1 Day",
+                "price_aed": 435,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – 2 Parks 1 Day",
+                "price_aed": 390,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "Both visits must be used on the same day. Non-refundable once the first park is entered. Park selection is "
+            "subject to the list of participating Yas Island attractions at the time of travel."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+    {
+        "product_id": "YasIsland_3Park2Day_2023",
+        "product_name": "Yas Island – 3 Parks in 2 Days",
+        "supplier_name": "Miral / Yas Island",
+        "destination_city": "Abu Dhabi",
+        "category": "Family",
+        "description_short": "Multi-day combo allowing access to three Yas Island parks over two days.",
+        "description_long": (
+            "A multi-park combo ticket that allows guests to visit three Yas Island parks over a two-day period, usually "
+            "including Ferrari World, Warner Bros. World and Yas Waterworld. Ideal for families staying in Abu Dhabi or "
+            "Yas Island hotels."
+        ),
+        "duration_hours": 16,
+        "inclusions": [
+            "Park admission to three Yas Island parks over two days",
+        ],
+        "exclusions": [
+            "Meals and beverages",
+            "Fast track / Quick pass",
+            "Hotel transfers",
+        ],
+        "pricing": [
+            {
+                "tier_name": "Adult – 3 Parks 2 Days",
+                "price_aed": 545,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+            {
+                "tier_name": "Child – 3 Parks 2 Days",
+                "price_aed": 495,
+                "currency": "AED",
+                "validity_start": None,
+                "validity_end": None,
+            },
+        ],
+        "booking_policy": (
+            "All park visits must be completed within the specified 2-day validity window after first use. Non-refundable "
+            "once activated. Park operating dates and hours must be checked in advance."
+        ),
+        "source_document": ["Rayna-Travel Desk-Learning Manual_V1.3.docx"],
+    },
+]
+
+
+# --------------------------------------------------------
+# Combine all segments into one list
+# (You can add Batch 1 or other batches here too)
+# --------------------------------------------------------
+
+all_products = []
+all_products.extend(batch2_segment_a)
+all_products.extend(batch2_segment_b)
+all_products.extend(batch3_segment_c)
+all_products.extend(batch3_segment_d)
+all_products.extend(batch3_segment_e)
+
+
+# --------------------------------------------------------
+# Write to JSONL file
+# --------------------------------------------------------
+
+def write_jsonl(products, output_path: str | Path) -> None:
+    output_path = Path(output_path)
+    with output_path.open("w", encoding="utf-8") as f:
+        for product in products:
+            f.write(json.dumps(product, ensure_ascii=False) + "\n")
+
+
+if __name__ == "__main__":
+    # Adjust the output path as needed
+    write_jsonl(all_products, "src/data/tour_catalog_segments_b2_b3.jsonl")
+    print(f"Wrote {len(all_products)} products to src/data/tour_catalog_segments_b2_b3.jsonl")

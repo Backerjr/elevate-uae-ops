@@ -15,8 +15,6 @@ import {
   BookOpen,
   Zap
 } from 'lucide-react';
-import './Dashboard.css';
-
 type TabId = 'tours' | 'calculator' | 'scripts' | 'pricing' | 'reference';
 
 interface DashboardProps {
