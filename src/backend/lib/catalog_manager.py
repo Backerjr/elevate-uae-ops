@@ -122,30 +122,46 @@ class CatalogManager:
         os.replace(tmp_path, self.db_path)
 
     def upsert_batch(self, new_products: List[Dict[str, Any]]) -> int:
-        validated_products = []
-        for idx, product_data in enumerate(new_products):
-            try:
-                product = Product(**product_data)
-                validated_products.append(product.model_dump())
-            except ValidationError as e:
-                product_id = product_data.get('product_id', f'index_{idx}')
-                raise ValidationError.from_exception_data(
-                    title=f"Validation failed for product: {product_id}",
-                    line_errors=e.errors()
-                )
-
         with CatalogLock(self.db_path):
-            self._create_backup()
-            
             existing_data = self._load_data()
-            product_dict = {p['product_id']: p for p in existing_data}
-            
-            for product in validated_products:
-                product_dict[product['product_id']] = product
-            
+            product_dict = {
+                p["product_id"]: p for p in existing_data if isinstance(p, dict) and p.get("product_id")
+            }
+
+            validated_count = 0
+
+            for idx, product_data in enumerate(new_products):
+                if not isinstance(product_data, dict):
+                    raise ValueError(f"Invalid product record at index {idx}: expected object")
+
+                product_id = product_data.get("product_id")
+                if not product_id:
+                    raise ValueError(f"Missing product_id for record at index {idx}")
+
+                base = product_dict.get(product_id, {})
+                merged: Dict[str, Any] = dict(base)
+                merged.update(product_data)
+
+                if "pricing" not in merged:
+                    merged["pricing"] = []
+                if "inclusions" not in merged:
+                    merged["inclusions"] = []
+
+                try:
+                    product = Product(**merged)
+                except ValidationError as e:
+                    raise ValidationError.from_exception_data(
+                        title=f"Validation failed for product: {product_id}",
+                        line_errors=e.errors(),
+                    )
+
+                product_dict[product_id] = product.model_dump()
+                validated_count += 1
+
+            self._create_backup()
             updated_list = list(product_dict.values())
             self._save_data(updated_list)
-            
+
             self._cleanup_old_backups()
-        
-        return len(validated_products)
+
+        return validated_count

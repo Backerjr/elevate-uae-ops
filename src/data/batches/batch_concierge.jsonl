@@ -1,0 +1,2 @@
+{"product_id": "Concierge_BirthdayCake", "product_name": "Celebration Cake (1KG)", "supplier_name": "Rayna Concierge", "category": "Concierge", "pricing": [{"tier_name": "Standard", "price_aed": 300, "currency": "AED"}], "active": true}
+{"product_id": "Concierge_PrivateButler", "product_name": "Private Butler Service", "supplier_name": "Rayna Concierge", "category": "Concierge", "pricing": [{"tier_name": "Per Event", "price_aed": 350, "currency": "AED"}], "active": true}

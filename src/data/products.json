@@ -1508,7 +1508,7 @@
   },
   {
     "product_id": "Musandam_DibbaCruise",
-    "product_name": "Musandam Dibba Cruise",
+    "product_name": "Escape to Musandam (Dibba Full Day Cruise)",
     "pricing": [
       {
         "tier_name": "TBD",
@@ -1519,17 +1519,16 @@
       }
     ],
     "inclusions": [
+      "Border Pass",
       "Buffet Lunch",
       "Snorkeling",
-      "Banana Boat Ride",
-      "Cave Visit",
-      "Border Permit"
+      "Banana Boat Ride"
     ],
     "active": true,
-    "supplier_name": null,
-    "destination_city": "Musandam",
+    "supplier_name": "Musandam Tourism",
+    "destination_city": "Dibba / Oman",
     "category": "Cruise",
-    "description_short": "Day cruise with activities in Musandam Dibba.",
+    "description_short": "Full day dhow cruise with lunch and water sports.",
     "description_long": "Musandam Dibba dhow cruise including lunch and water activities; border permit required.",
     "duration_hours": 9.0,
     "exclusions": [],
@@ -1650,6 +1649,210 @@
     "description_long": "Concierge service: private butler for an event.",
     "duration_hours": null,
     "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Dubai_ClassicHalfDayCityTour",
+    "product_name": "Classic Half Day Dubai City Tour",
+    "pricing": [],
+    "inclusions": [
+      "Hotel Pickup/Dropoff",
+      "Zabeel Palace Photo Stop",
+      "Bastakiya Visit",
+      "Abra Ride",
+      "Spice & Gold Souq Visit"
+    ],
+    "active": true,
+    "supplier_name": "Rayna Tours",
+    "destination_city": "Dubai",
+    "category": "Sightseeing",
+    "description_short": "A comprehensive 6-hour tour covering Old and New Dubai highlights.",
+    "description_long": "Embark on a captivating journey through Dubai. Stops include Zabeel Palace (Photo), Dubai Frame (Photo), Bastakiya Heritage District, Abra Ride across the Creek, and the Gold & Spice Souqs.",
+    "duration_hours": 6.0,
+    "exclusions": [
+      "Lunch",
+      "Shopping expenses"
+    ],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "AbuDhabi_CityTour_Standard",
+    "product_name": "Abu Dhabi City Tour (Standard)",
+    "pricing": [],
+    "inclusions": [
+      "Sheikh Zayed Grand Mosque",
+      "Heritage Village",
+      "Corniche Drive",
+      "Dates Market"
+    ],
+    "active": true,
+    "supplier_name": "Rayna Tours",
+    "destination_city": "Abu Dhabi",
+    "category": "Sightseeing",
+    "description_short": "Full day tour of the UAE capital including Sheikh Zayed Mosque.",
+    "description_long": null,
+    "duration_hours": 11.0,
+    "exclusions": null,
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Dubai_Yacht_Marina_90Min",
+    "product_name": "90-Min Sightseeing Yacht Tour",
+    "pricing": [
+      {
+        "tier_name": "Adult",
+        "price_aed": 160.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      },
+      {
+        "tier_name": "Child",
+        "price_aed": 120.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": "Xclusive Yachts",
+    "destination_city": "Dubai",
+    "category": "Cruise",
+    "description_short": null,
+    "description_long": null,
+    "duration_hours": 1.5,
+    "exclusions": null,
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Addon_Quad_350cc",
+    "product_name": "Quad Bike 350CC (Single Seater)",
+    "pricing": [
+      {
+        "tier_name": "30 Mins",
+        "price_aed": 350.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": "Rayna Tours",
+    "destination_city": "Dubai (Desert)",
+    "category": "Adventure",
+    "description_short": null,
+    "description_long": null,
+    "duration_hours": 0.5,
+    "exclusions": null,
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Addon_Quad_570cc",
+    "product_name": "Quad Bike 570CC Sportsman (2 Seater)",
+    "pricing": [
+      {
+        "tier_name": "30 Mins",
+        "price_aed": 500.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": "Rayna Tours",
+    "destination_city": "Dubai (Desert)",
+    "category": "Adventure",
+    "description_short": null,
+    "description_long": null,
+    "duration_hours": 0.5,
+    "exclusions": null,
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Addon_Buggy_1000cc",
+    "product_name": "Polaris RZR 1000CC Buggy (4 Seater)",
+    "pricing": [
+      {
+        "tier_name": "30 Mins",
+        "price_aed": 650.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      },
+      {
+        "tier_name": "60 Mins",
+        "price_aed": 900.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": "Rayna Tours",
+    "destination_city": "Dubai (Desert)",
+    "category": "Adventure",
+    "description_short": null,
+    "description_long": null,
+    "duration_hours": 0.5,
+    "exclusions": null,
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Concierge_BirthdayCake",
+    "product_name": "Celebration Cake (1KG)",
+    "pricing": [
+      {
+        "tier_name": "Standard",
+        "price_aed": 300.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": "Rayna Concierge",
+    "destination_city": null,
+    "category": "Concierge",
+    "description_short": null,
+    "description_long": null,
+    "duration_hours": null,
+    "exclusions": null,
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Concierge_PrivateButler",
+    "product_name": "Private Butler Service",
+    "pricing": [
+      {
+        "tier_name": "Per Event",
+        "price_aed": 350.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": "Rayna Concierge",
+    "destination_city": null,
+    "category": "Concierge",
+    "description_short": null,
+    "description_long": null,
+    "duration_hours": null,
+    "exclusions": null,
     "booking_policy": null,
     "source_document": null
   }
