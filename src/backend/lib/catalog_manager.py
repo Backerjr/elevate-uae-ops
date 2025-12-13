@@ -43,8 +43,10 @@ class Product(BaseModel):
     @field_validator('pricing')
     @classmethod
     def validate_pricing(cls, v):
-        if not v:
-            raise ValueError('pricing must contain at least one tier')
+        if v is None:
+            return []
+        if len(v) == 0:
+            return []
         return [PricingTier(**tier) if isinstance(tier, dict) else tier for tier in v]
 
 

@@ -1,34 +1,66 @@
-export const whatsappScripts = [
+export interface Script {
+  id: string;
+  title: string;
+  category: "Introduction" | "Objection Handling" | "Closing" | "Follow Up" | "VIP";
+  text: string;
+  tags?: string[];
+}
+
+export const whatsappScripts: Script[] = [
   {
-    id: "wa_warm_welcome",
-    title: "Warm Welcome (Inbound)",
-    category: "Outreach",
-    content:
-      "Hi [Name]! 👋 This is [Agent Name] from Rayna Tours. I received your request for the [Tour Name]. \n\nI’m reviewing the availability now—are you looking for a standard experience or would you prefer the VIP upgrade with private transfers? 🚗✨",
-    tags: ["Inbound", "Qualifying"],
+    id: "intro_ahmed",
+    title: "1. Warm Welcome (Ahmed Style)",
+    category: "Introduction",
+    text: "Hey! Welcome to Dubai, I'm Ahmed with Rayna Tours. You tell me what you want, I'll make it happen—no pressure, no chaos. I'll handle everything, you just enjoy.",
+    tags: ["New Lead", "Casual"],
   },
   {
-    id: "wa_price_drop",
-    title: "Price Drop Alert (Re-engagement)",
-    category: "Follow-up",
-    content:
-      "Hi [Name], quick update! 🚨 We just had a price drop for the [Tour Name] on [Date]. \n\nIt’s now available for [New Price] instead of [Old Price]. 📉\n\nI can hold this rate for you until 5 PM today. Shall I send the booking link?",
-    tags: ["Urgency", "Discount"],
+    id: "objection_price",
+    title: "2. Price Doubt Killer",
+    category: "Objection Handling",
+    text: "I know you'll find cheaper out there—I won't lie. But you won't find *me* out there. I make sure everything runs smooth, no last-minute stress, and I'm always one message away. That's the difference.",
+    tags: ["High Price", "Trust"],
   },
   {
-    id: "wa_concierge_close",
-    title: "The 'Concierge' Close",
+    id: "closing_locked",
+    title: "3. Booking Confirmation Hype",
     category: "Closing",
-    content:
-      "Great choice, [Name]. I’ve drafted your itinerary. 📝\n\nTo finalize the [Tour Name], I just need a quick confirmation on the pickup time: \nOption A: 2:00 PM (Leisurely start)\nOption B: 3:30 PM (Catch the sunset directly)\n\nWhich works better for you?",
-    tags: ["Closing", "Options"],
+    text: "Alright, we're locked in! I'll personally follow up to make sure your experience is as smooth as your dune ride's gonna be. You're in good hands.",
+    tags: ["Confirmed"],
   },
   {
-    id: "wa_payment_link",
-    title: "Payment Link Delivery",
-    category: "Closing",
-    content:
-      "All set, [Name]! 🎟️\n\nHere is your secure payment link for the [Tour Name]: [Link]\n\nOnce completed, you’ll receive the voucher instantly on WhatsApp. Let me know if you have any trouble!",
-    tags: ["Transaction", "Admin"],
+    id: "followup_post_trip",
+    title: "4. Post-Experience Check-in",
+    category: "Follow Up",
+    text: "Hey! Hope you had the best time today. Just checking in to see how everything went. And hey—if you need anything else while you're in Dubai, you already know who to message.",
+    tags: ["Review"],
   },
-] as const;
+  {
+    id: "urgency_snooze",
+    title: "5. Urgency (Snooze = Lose)",
+    category: "Follow Up",
+    text: "Hey hey—quick heads-up, spots are filling fast, so if you're still thinking about it, let me know. I'd hate for you to miss out on a perfect day just 'cause we waited too long.",
+    tags: ["Urgency"],
+  },
+  {
+    id: "upsell_luxury",
+    title: "6. Luxury Recommendation",
+    category: "VIP",
+    text: "For my premium guests, I always recommend this one—everything's done right, smooth, and no surprises. If you're looking for comfort and quality, this is the one.",
+    tags: ["Premium", "Upsell"],
+  },
+  {
+    id: "upsell_exclusive",
+    title: "7. VIP Flattery",
+    category: "VIP",
+    text: "I saved this option just for you, because honestly? It fits your style. It's classy, private, and guaranteed to impress—just like you. Let me know if I should lock it in.",
+    tags: ["VIP", "High Net Worth"],
+  },
+  {
+    id: "sign_off",
+    title: "Bonus: Signature Sign-Off",
+    category: "Closing",
+    text: "If you want it done right—done smooth—you already know. Just message me. I'm Ahmed, and I've got you covered.",
+    tags: ["Branding"],
+  },
+];
