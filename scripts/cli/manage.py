@@ -180,13 +180,13 @@ class CatalogCLI:
                 if product.get('active', True):
                     active_count += 1
                 
-                cat = product.get('category', 'Uncategorized')
+                cat = product.get('category') or 'Uncategorized'
                 categories[cat] = categories.get(cat, 0) + 1
                 
-                city = product.get('destination_city', 'Unknown')
+                city = product.get('destination_city') or 'Unknown'
                 cities[city] = cities.get(city, 0) + 1
                 
-                supplier = product.get('supplier_name', 'Unknown')
+                supplier = product.get('supplier_name') or 'Unknown'
                 suppliers[supplier] = suppliers.get(supplier, 0) + 1
             
             print(f"Active Products:     {active_count}")
