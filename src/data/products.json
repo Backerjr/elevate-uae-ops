@@ -1445,5 +1445,212 @@
     "source_document": [
       "Rayna-Travel Desk-Learning Manual_V1.3.docx"
     ]
+  },
+  {
+    "product_id": "Dubai_ClassicCityTour",
+    "product_name": "Classic Half Day Dubai City Tour",
+    "pricing": [
+      {
+        "tier_name": "TBD",
+        "price_aed": 0.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [
+      "Zabeel Palace Photo Stop",
+      "Dubai Frame Photo Stop",
+      "Bastakiya Visit",
+      "Abra Ride",
+      "Spice & Gold Souq"
+    ],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Dubai",
+    "category": "Sightseeing",
+    "description_short": "Classic half-day Dubai sightseeing tour.",
+    "description_long": "Classic half-day Dubai city tour covering key photo stops and heritage highlights.",
+    "duration_hours": 6.0,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "AbuDhabi_StandardCity",
+    "product_name": "Abu Dhabi City Tour",
+    "pricing": [
+      {
+        "tier_name": "TBD",
+        "price_aed": 0.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [
+      "Sheikh Zayed Mosque",
+      "Heritage Village",
+      "Corniche Drive",
+      "Dates Market",
+      "Ferrari World Photo Stop"
+    ],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Abu Dhabi",
+    "category": "Sightseeing",
+    "description_short": "Full-day Abu Dhabi city tour.",
+    "description_long": "Full-day Abu Dhabi city tour with major landmarks and photo stops.",
+    "duration_hours": 11.0,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Musandam_DibbaCruise",
+    "product_name": "Musandam Dibba Cruise",
+    "pricing": [
+      {
+        "tier_name": "TBD",
+        "price_aed": 0.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [
+      "Buffet Lunch",
+      "Snorkeling",
+      "Banana Boat Ride",
+      "Cave Visit",
+      "Border Permit"
+    ],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Musandam",
+    "category": "Cruise",
+    "description_short": "Day cruise with activities in Musandam Dibba.",
+    "description_long": "Musandam Dibba dhow cruise including lunch and water activities; border permit required.",
+    "duration_hours": 9.0,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Adventure_QuadBike",
+    "product_name": "Quad Bike Experience",
+    "pricing": [
+      {
+        "tier_name": "350CC Single",
+        "price_aed": 350.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      },
+      {
+        "tier_name": "570CC Single",
+        "price_aed": 500.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Dubai",
+    "category": "Adventure",
+    "description_short": "1-hour quad bike experience.",
+    "description_long": "Guided quad bike experience with tiered engine options.",
+    "duration_hours": 1.0,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Adventure_DuneBuggy",
+    "product_name": "Dune Buggy Adventure",
+    "pricing": [
+      {
+        "tier_name": "Polaris 570CC (2-Seater)",
+        "price_aed": 600.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      },
+      {
+        "tier_name": "Can-Am 1000CC (2-Seater)",
+        "price_aed": 1200.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Dubai",
+    "category": "Adventure",
+    "description_short": "1-hour dune buggy ride.",
+    "description_long": "Dune buggy adventure with multiple vehicle options.",
+    "duration_hours": 1.0,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Concierge_Cake",
+    "product_name": "Celebration Cake",
+    "pricing": [
+      {
+        "tier_name": "Standard 1KG",
+        "price_aed": 300.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      },
+      {
+        "tier_name": "Special Flavour",
+        "price_aed": 400.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Dubai",
+    "category": "Concierge",
+    "description_short": "Add-on celebration cake.",
+    "description_long": "Concierge add-on: celebration cake options.",
+    "duration_hours": null,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
+  },
+  {
+    "product_id": "Concierge_Butler",
+    "product_name": "Private Butler Service",
+    "pricing": [
+      {
+        "tier_name": "Per Event",
+        "price_aed": 350.0,
+        "currency": "AED",
+        "validity_start": null,
+        "validity_end": null
+      }
+    ],
+    "inclusions": [],
+    "active": true,
+    "supplier_name": null,
+    "destination_city": "Dubai",
+    "category": "Concierge",
+    "description_short": "Private butler service for an event.",
+    "description_long": "Concierge service: private butler for an event.",
+    "duration_hours": null,
+    "exclusions": [],
+    "booking_policy": null,
+    "source_document": null
   }
 ]
