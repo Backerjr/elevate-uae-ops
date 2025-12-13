@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { tours, vehicleRates, whatsappScripts, comboPackages, brandPillars, type Tour } from '@/data/playbook-data';
-import catalogData from '@/data/products.json';
+import catalogData from '@data/products.json';
 import { QuickReference } from './QuickReference';
 import { 
   Map, 
@@ -28,37 +28,18 @@ interface DashboardProps {
 export function Dashboard({ onNavigate }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<'tours' | 'catalog' | 'scripts' | 'combos' | 'vehicles'>('tours');
 
-  const mapCatalogCategory = (category: string): Tour['category'] => {
-    const normalized = category.toLowerCase();
-    if (normalized.includes('adventure')) return 'adventure';
-    if (normalized.includes('desert')) return 'desert';
-    if (normalized.includes('cruise')) return 'cruise';
-    if (normalized.includes('dubai') || normalized.includes('sightseeing')) return 'dubai';
-    if (normalized.includes('abu')) return 'abu-dhabi';
-    return 'experience';
-  };
+  const typedCatalogData = catalogData as Array<{
+    product_id: string;
+    product_name?: string;
+    title?: string;
+    category?: string;
+    destination_city?: string;
+    description_short?: string;
+    pricing?: Array<{ price_aed?: number }>;
+  }>;
 
-  const mappedCatalogTours: Tour[] = catalogData.map((p) => ({
-    id: p.product_id,
-    name: p.product_name ?? p.title ?? "Catalog Product",
-    category: mapCatalogCategory(p.category ?? ''),
-    pickup: p.destination_city ?? 'UAE',
-    duration: p.duration_hours ? `${p.duration_hours} hrs` : 'Approx 1-3 hrs',
-    highlights: p.description_short ? [p.description_short] : [],
-    inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
-    requirements: [],
-    proTip: undefined,
-    note: undefined,
-    dressCode: undefined,
-    visualCues: ['🧭'],
-    margin: 'medium',
-    difficulty: 'easy',
-    idealFor: [p.category || 'Guests'],
-    waiverUrl: undefined,
-  }));
-
-  const allTours = [...tours, ...mappedCatalogTours];
-  const mappedCatalogProducts = catalogData.map((p) => ({
+  const allTours = tours;
+  const mappedCatalogProducts = typedCatalogData.map((p) => ({
     id: p.product_id,
     title: p.product_name ?? p.title ?? 'Catalog Product',
     category: p.category ?? 'Catalog',

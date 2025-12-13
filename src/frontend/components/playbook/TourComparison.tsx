@@ -119,14 +119,14 @@ export function TourComparison() {
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Pricing Range</p>
                   <p className="font-semibold text-primary">
-                    AED {tour.priceRange.min} - {tour.priceRange.max}
+                    {tour.priceRange ? `AED ${tour.priceRange.min} - ${tour.priceRange.max}` : '—'}
                   </p>
                 </div>
 
                 {/* Best For */}
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Best For</p>
-                  <p className="text-sm">{tour.bestFor}</p>
+                  <p className="text-sm">{tour.bestFor ?? tour.idealFor.join(', ')}</p>
                 </div>
 
                 {/* Highlights */}
@@ -149,7 +149,7 @@ export function TourComparison() {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1.5 pt-2 border-t">
-                  {tour.tags.slice(0, 3).map(tag => (
+                  {(tour.tags ?? []).slice(0, 3).map(tag => (
                     <Badge key={tag} variant="muted" className="text-xs">
                       {tag}
                     </Badge>

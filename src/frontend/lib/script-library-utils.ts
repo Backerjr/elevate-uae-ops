@@ -3,6 +3,7 @@
  * Constants and helpers for the ScriptLibrary component
  */
 
+import type { BadgeProps } from '@/components/ui/badge';
 import type { WhatsAppScript } from '@/data/playbook-data';
 
 export const categoryIcons: Record<string, string> = {
@@ -15,7 +16,7 @@ export const categoryIcons: Record<string, string> = {
   'emergency': '🚨',
 };
 
-export const categoryColors: Record<string, string> = {
+export const categoryColors: Record<string, BadgeProps["variant"]> = {
   'inquiry': 'info',
   'culture': 'success',
   'price': 'gold',

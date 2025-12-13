@@ -84,9 +84,9 @@ export function getRecommendations(answers: Record<string, string>): Recommendat
 
   const recommendedCombos = comboPackages.filter(combo => {
     if (answers.budget === 'budget' && combo.margin === 'high') return false;
-    if (answers.group === 'family' && combo.idealFor.includes('Families')) return true;
+    if (answers.group === 'family' && (combo.idealFor ?? []).includes('Families')) return true;
     if (answers.interest === 'culture' && combo.items.some(i => i.includes('Qasr') || i.includes('Abu Dhabi'))) return true;
-    return combo.idealFor.some(ideal => 
+    return (combo.idealFor ?? []).some(ideal => 
       (answers.group === 'couple' && ideal.includes('Couple')) ||
       (answers.budget === 'budget' && ideal.includes('Budget')) ||
       (answers.interest === 'adventure' && ideal.includes('Adventure'))

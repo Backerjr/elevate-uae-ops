@@ -1,5 +1,7 @@
 // Ahmed Travel | New Hire Training Playbook Data (30% retail markup applied)
 
+import catalogData from "@data/products.json";
+
 export interface Tour {
   id: string;
   name: string;
@@ -16,10 +18,13 @@ export interface Tour {
   margin: 'high' | 'medium' | 'low';
   difficulty: 'easy' | 'moderate' | 'complex';
   idealFor: string[];
+  priceRange?: { min: number; max: number };
+  bestFor?: string;
+  tags?: string[];
   waiverUrl?: string;
 }
 
-export const tours: Tour[] = [
+const hardcodedTours: Tour[] = [
   {
     id: 'dubai-full-day',
     name: 'Dubai Full-Day Explore Tour',
@@ -156,6 +161,60 @@ export const tours: Tour[] = [
     idealFor: ['Adventure seekers', 'Young adults', 'Thrill seekers']
   }
 ];
+
+type CatalogProduct = {
+  product_id?: string;
+  product_name?: string;
+  title?: string;
+  category?: string;
+  destination_city?: string;
+  duration_hours?: number;
+  description_short?: string;
+  inclusions?: unknown;
+  pricing?: Array<{ price_aed?: number }>;
+};
+
+const mapCatalogCategory = (input?: string): Tour['category'] => {
+  const normalized = (input ?? '').toLowerCase();
+  if (normalized.includes('adventure')) return 'adventure';
+  if (normalized.includes('desert')) return 'desert';
+  if (normalized.includes('cruise')) return 'cruise';
+  if (normalized.includes('dubai') || normalized.includes('sightseeing')) return 'dubai';
+  if (normalized.includes('abu')) return 'abu-dhabi';
+  return 'experience';
+};
+
+const mapCatalogProductToTour = (product: CatalogProduct, fallbackIndex: number): Tour => ({
+  id: product.product_id ?? `catalog-${fallbackIndex}`,
+  name: product.product_name ?? product.title ?? 'Catalog Product',
+  category: mapCatalogCategory(product.category),
+  pickup: product.destination_city ?? 'UAE',
+  duration: product.duration_hours ? `${product.duration_hours} hrs` : 'Approx 1–3 hrs',
+  highlights: product.description_short ? [product.description_short] : [],
+  inclusions: Array.isArray(product.inclusions) ? (product.inclusions as string[]) : [],
+  requirements: [],
+  proTip: undefined,
+  note: product.pricing?.[0]?.price_aed ? `From AED ${product.pricing[0].price_aed}` : undefined,
+  dressCode: undefined,
+  visualCues: ['🧭'],
+  margin: 'medium',
+  difficulty: 'easy',
+  idealFor: [product.category ?? 'Guests'],
+  priceRange: product.pricing?.[0]?.price_aed
+    ? { min: product.pricing[0].price_aed ?? 0, max: product.pricing[0].price_aed ?? 0 }
+    : undefined,
+  bestFor: product.category ?? undefined,
+  tags: product.category ? [product.category] : [],
+  waiverUrl: undefined,
+});
+
+const mappedCatalogTours: Tour[] = (catalogData as CatalogProduct[]).map(mapCatalogProductToTour);
+
+export const tours: Tour[] = [...hardcodedTours, ...mappedCatalogTours];
+
+if (import.meta.env?.MODE !== 'production') {
+  console.log(`[playbook-data] tours total: ${tours.length} (hardcoded: ${hardcodedTours.length}, catalog: ${mappedCatalogTours.length})`);
+}
 
 export interface VehicleRate {
   vehicle: string;
