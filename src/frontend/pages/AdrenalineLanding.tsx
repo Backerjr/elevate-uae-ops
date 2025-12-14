@@ -3,7 +3,6 @@ import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-reac
 // Static content stays in mock
 import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
 // Dynamic content comes from the generated artifact
-// @ts-ignore - Fails if script hasn't run, but safe for build if file exists
 import { VEHICLES } from '../data/landing-generated';
 
 // --- Types ---
