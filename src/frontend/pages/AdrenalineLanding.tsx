@@ -40,8 +40,10 @@ const TrustTicker = () => (
 );
 
 const baseUrl = import.meta.env.BASE_URL;
-const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, '')}`;
-const heroImage = withBase('assets/placeholders/hero.svg');
+const resolvePath = (path: string) => {
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${baseUrl}${cleanPath}`;
+};
 
 const AdrenalineLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,7 +73,7 @@ const AdrenalineLanding = () => {
         <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-zinc-900">
           <div className="absolute inset-0 z-0">
             <img
-              src={heroImage}
+              src={resolvePath("/assets/placeholders/hero.svg")}
               className="w-full h-full object-cover opacity-30"
               alt="Adrenaline desert hero"
             />
@@ -111,7 +113,7 @@ const AdrenalineLanding = () => {
                 >
                   <div className="relative aspect-[4/3] bg-zinc-800">
                     <img
-                      src={withBase(v.image)}
+                      src={resolvePath(v.image)}
                       alt={v.name}
                       className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     />
