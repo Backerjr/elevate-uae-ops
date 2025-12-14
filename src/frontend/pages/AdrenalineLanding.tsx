@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react';
 import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-react';
-import { FAQS, SAFETY_SPECS, SITE_CONFIG, VEHICLES } from '../data/landing-mock';
+import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
+import { VEHICLES } from '../data/landing-generated';
 
 const SectionHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <div className="text-center mb-12">
