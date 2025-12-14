@@ -135,27 +135,19 @@ class CatalogManager:
                     raise ValueError(f"Invalid product record at index {idx}: expected object")
 
                 product_id = product_data.get("product_id")
-                if not product_id:
-                    raise ValueError(f"Missing product_id for record at index {idx}")
-
-                base = product_dict.get(product_id, {})
+                base = product_dict.get(product_id, {}) if product_id else {}
                 merged: Dict[str, Any] = dict(base)
                 merged.update(product_data)
-
-                if "pricing" not in merged:
-                    merged["pricing"] = []
-                if "inclusions" not in merged:
-                    merged["inclusions"] = []
 
                 try:
                     product = Product(**merged)
                 except ValidationError as e:
                     raise ValidationError.from_exception_data(
-                        title=f"Validation failed for product: {product_id}",
+                        title=f"Validation failed for product: {product_id or '<missing product_id>'}",
                         line_errors=e.errors(),
                     )
 
-                product_dict[product_id] = product.model_dump()
+                product_dict[product.product_id] = product.model_dump()
                 validated_count += 1
 
             self._create_backup()
