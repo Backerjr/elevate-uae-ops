@@ -39,7 +39,9 @@ const TrustTicker = () => (
   </div>
 );
 
-const heroImage = `${import.meta.env.BASE_URL}assets/placeholders/hero.svg`;
+const baseUrl = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, '')}`;
+const heroImage = withBase('assets/placeholders/hero.svg');
 
 const AdrenalineLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -109,7 +111,7 @@ const AdrenalineLanding = () => {
                 >
                   <div className="relative aspect-[4/3] bg-zinc-800">
                     <img
-                      src={v.image}
+                      src={withBase(v.image)}
                       alt={v.name}
                       className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     />
@@ -244,7 +246,7 @@ const AdrenalineLanding = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in">
           <div className="bg-zinc-900 w-full max-w-md rounded-2xl border border-white/10 shadow-2xl relative p-8 text-center">
-            <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+            <button type="button" onClick={() => setIsModalOpen(false)} aria-label="Close" title="Close" className="absolute top-4 right-4 text-gray-400 hover:text-white">
               <X />
             </button>
             <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
