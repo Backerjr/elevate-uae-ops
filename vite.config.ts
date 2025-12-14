@@ -4,8 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  // DYNAMIC BASE: Uses repo name in prod, root in dev
-  base: mode === "production" ? "/elevate-uae-ops/" : "/",
+  // DYNAMIC BASE: Uses env override or defaults to root
+  base: process.env.VITE_BASE_PATH || "/",
   server: {
     host: "::",
     port: 8080,
