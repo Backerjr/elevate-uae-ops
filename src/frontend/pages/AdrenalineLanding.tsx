@@ -268,8 +268,13 @@ const AdrenalineLanding = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in">
           <div className="bg-zinc-900 w-full max-w-md rounded-2xl border border-white/10 shadow-2xl relative p-8 text-center">
-            <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
-              <X />
+            <button
+              onClick={() => setIsModalOpen(false)}
+              aria-label="Close dialog"
+              title="Close"
+              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+            >
+              <X aria-hidden="true" />
             </button>
             <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <Calendar className="w-8 h-8 text-amber-500" />
