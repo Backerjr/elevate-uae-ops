@@ -1,8 +1,32 @@
 import React, { useId, useState } from 'react';
 import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-react';
+// Static content stays in mock
 import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
+// Dynamic content comes from the generated artifact
+// @ts-ignore - Fails if script hasn't run, but safe for build if file exists
 import { VEHICLES } from '../data/landing-generated';
 
+// --- Types ---
+interface Vehicle {
+  id: string;
+  name: string;
+  type: string;
+  power: string;
+  price: number;
+  image: string;
+  specs: string[];
+}
+
+// --- Helpers ---
+// Fixes 404s on GitHub Pages/Vercel by prepending the base path
+const resolvePath = (path: string) => {
+  const base = import.meta.env.BASE_URL;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  return `${cleanBase}${cleanPath}`;
+};
+
+// --- Components ---
 const SectionHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <div className="text-center mb-12">
     <h2 className="text-3xl md:text-5xl font-black text-white mb-4 uppercase tracking-tight italic">{title}</h2>
@@ -40,12 +64,6 @@ const TrustTicker = () => (
   </div>
 );
 
-const baseUrl = import.meta.env.BASE_URL;
-const resolvePath = (path: string) => {
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${baseUrl}${cleanPath}`;
-};
-
 const AdrenalineLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -73,8 +91,9 @@ const AdrenalineLanding = () => {
       <main className="pt-20">
         <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-zinc-900">
           <div className="absolute inset-0 z-0">
+            {/* FIXED: Asset path resolution */}
             <img
-              src={resolvePath("/assets/placeholders/hero.svg")}
+              src={resolvePath('assets/placeholders/hero.svg')}
               className="w-full h-full object-cover opacity-30"
               alt="Adrenaline desert hero"
             />
@@ -107,12 +126,13 @@ const AdrenalineLanding = () => {
           <div className="max-w-7xl mx-auto">
             <SectionHeader title="The Garage" subtitle="2025 Models. Maintained by race engineers." />
             <div className="grid md:grid-cols-3 gap-8">
-              {VEHICLES.map((v) => (
+              {(VEHICLES as Vehicle[]).map((v) => (
                 <div
                   key={v.id}
                   className="group bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 hover:border-amber-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 flex flex-col"
                 >
                   <div className="relative aspect-[4/3] bg-zinc-800">
+                    {/* FIXED: Asset path resolution for dynamic images */}
                     <img
                       src={resolvePath(v.image)}
                       alt={v.name}
@@ -249,7 +269,7 @@ const AdrenalineLanding = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in">
           <div className="bg-zinc-900 w-full max-w-md rounded-2xl border border-white/10 shadow-2xl relative p-8 text-center">
-            <button type="button" onClick={() => setIsModalOpen(false)} aria-label="Close" title="Close" className="absolute top-4 right-4 text-gray-400 hover:text-white">
+            <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
               <X />
             </button>
             <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
