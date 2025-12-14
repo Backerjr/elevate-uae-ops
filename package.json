@@ -9,7 +9,7 @@
     "build": "vite build --config vite.config.ts",
     "build:dev": "vite build --config vite.config.ts --mode development",
     "test": "vitest",
-    "predeploy": "npm run build",
+    "predeploy": "VITE_BASE_PATH=/elevate-uae-ops/ npm run build",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
