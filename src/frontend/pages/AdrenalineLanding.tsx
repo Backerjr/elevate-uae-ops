@@ -39,6 +39,8 @@ const TrustTicker = () => (
   </div>
 );
 
+const heroImage = `${import.meta.env.BASE_URL}assets/placeholders/hero.svg`;
+
 const AdrenalineLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -67,7 +69,7 @@ const AdrenalineLanding = () => {
         <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-zinc-900">
           <div className="absolute inset-0 z-0">
             <img
-              src="/assets/placeholders/hero.svg"
+              src={heroImage}
               className="w-full h-full object-cover opacity-30"
               alt="Adrenaline desert hero"
             />
@@ -261,4 +263,3 @@ const AdrenalineLanding = () => {
 };
 
 export default AdrenalineLanding;
-

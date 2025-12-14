@@ -3,8 +3,10 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
+const repoBase = "/elevate-uae-ops/";
+
 export default defineConfig(({ mode }) => ({
-  base: "/",
+  base: mode === "production" ? repoBase : "/",
   server: {
     host: "::",
     port: 8080,
