@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import React, { useId, useState } from 'react';
 import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-react';
 // Static content stays in mock
@@ -117,7 +118,7 @@ const AdrenalineLanding = () => {
           <div className="max-w-7xl mx-auto">
             <SectionHeader title="The Garage" subtitle="2025 Models. Maintained by race engineers." />
             <div className="grid md:grid-cols-3 gap-8">
-              {(VEHICLES as Vehicle[]).map((v) => (
+              {(VEHICLES as Vehicle[]).map((v: Vehicle) => (
                 <div
                   key={v.id}
                   className="group bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 hover:border-amber-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 flex flex-col"
@@ -139,7 +140,7 @@ const AdrenalineLanding = () => {
                       <Users className="w-4 h-4" /> {v.type}
                     </p>
                     <ul className="space-y-3 mb-8 border-t border-white/5 pt-6 flex-1">
-                      {v.specs.map((feat, i) => (
+                      {v.specs.map((feat: string, i: number) => (
                         <li key={i} className="flex items-center text-gray-300 text-sm">
                           <Check className="w-4 h-4 text-amber-500 mr-3 flex-shrink-0" /> {feat}
                         </li>
@@ -173,7 +174,7 @@ const AdrenalineLanding = () => {
                 <Shield className="w-6 h-6 text-amber-500" /> SAFETY SPECS
               </h3>
               <div className="space-y-4">
-                {SAFETY_SPECS.map((spec, i) => (
+                {SAFETY_SPECS.map((spec: string, i: number) => (
                   <div
                     key={i}
                     className="bg-zinc-950 p-4 rounded-xl border border-white/5 flex items-center justify-between"
@@ -210,7 +211,7 @@ const AdrenalineLanding = () => {
           <div className="max-w-3xl mx-auto px-4">
             <SectionHeader title="Need to Know" />
             <div className="space-y-4">
-              {FAQS.map((faq, i) => {
+              {FAQS.map((faq: any, i: number) => {
                 const isOpen = openFaqIndex === i;
                 const buttonId = `${faqIdBase}-faq-btn-${i}`;
                 const panelId = `${faqIdBase}-faq-panel-${i}`;

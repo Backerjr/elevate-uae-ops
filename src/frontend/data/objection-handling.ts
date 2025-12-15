@@ -5,7 +5,7 @@ export const objectionHandlers = [
     category: "Price",
     severity: "High",
     response:
-      "I completely understand that budget is key. The reason this package is priced higher is that it includes [Premium Feature 1] and [Premium Feature 2] which standard online tickets exclude.",
+      "I completely understand that budget is key. The reason this package is priced higher is that it includes VIP Transfers and a Private Camp Area, which standard online tickets exclude.",
     followUp: "Have you checked if the cheaper option includes private 4x4 pickup?",
     proTip: "Focus on 'Value vs Cost' - cheaper often means crowded buses.",
     bulletPoints: [
@@ -20,7 +20,7 @@ export const objectionHandlers = [
     category: "Timing",
     severity: "Medium",
     response:
-      "Of course, take your time. However, just a heads-up that [Tour Name] is our most popular sunset slot and we typically sell out 48 hours in advance.",
+      "Of course, take your time. However, just a heads-up that this is our most popular sunset slot and we typically sell out 48 hours in advance.",
     followUp: "Is there a specific detail you're unsure about?",
     proTip: "Use 'Soft Urgency' - availability is real leverage.",
     bulletPoints: [
@@ -35,7 +35,7 @@ export const objectionHandlers = [
     category: "Trust",
     severity: "Critical",
     response:
-      "Safety is our #1 priority. We use only licensed, insurance-covered 4x4s and our drivers are professionally certified for desert driving. We've safely guided over 10,000 guests this year alone.",
+      "Safety is our #1 priority. We use only licensed, insurance-covered 4x4s and our drivers are professionally certified for desert driving.",
     followUp: "Would seeing our recent TripAdvisor reviews help give you peace of mind?",
     proTip: "Leaning on 'Certified' and 'Insurance' builds instant trust.",
     bulletPoints: [

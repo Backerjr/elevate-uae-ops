@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { whatsappScripts } from '@/data';
+import { whatsappScripts } from '@/data/whatsapp-scripts';
 import { Check, Copy } from 'lucide-react';
 
 export function ScriptLibrary() {
@@ -28,9 +28,9 @@ export function ScriptLibrary() {
     });
   }, [searchQuery, filterCategory]);
 
-  const handleCopyScript = (scriptId: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(scriptId);
+  const handleCopyScript = (script: typeof whatsappScripts[number]) => {
+    navigator.clipboard.writeText(script.text);
+    setCopiedId(script.id);
     setTimeout(() => setCopiedId(''), 1800);
   };
 
@@ -84,7 +84,7 @@ export function ScriptLibrary() {
                   className="opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCopyScript(script.id, script.text);
+                    handleCopyScript(script);
                   }}
                 >
                   {copiedId === script.id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
