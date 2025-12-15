@@ -1,200 +1,184 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { tours, type Tour } from '@/data/playbook-data';
-import { Clock, MapPin, Users, Star, ChevronDown, ChevronUp, Lightbulb, AlertCircle } from 'lucide-react';
-import { categoryLabels, marginColors } from '@/lib/tour-catalog-utils';
+/* src/frontend/components/playbook/TourCatalog.tsx */
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Clock, MapPin, Tag } from 'lucide-react';
 
-interface TourCardProps {
-  tour: Tour;
-  isExpanded: boolean;
-  onToggle: () => void;
-  delay: number;
+// --- Type Definitions for Tour Data ---
+interface Inclusion {
+  id: number;
+  name: string;
 }
 
-function TourCard({ tour, isExpanded, onToggle, delay }: TourCardProps) {
+interface TourHighlight {
+  id: number;
+  name: string;
+}
+
+interface Tour {
+  id: string;
+  title: string;
+  description: string;
+  status: 'active' | 'archived' | 'pending';
+  destination: string;
+  duration: string;
+  heroImageUrl?: string;
+  highlights: TourHighlight[];
+  inclusions: Inclusion[];
+}
+
+// --- Mock Data (for demonstration purposes) ---
+const mockTours: Tour[] = [
+  {
+    id: 'T1001',
+    title: 'Arabian Sands Adventure',
+    description: 'Experience the majesty of the desert with a thrilling 4x4 dune bashing adventure and a serene sunset camel ride.',
+    status: 'active',
+    destination: 'Dubai Desert Conservation Reserve',
+    duration: '6 hours',
+    heroImageUrl: '/assets/placeholders/hero_desert_1.jpg',
+    highlights: [{ id: 1, name: 'Private Dune Buggy' }, { id: 2, name: 'Sunset Camel Ride' }],
+    inclusions: [{ id: 1, name: 'Gourmet Dinner' }, { id: 2, name: 'Transportation' }],
+  },
+  {
+    id: 'T1002',
+    title: 'Opulent Cityscape Tour',
+    description: 'A luxurious journey through Dubai\'s iconic landmarks, from the Burj Khalifa to the Palm Jumeirah.',
+    status: 'pending',
+    destination: 'Downtown Dubai',
+    duration: '4 hours',
+    heroImageUrl: '/assets/placeholders/hero_city_2.jpg',
+    highlights: [{ id: 1, name: 'Burj Khalifa Access' }, { id: 2, name: 'Luxury Yacht Cruise' }],
+    inclusions: [{ id: 1, name: 'Personal Photographer' }, { id: 2, name: 'Champagne Toast' }],
+  },
+  {
+    id: 'T1003',
+    title: 'Underwater Sanctuary',
+    description: 'Discover the vibrant marine life of the Arabian Gulf. Snorkeling or diving in crystal clear waters.',
+    status: 'active',
+    destination: 'Fujairah Coast',
+    duration: 'Full Day',
+    heroImageUrl: '/assets/placeholders/hero_water_3.jpg',
+    highlights: [{ id: 1, name: 'Guided Snorkeling Tour' }, { id: 2, name: 'PADI Certified Instructors' }],
+    inclusions: [{ id: 1, name: 'Equipment Rental' }, { id: 2, name: 'Beachfront Lunch' }],
+  },
+];
+
+// --- Tour Card Component (Redesigned) ---
+const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Define hover styles for glassmorphism and gold glow
+  const cardStyles = `
+    glass-card rounded-xl overflow-hidden
+    transition-all duration-300 ease-in-out
+    hover:scale-[1.02] hover:shadow-primary/50 hover:shadow-2xl
+  `;
+
+  // Determine badge style based on status
+  const badgeClass = tour.status === 'active'
+    ? 'border-primary text-primary'
+    : 'border-white/50 text-white/70';
+
   return (
-    <Card 
-      variant="elevated" 
-      className={`animate-slide-up cursor-pointer hover:scale-[1.02] transition-all duration-300`}
-      style={{ animationDelay: `${delay * 0.1}s` }}
-      onClick={onToggle}
-    >
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="space-y-2">
-            <div className="flex flex-wrap gap-1.5">
-              <Badge variant={tour.category}>{categoryLabels[tour.category]}</Badge>
-              <Badge variant={marginColors[tour.margin]}>
-                {tour.margin === 'high' ? '💰 High Margin' : tour.margin === 'medium' ? 'Med Margin' : 'Budget'}
-              </Badge>
-            </div>
-            <CardTitle className="text-lg">{tour.name}</CardTitle>
+    <div className={cardStyles}>
+      {/* --- Card Header: Hero Image with Gold Overlay --- */}
+      <div className="relative h-64">
+        <img
+          src={tour.heroImageUrl || '/assets/placeholders/hero.svg'} // Placeholder image
+          alt={tour.title}
+          className="w-full h-full object-cover"
+        />
+        {/* Gold Accent Overlay and Status Badge */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60"></div>
+        <div className="absolute bottom-0 left-0 p-4 w-full flex justify-between items-end">
+          <span className={`px-4 py-1 text-sm font-semibold rounded-full border ${badgeClass}`}>
+            {tour.status}
+          </span>
+        </div>
+      </div>
+
+      {/* --- Card Content --- */}
+      <div className="p-6">
+        {/* Tour Title - Use font-display for luxury aesthetic */}
+        <h3 className="text-3xl font-display text-primary mb-2 leading-tight">
+          {tour.title}
+        </h3>
+        {/* Tour Description */}
+        <p className="text-white/80 line-clamp-3 mb-4">{tour.description}</p>
+
+        {/* --- Key Details (Iconography) --- */}
+        <div className="space-y-3 mb-4 text-white/90">
+          <div className="flex items-center space-x-3">
+            <MapPin className="w-5 h-5 text-primary" />
+            <span className="text-sm">{tour.destination}</span>
           </div>
-          <div className="text-2xl">{tour.visualCues[0]}</div>
-        </div>
-        <CardDescription className="flex flex-wrap items-center gap-3 mt-2">
-          <span className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            {tour.duration}
-          </span>
-          <span className="flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5" />
-            {tour.pickup}
-          </span>
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        {/* Visual Cues */}
-        <div className="flex gap-2 text-xl">
-          {tour.visualCues.map((cue, i) => (
-            <span key={i}>{cue}</span>
-          ))}
+          <div className="flex items-center space-x-3">
+            <Clock className="w-5 h-5 text-primary" />
+            <span className="text-sm">{tour.duration}</span>
+          </div>
         </div>
 
-        {/* Ideal For */}
-        <div className="flex flex-wrap gap-1.5">
-          {tour.idealFor.map(tag => (
-            <Badge key={tag} variant="muted" className="text-xs">
-              <Users className="h-3 w-3 mr-1" />
-              {tag}
-            </Badge>
-          ))}
-        </div>
-
-        {/* Expandable Details */}
+        {/* --- Collapsible Details Area --- */}
         {isExpanded && (
-          <div className="pt-4 border-t border-border space-y-4 animate-fade-in">
-            {/* Highlights */}
+          <div className="space-y-4 pt-4 border-t border-muted">
+            {/* Highlights Section */}
             <div>
-              <h4 className="font-semibold text-sm mb-2 flex items-center gap-1.5">
-                <Star className="h-4 w-4 text-primary" />
-                Highlights
-              </h4>
-              <ul className="space-y-1">
-                {tour.highlights.map((h, i) => (
-                  <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    {h}
+              <h4 className="text-md font-display text-primary mb-2">Highlights</h4>
+              <ul className="grid grid-cols-2 gap-y-2 text-sm text-white/80">
+                {tour.highlights.map(h => (
+                  <li key={h.id} className="flex items-center">
+                    <div className="w-1 h-1 bg-primary rounded-full mr-2"></div>
+                    {h.name}
                   </li>
                 ))}
               </ul>
             </div>
-
-            {/* Inclusions */}
-            {tour.inclusions && (
-              <div>
-                <h4 className="font-semibold text-sm mb-2">Inclusions</h4>
-                <ul className="space-y-1">
-                  {tour.inclusions.map((inc, i) => (
-                    <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-success mt-0.5">✓</span>
-                      {inc}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Requirements */}
-            {tour.requirements && (
-              <div>
-                <h4 className="font-semibold text-sm mb-2 flex items-center gap-1.5">
-                  <AlertCircle className="h-4 w-4 text-warning" />
-                  Requirements
-                </h4>
-                <ul className="space-y-1">
-                  {tour.requirements.map((req, i) => (
-                    <li key={i} className="text-sm text-muted-foreground">• {req}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Pro Tip / Notes */}
-            {(tour.proTip || tour.note || tour.dressCode) && (
-              <div className="bg-primary/5 rounded-lg p-3">
-                {tour.proTip && (
-                  <p className="text-sm flex items-start gap-2">
-                    <Lightbulb className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span><strong>Pro Tip:</strong> {tour.proTip}</span>
-                  </p>
-                )}
-                {tour.note && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    <strong>Note:</strong> {tour.note}
-                  </p>
-                )}
-                {tour.dressCode && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    <strong>Dress Code:</strong> {tour.dressCode}
-                  </p>
-                )}
-              </div>
-            )}
+            {/* Inclusions Section */}
+            <div>
+              <h4 className="text-md font-display text-primary mb-2">Inclusions</h4>
+              <ul className="grid grid-cols-2 gap-y-2 text-sm text-white/80">
+                {tour.inclusions.map(i => (
+                  <li key={i.id} className="flex items-center">
+                    <div className="w-1 h-1 bg-primary rounded-full mr-2"></div>
+                    {i.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
 
-        {/* Toggle Button */}
-        <Button variant="ghost" size="sm" className="w-full" onClick={(e) => { e.stopPropagation(); onToggle(); }}>
-          {isExpanded ? (
-            <>Less Details <ChevronUp className="h-4 w-4 ml-1" /></>
-          ) : (
-            <>More Details <ChevronDown className="h-4 w-4 ml-1" /></>
-          )}
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
-
-export function TourCatalog() {
-  const [expandedTour, setExpandedTour] = useState<string | null>(null);
-  const [filterCategory, setFilterCategory] = useState<string | null>(null);
-
-  const filteredTours = filterCategory 
-    ? tours.filter(tour => tour.category === filterCategory)
-    : tours;
-
-  const categories = Array.from(new Set(tours.map(t => t.category)));
-
-  return (
-    <div className="space-y-6">
-      {/* Category Filters */}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant={filterCategory === null ? 'gold' : 'outline'}
-          size="sm"
-          onClick={() => setFilterCategory(null)}
+        {/* --- Expand/Collapse Toggle Button --- */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full mt-4 flex justify-center items-center text-sm font-semibold text-primary/80 hover:text-primary transition-colors duration-200"
         >
-          All Tours
-        </Button>
-        {categories.map(cat => (
-          <Button
-            key={cat}
-            variant={filterCategory === cat ? 'gold' : 'outline'}
-            size="sm"
-            onClick={() => setFilterCategory(cat)}
-          >
-            {categoryLabels[cat]}
-          </Button>
-        ))}
+          {isExpanded ? (
+            <>
+              Show Less <ChevronUp className="w-4 h-4 ml-2" />
+            </>
+          ) : (
+            <>
+              Show More <ChevronDown className="w-4 h-4 ml-2" />
+            </>
+          )}
+        </button>
       </div>
+    </div>
+  );
+};
 
-      {/* Tour Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filteredTours.map((tour, index) => (
-          <TourCard 
-            key={tour.id} 
-            tour={tour} 
-            isExpanded={expandedTour === tour.id}
-            onToggle={() => setExpandedTour(expandedTour === tour.id ? null : tour.id)}
-            delay={index}
-          />
+// --- Tour Catalog Component ---
+const TourCatalog: React.FC = () => {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {/* Grid Layout: 1 column on mobile, 2 on tablet, 3 on desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {mockTours.map(tour => (
+          <TourCard key={tour.id} tour={tour} />
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default TourCatalog;
