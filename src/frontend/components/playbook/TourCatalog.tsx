@@ -168,7 +168,11 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
 };
 
 // --- Tour Catalog Component ---
-const TourCatalog: React.FC = () => {
+/**
+ * Changed from `export default TourCatalog;` to a named export.
+ * This resolves the build error where `Index.tsx` expects `{ TourCatalog }` (named import).
+ */
+export const TourCatalog: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Grid Layout: 1 column on mobile, 2 on tablet, 3 on desktop */}
@@ -180,5 +184,3 @@ const TourCatalog: React.FC = () => {
     </div>
   );
 };
-
-export default TourCatalog;
