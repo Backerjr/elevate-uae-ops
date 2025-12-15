@@ -78,18 +78,22 @@ export function CommunicationLibrary() {
                 <AccordionItem value={item.id} key={item.id} className="border border-border rounded-lg px-3">
                   <AccordionTrigger className="text-left">
                     <div className="flex items-center gap-2">
-                      <ShieldAlert className="h-4 w-4 text-warning" />
-                      <span>{item.objection}</span>
-                      <Badge variant="warning" className="ml-2">{item.category}</Badge>
+                      <ShieldAlert className="h-4 w-4 text-primary" />
+                      <div className="text-left">
+                        <div className="font-semibold">{item.title}</div>
+                        <div className="text-xs text-muted-foreground">{item.category}</div>
+                      </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="space-y-3 pb-4">
-                    <p className="text-sm text-foreground">{item.response}</p>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                      {item.bulletPoints.map((point) => (
-                        <li key={point}>{point}</li>
+                  <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                    <div className="space-y-2">
+                      {item.handlers.map((handler, idx) => (
+                        <div key={idx} className="p-2 rounded-md bg-muted/40">
+                          <div className="font-semibold">{handler.objection}</div>
+                          <p className="mt-1 text-muted-foreground whitespace-pre-line">{handler.response}</p>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               ))}

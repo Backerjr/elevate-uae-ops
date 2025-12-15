@@ -118,79 +118,37 @@ export function TourComparison() {
                 {/* Pricing */}
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Pricing Range</p>
-                  <p className="font-semibold text-primary">
-                    {tour.priceRange ? `AED ${tour.priceRange.min} - ${tour.priceRange.max}` : '—'}
-                  </p>
+                  <p className="font-semibold">{tour.priceRange ? `${tour.priceRange.min} - ${tour.priceRange.max}` : 'Varies'}</p>
                 </div>
 
-                {/* Best For */}
+                {/* Inclusions */}
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">Best For</p>
-                  <p className="text-sm">{tour.bestFor ?? tour.idealFor.join(', ')}</p>
-                </div>
-
-                {/* Highlights */}
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2">Highlights</p>
-                  <div className="space-y-1">
-                    {tour.highlights.slice(0, 3).map((highlight, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-sm">
-                        <Check className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-muted-foreground mb-1">Highlights</p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    {tour.highlights.map((highlight, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <Check className="h-4 w-4 text-primary" />
                         <span>{highlight}</span>
-                      </div>
+                      </li>
                     ))}
-                    {tour.highlights.length > 3 && (
-                      <p className="text-xs text-muted-foreground pl-6">
-                        +{tour.highlights.length - 3} more
-                      </p>
-                    )}
-                  </div>
+                  </ul>
                 </div>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t">
-                  {(tour.tags ?? []).slice(0, 3).map(tag => (
-                    <Badge key={tag} variant="muted" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
+                {/* Ideal For */}
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Ideal For</p>
+                  <div className="flex flex-wrap gap-2">
+                    {tour.idealFor.map((tag, i) => (
+                      <Badge key={i} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-
-          {/* Add More Placeholder */}
-          {selectedTours.length < MAX_TOURS_TO_COMPARE && (
-            <Card 
-              variant="muted" 
-              className="flex items-center justify-center min-h-[400px] cursor-pointer hover:bg-muted/80 transition-colors"
-              onClick={() => document.querySelector<HTMLButtonElement>('[role="combobox"]')?.click()}
-            >
-              <div className="text-center">
-                <Plus className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">
-                  Add another tour to compare
-                </p>
-              </div>
-            </Card>
-          )}
         </div>
-      )}
-
-      {/* Comparison Tips */}
-      {selectedTours.length > 0 && (
-        <Card variant="gradient">
-          <CardHeader>
-            <CardTitle className="text-base">Comparison Tips</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Use this comparison to help clients visualize differences in duration, pricing, and experiences</li>
-              <li>• Highlight the unique value proposition of each tour based on client preferences</li>
-              <li>• Consider combining complementary tours for multi-day packages</li>
-            </ul>
-          </CardContent>
-        </Card>
       )}
     </div>
   );
