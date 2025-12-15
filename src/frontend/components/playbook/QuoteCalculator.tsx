@@ -6,24 +6,60 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { vehicleRates, zones, attractions, comboPackages } from '@/data/playbook-data';
-import { Calculator, Car, MapPin, Ticket, Package, Copy, Check, Users, Plus, Minus } from 'lucide-react';
+import { Calculator, Car, MapPin, Ticket, Package, Copy, Check, Users, Minus, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function QuoteCalculator() {
   const [vehicle, setVehicle] = useState<string>('');
   const [zone, setZone] = useState<string>('');
   const [tourType, setTourType] = useState<'full-dubai' | 'full-abudhabi' | 'half-dubai'>('full-dubai');
-  const [guests, setGuests] = useState<number | string>(1);
+  const [guests, setGuests] = useState<number | ''>(1);
   const [selectedAttractions, setSelectedAttractions] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
   const selectedVehicle = vehicleRates.find(v => v.vehicle === vehicle);
   const selectedZone = zones.find(z => z.zone.toString() === zone);
 
+  // Derived value for calculations (fallback to 1 if empty)
+  const safeGuests = typeof guests === 'number' && guests > 0 ? guests : 1;
+
+  // --- Handlers for Guest Input ---
+
+  const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === '') {
+      setGuests('');
+      return;
+    }
+    const parsed = parseInt(val, 10);
+    if (!isNaN(parsed)) {
+      setGuests(parsed);
+    }
+  };
+
+  const handleGuestBlur = () => {
+    let val = typeof guests === 'number' ? guests : 1;
+    if (val < 1) val = 1;
+    if (val > 500) val = 500;
+    setGuests(val);
+  };
+
+  const incrementGuests = () => {
+    const current = typeof guests === 'number' ? guests : 0;
+    setGuests(Math.min(500, current + 1));
+  };
+
+  const decrementGuests = () => {
+    const current = typeof guests === 'number' ? guests : 1;
+    setGuests(Math.max(1, current - 1));
+  };
+
+  // --- Calculations ---
+
   const calculation = useMemo(() => {
     if (!selectedVehicle || !selectedZone) return null;
 
-    const guestCount = typeof guests === 'string' ? parseInt(guests) || 1 : guests;
+    const guestCount = typeof guests === 'string' ? parseInt(guests, 10) || 1 : guests;
 
     const rateKey =
       selectedVehicle.capacity <= 4
@@ -47,12 +83,12 @@ export function QuoteCalculator() {
 
     const attractionsCost = selectedAttractions.reduce((sum, id) => {
       const attr = attractions.find(a => a.id === id);
-      return sum + (attr ? attr.sellPrice * guestCount : 0);
+      return sum + (attr ? attr.sellPrice * safeGuests : 0);
     }, 0);
 
     const subtotal = vehicleRate + pickupRate + attractionsCost;
     const total = subtotal;
-    const perPerson = Math.ceil(total / guestCount);
+    const perPerson = Math.ceil(total / safeGuests);
 
     return {
       vehicleRate,
@@ -62,7 +98,7 @@ export function QuoteCalculator() {
       total,
       perPerson,
     };
-  }, [selectedVehicle, selectedZone, tourType, selectedAttractions, guests]);
+  }, [selectedVehicle, selectedZone, tourType, selectedAttractions, safeGuests, guests]);
 
   const copyQuote = () => {
     if (!calculation) return;
@@ -74,7 +110,7 @@ export function QuoteCalculator() {
 📍 Tour: ${tourType === 'full-dubai' ? 'Full Day Dubai' : tourType === 'full-abudhabi' ? 'Full Day Abu Dhabi' : 'Half Day Dubai'}
 🚐 Vehicle: ${vehicle}
 📍 Pickup Zone: Zone ${zone} (${selectedZone?.name})
-👥 Guests: ${guests}
+👥 Guests: ${safeGuests}
 
 💰 Breakdown:
 • Vehicle: AED ${calculation.vehicleRate}
@@ -92,34 +128,6 @@ Thank you for choosing Ahmed Travel! ✈️
     setCopied(true);
     toast.success('Quote copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleGuestChange = (value: string) => {
-    if (value === '') {
-      setGuests('');
-      return;
-    }
-    const num = parseInt(value);
-    if (!isNaN(num) && num >= 0) {
-      setGuests(num);
-    }
-  };
-
-  const handleGuestBlur = () => {
-    let num = typeof guests === 'string' ? parseInt(guests) : guests;
-    if (isNaN(num) || num < 1) num = 1;
-    if (num > 500) num = 500;
-    setGuests(num);
-  };
-
-  const incrementGuests = () => {
-    const current = typeof guests === 'string' ? parseInt(guests) || 0 : guests;
-    setGuests(Math.min(500, current + 1));
-  };
-
-  const decrementGuests = () => {
-    const current = typeof guests === 'string' ? parseInt(guests) || 0 : guests;
-    setGuests(Math.max(1, current - 1));
   };
 
   return (
@@ -187,14 +195,14 @@ Thank you for choosing Ahmed Travel! ✈️
               <SelectContent>
                 {zones.map(z => (
                   <SelectItem key={z.zone} value={z.zone.toString()}>
-                    Zone {z.zone}: {z.name} ({z.areas.join(', ')})
+                    Zone {z.zone} - {z.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Guests */}
+          {/* Guests Input with Stepper */}
           <div className="space-y-2">
             <Label className="flex items-center gap-1.5">
               <Users className="h-4 w-4" />
@@ -216,9 +224,9 @@ Thank you for choosing Ahmed Travel! ✈️
                 min={1}
                 max={500}
                 value={guests}
-                onChange={(e) => handleGuestChange(e.target.value)}
+                onChange={handleGuestChange}
                 onBlur={handleGuestBlur}
-                className="text-center"
+                className="text-center font-medium"
               />
               <Button
                 variant="outline"
@@ -285,7 +293,7 @@ Thank you for choosing Ahmed Travel! ✈️
                   </div>
                   {calculation.attractionsCost > 0 && (
                     <div className="flex justify-between text-sidebar-foreground/80">
-                      <span>Attractions ({guests}x)</span>
+                      <span>Attractions ({safeGuests}x)</span>
                       <span>AED {calculation.attractionsCost}</span>
                     </div>
                   )}
@@ -297,7 +305,7 @@ Thank you for choosing Ahmed Travel! ✈️
                     <span className="text-primary">AED {calculation.total}</span>
                   </div>
                   <div className="flex justify-between text-sm text-sidebar-foreground/70 mt-1">
-                    <span>Per Person ({guests} guests)</span>
+                    <span>Per Person ({safeGuests} guests)</span>
                     <span>AED {calculation.perPerson}</span>
                   </div>
                 </div>
