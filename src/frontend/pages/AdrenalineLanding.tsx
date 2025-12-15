@@ -1,9 +1,11 @@
 /// <reference types="vite/client" />
 import React, { useId, useState } from 'react';
 import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-react';
-import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '@/data/landing-mock';
-import { VEHICLES } from '@/data/landing-generated';
-import { resolvePath } from '@/lib/path-utils';
+// Static content stays in mock
+import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
+// Dynamic content comes from the generated artifact
+import { VEHICLES } from '../data/landing-generated';
+import { resolvePath } from '../lib/path-utils';
 
 // --- Types ---
 interface Vehicle {
@@ -21,8 +23,6 @@ interface FaqItem {
   a: string;
 }
 
-type SafetySpec = string;
-
 // --- Components ---
 const SectionHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <div className="text-center mb-12">
@@ -35,16 +35,17 @@ const ButtonPrimary = ({
   children,
   onClick,
   className = '',
-  ...rest
+  ariaLabel,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+  ariaLabel?: string;
+}) => (
   <button
     onClick={onClick}
+    aria-label={ariaLabel || (typeof children === 'string' ? children : 'Button')}
     className={`bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-wider py-4 px-8 rounded-lg shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all transform hover:-translate-y-1 active:scale-95 ${className}`}
-    {...rest}
   >
     {children}
   </button>
@@ -80,10 +81,10 @@ const AdrenalineLanding = () => {
             <a href="#fleet" className="text-sm font-bold text-gray-300 hover:text-white uppercase">
               The Fleet
             </a>
-            <ButtonPrimary
-              onClick={() => setIsModalOpen(true)}
+            <ButtonPrimary 
+              onClick={() => setIsModalOpen(true)} 
               className="!py-2 !px-6 !text-sm !shadow-none"
-              aria-label="Book your adventure now"
+              ariaLabel="Book Now"
             >
               Book Now
             </ButtonPrimary>
@@ -115,10 +116,10 @@ const AdrenalineLanding = () => {
               No bus crowds. No speed limiters. Pure power.
             </p>
             <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-              <ButtonPrimary
-                onClick={() => setIsModalOpen(true)}
+              <ButtonPrimary 
+                onClick={() => setIsModalOpen(true)} 
                 className="w-full md:w-auto min-w-[200px]"
-                aria-label="Check tour availability and book your adventure"
+                ariaLabel="Check Availability"
               >
                 Check Availability
               </ButtonPrimary>
@@ -132,7 +133,7 @@ const AdrenalineLanding = () => {
           <div className="max-w-7xl mx-auto">
             <SectionHeader title="The Garage" subtitle="2025 Models. Maintained by race engineers." />
             <div className="grid md:grid-cols-3 gap-8">
-              {VEHICLES.map((v: Vehicle) => (
+              {(VEHICLES as Vehicle[]).map((v) => (
                 <div
                   key={v.id}
                   className="group bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 hover:border-amber-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 flex flex-col"
@@ -153,7 +154,7 @@ const AdrenalineLanding = () => {
                       <Users className="w-4 h-4" /> {v.type}
                     </p>
                     <ul className="space-y-3 mb-8 border-t border-white/5 pt-6 flex-1">
-                      {v.specs.map((feat: string, i: number) => (
+                      {v.specs.map((feat, i) => (
                         <li key={i} className="flex items-center text-gray-300 text-sm">
                           <Check className="w-4 h-4 text-amber-500 mr-3 flex-shrink-0" /> {feat}
                         </li>
@@ -168,8 +169,8 @@ const AdrenalineLanding = () => {
                       </div>
                       <button
                         onClick={() => setIsModalOpen(true)}
+                        aria-label={`Book ${v.name}`}
                         className="bg-white hover:bg-amber-500 hover:text-black text-zinc-950 font-bold py-2 px-6 rounded-lg transition-colors"
-                        aria-label={`Book the ${v.name} now`}
                       >
                         Book
                       </button>
@@ -188,7 +189,7 @@ const AdrenalineLanding = () => {
                 <Shield className="w-6 h-6 text-amber-500" /> SAFETY SPECS
               </h3>
               <div className="space-y-4">
-                {SAFETY_SPECS.map((spec: SafetySpec, i: number) => (
+                {SAFETY_SPECS.map((spec: string, i: number) => (
                   <div
                     key={i}
                     className="bg-zinc-950 p-4 rounded-xl border border-white/5 flex items-center justify-between"
@@ -234,10 +235,10 @@ const AdrenalineLanding = () => {
                     <button
                       id={buttonId}
                       onClick={() => setOpenFaqIndex(isOpen ? null : i)}
-                      className="flex justify-between items-center w-full p-6 text-left"
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      aria-label={`Toggle answer for: ${faq.q}`}
+                      aria-label={isOpen ? "Collapse FAQ" : "Expand FAQ"}
+                      className="flex justify-between items-center w-full p-6 text-left"
                     >
                       <span className="text-lg font-bold text-white">{faq.q}</span>
                       <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -268,10 +269,10 @@ const AdrenalineLanding = () => {
       </footer>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black to-transparent md:hidden z-30 pt-12">
-        <ButtonPrimary
-          onClick={() => setIsModalOpen(true)}
+        <ButtonPrimary 
+          onClick={() => setIsModalOpen(true)} 
           className="w-full shadow-xl"
-          aria-label="Book your adventure"
+          ariaLabel="Book Adventure Mobile"
         >
           Book Adventure
         </ButtonPrimary>
@@ -293,10 +294,10 @@ const AdrenalineLanding = () => {
             </div>
             <h3 className="text-2xl font-black text-white mb-2">Check Availability</h3>
             <p className="text-gray-400 mb-8">This is a demo. In production, this opens the booking engine.</p>
-            <ButtonPrimary
-              className="w-full"
+            <ButtonPrimary 
+              className="w-full" 
               onClick={() => setIsModalOpen(false)}
-              aria-label="Proceed with mock booking"
+              ariaLabel="Proceed with booking"
             >
               Proceed (Mock)
             </ButtonPrimary>
