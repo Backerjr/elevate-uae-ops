@@ -1,11 +1,8 @@
 /// <reference types="vite/client" />
 import React, { useId, useState } from 'react';
 import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-react';
-// Static content stays in mock
-import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
-// Dynamic content comes from the generated artifact
-import { VEHICLES } from '../data/landing-generated';
 import { resolvePath } from '../lib/path-utils';
+import { FAQS, SAFETY_SPECS, SITE_CONFIG, VEHICLES } from '../data/landing-mock';
 
 // --- Types ---
 interface Vehicle {
