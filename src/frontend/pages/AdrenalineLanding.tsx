@@ -1,11 +1,9 @@
 /// <reference types="vite/client" />
 import React, { useId, useState } from 'react';
 import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-react';
-// Static content stays in mock
-import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
-// Dynamic content comes from the generated artifact
-import { VEHICLES } from '../data/landing-generated';
-import { resolvePath } from '../lib/path-utils';
+import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '@/data/landing-mock';
+import { VEHICLES } from '@/data/landing-generated';
+import { resolvePath } from '@/lib/path-utils';
 
 // --- Types ---
 interface Vehicle {
@@ -17,6 +15,13 @@ interface Vehicle {
   image: string;
   specs: string[];
 }
+
+interface FaqItem {
+  q: string;
+  a: string;
+}
+
+type SafetySpec = string;
 
 // --- Components ---
 const SectionHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
@@ -30,14 +35,16 @@ const ButtonPrimary = ({
   children,
   onClick,
   className = '',
+  ...rest
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
-}) => (
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     onClick={onClick}
     className={`bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-wider py-4 px-8 rounded-lg shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all transform hover:-translate-y-1 active:scale-95 ${className}`}
+    {...rest}
   >
     {children}
   </button>
@@ -73,7 +80,11 @@ const AdrenalineLanding = () => {
             <a href="#fleet" className="text-sm font-bold text-gray-300 hover:text-white uppercase">
               The Fleet
             </a>
-            <ButtonPrimary onClick={() => setIsModalOpen(true)} className="!py-2 !px-6 !text-sm !shadow-none">
+            <ButtonPrimary
+              onClick={() => setIsModalOpen(true)}
+              className="!py-2 !px-6 !text-sm !shadow-none"
+              aria-label="Book your adventure now"
+            >
               Book Now
             </ButtonPrimary>
           </div>
@@ -83,7 +94,6 @@ const AdrenalineLanding = () => {
       <main className="pt-20">
         <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-zinc-900">
           <div className="absolute inset-0 z-0">
-            {/* FIXED: Asset path resolution */}
             <img
               src={resolvePath('/assets/placeholders/hero.svg')}
               className="w-full h-full object-cover opacity-30"
@@ -105,7 +115,11 @@ const AdrenalineLanding = () => {
               No bus crowds. No speed limiters. Pure power.
             </p>
             <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-              <ButtonPrimary onClick={() => setIsModalOpen(true)} className="w-full md:w-auto min-w-[200px]">
+              <ButtonPrimary
+                onClick={() => setIsModalOpen(true)}
+                className="w-full md:w-auto min-w-[200px]"
+                aria-label="Check tour availability and book your adventure"
+              >
                 Check Availability
               </ButtonPrimary>
             </div>
@@ -118,13 +132,12 @@ const AdrenalineLanding = () => {
           <div className="max-w-7xl mx-auto">
             <SectionHeader title="The Garage" subtitle="2025 Models. Maintained by race engineers." />
             <div className="grid md:grid-cols-3 gap-8">
-              {(VEHICLES as Vehicle[]).map((v: Vehicle) => (
+              {VEHICLES.map((v: Vehicle) => (
                 <div
                   key={v.id}
                   className="group bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 hover:border-amber-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 flex flex-col"
                 >
                   <div className="relative aspect-[4/3] bg-zinc-800">
-                    {/* FIXED: Asset path resolution for dynamic images */}
                     <img
                       src={resolvePath(v.image)}
                       alt={v.name}
@@ -156,6 +169,7 @@ const AdrenalineLanding = () => {
                       <button
                         onClick={() => setIsModalOpen(true)}
                         className="bg-white hover:bg-amber-500 hover:text-black text-zinc-950 font-bold py-2 px-6 rounded-lg transition-colors"
+                        aria-label={`Book the ${v.name} now`}
                       >
                         Book
                       </button>
@@ -174,7 +188,7 @@ const AdrenalineLanding = () => {
                 <Shield className="w-6 h-6 text-amber-500" /> SAFETY SPECS
               </h3>
               <div className="space-y-4">
-                {SAFETY_SPECS.map((spec: string, i: number) => (
+                {SAFETY_SPECS.map((spec: SafetySpec, i: number) => (
                   <div
                     key={i}
                     className="bg-zinc-950 p-4 rounded-xl border border-white/5 flex items-center justify-between"
@@ -211,7 +225,7 @@ const AdrenalineLanding = () => {
           <div className="max-w-3xl mx-auto px-4">
             <SectionHeader title="Need to Know" />
             <div className="space-y-4">
-              {FAQS.map((faq: any, i: number) => {
+              {FAQS.map((faq: FaqItem, i: number) => {
                 const isOpen = openFaqIndex === i;
                 const buttonId = `${faqIdBase}-faq-btn-${i}`;
                 const panelId = `${faqIdBase}-faq-panel-${i}`;
@@ -223,6 +237,7 @@ const AdrenalineLanding = () => {
                       className="flex justify-between items-center w-full p-6 text-left"
                       aria-expanded={isOpen}
                       aria-controls={panelId}
+                      aria-label={`Toggle answer for: ${faq.q}`}
                     >
                       <span className="text-lg font-bold text-white">{faq.q}</span>
                       <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -253,7 +268,11 @@ const AdrenalineLanding = () => {
       </footer>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black to-transparent md:hidden z-30 pt-12">
-        <ButtonPrimary onClick={() => setIsModalOpen(true)} className="w-full shadow-xl">
+        <ButtonPrimary
+          onClick={() => setIsModalOpen(true)}
+          className="w-full shadow-xl"
+          aria-label="Book your adventure"
+        >
           Book Adventure
         </ButtonPrimary>
       </div>
@@ -274,7 +293,11 @@ const AdrenalineLanding = () => {
             </div>
             <h3 className="text-2xl font-black text-white mb-2">Check Availability</h3>
             <p className="text-gray-400 mb-8">This is a demo. In production, this opens the booking engine.</p>
-            <ButtonPrimary className="w-full" onClick={() => setIsModalOpen(false)}>
+            <ButtonPrimary
+              className="w-full"
+              onClick={() => setIsModalOpen(false)}
+              aria-label="Proceed with mock booking"
+            >
               Proceed (Mock)
             </ButtonPrimary>
           </div>
