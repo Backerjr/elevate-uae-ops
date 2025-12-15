@@ -4,8 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  // DYNAMIC BASE: Uses env override or defaults to root
-  base: process.env.VITE_BASE_PATH || "/",
+  // DYNAMIC BASE: GitHub Pages subpath in production, root otherwise
+  base: mode === "production" ? "/elevate-uae-ops/" : "/",
   server: {
     host: "::",
     port: 8080,

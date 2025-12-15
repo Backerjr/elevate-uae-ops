@@ -4,6 +4,7 @@ import { Calendar, Check, ChevronDown, Shield, Users, X, Zap } from 'lucide-reac
 import { FAQS, SAFETY_SPECS, SITE_CONFIG } from '../data/landing-mock';
 // Dynamic content comes from the generated artifact
 import { VEHICLES } from '../data/landing-generated';
+import { resolvePath } from '../lib/path-utils';
 
 // --- Types ---
 interface Vehicle {
@@ -15,15 +16,6 @@ interface Vehicle {
   image: string;
   specs: string[];
 }
-
-// --- Helpers ---
-// Fixes 404s on GitHub Pages/Vercel by prepending the base path
-const resolvePath = (path: string) => {
-  const base = import.meta.env.BASE_URL;
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  const cleanBase = base.endsWith('/') ? base : `${base}/`;
-  return `${cleanBase}${cleanPath}`;
-};
 
 // --- Components ---
 const SectionHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
@@ -92,7 +84,7 @@ const AdrenalineLanding = () => {
           <div className="absolute inset-0 z-0">
             {/* FIXED: Asset path resolution */}
             <img
-              src={resolvePath('assets/placeholders/hero.svg')}
+              src={resolvePath('/assets/placeholders/hero.svg')}
               className="w-full h-full object-cover opacity-30"
               alt="Adrenaline desert hero"
             />

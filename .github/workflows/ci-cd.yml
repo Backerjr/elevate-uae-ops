@@ -55,6 +55,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Generate Frontend Data
+        run: python3 scripts/cli/export_frontend.py
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
