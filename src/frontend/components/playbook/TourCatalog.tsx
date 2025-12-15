@@ -169,8 +169,9 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
 
 // --- Tour Catalog Component ---
 /**
- * Changed from `export default TourCatalog;` to a named export.
- * This resolves the build error where `Index.tsx` expects `{ TourCatalog }` (named import).
+ * Exported as both a named and default export so consumers can import it either way:
+ * - `import TourCatalog from ...`
+ * - `import { TourCatalog } from ...`
  */
 export const TourCatalog: React.FC = () => {
   return (
@@ -184,3 +185,5 @@ export const TourCatalog: React.FC = () => {
     </div>
   );
 };
+
+export default TourCatalog;

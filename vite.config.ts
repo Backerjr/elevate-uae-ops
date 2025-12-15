@@ -4,8 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  // FIX: Dynamic base path for GitHub Pages support
-  base: mode === "production" ? "/elevate-uae-ops/" : "/",
+  // Default to "/" for Vercel/local. Only use a subdirectory when explicitly set (e.g. GitHub Pages).
+  base: process.env.VITE_BASE_PATH || "/",
   server: {
     host: "::",
     port: 8080,
