@@ -6,14 +6,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { vehicleRates, zones, attractions, comboPackages } from '@/data/playbook-data';
-import { Calculator, Car, MapPin, Ticket, Package, Copy, Check, Users } from 'lucide-react';
+import { Calculator, Car, MapPin, Ticket, Package, Copy, Check, Users, Plus, Minus } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function QuoteCalculator() {
   const [vehicle, setVehicle] = useState<string>('');
   const [zone, setZone] = useState<string>('');
   const [tourType, setTourType] = useState<'full-dubai' | 'full-abudhabi' | 'half-dubai'>('full-dubai');
-  const [guests, setGuests] = useState<number>(1);
+  const [guests, setGuests] = useState<number | string>(1);
   const [selectedAttractions, setSelectedAttractions] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
@@ -22,6 +22,8 @@ export function QuoteCalculator() {
 
   const calculation = useMemo(() => {
     if (!selectedVehicle || !selectedZone) return null;
+
+    const guestCount = typeof guests === 'string' ? parseInt(guests) || 1 : guests;
 
     const rateKey =
       selectedVehicle.capacity <= 4
@@ -45,12 +47,12 @@ export function QuoteCalculator() {
 
     const attractionsCost = selectedAttractions.reduce((sum, id) => {
       const attr = attractions.find(a => a.id === id);
-      return sum + (attr ? attr.sellPrice * guests : 0);
+      return sum + (attr ? attr.sellPrice * guestCount : 0);
     }, 0);
 
     const subtotal = vehicleRate + pickupRate + attractionsCost;
     const total = subtotal;
-    const perPerson = Math.ceil(total / guests);
+    const perPerson = Math.ceil(total / guestCount);
 
     return {
       vehicleRate,
@@ -90,6 +92,34 @@ Thank you for choosing Ahmed Travel! ✈️
     setCopied(true);
     toast.success('Quote copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleGuestChange = (value: string) => {
+    if (value === '') {
+      setGuests('');
+      return;
+    }
+    const num = parseInt(value);
+    if (!isNaN(num) && num >= 0) {
+      setGuests(num);
+    }
+  };
+
+  const handleGuestBlur = () => {
+    let num = typeof guests === 'string' ? parseInt(guests) : guests;
+    if (isNaN(num) || num < 1) num = 1;
+    if (num > 500) num = 500;
+    setGuests(num);
+  };
+
+  const incrementGuests = () => {
+    const current = typeof guests === 'string' ? parseInt(guests) || 0 : guests;
+    setGuests(Math.min(500, current + 1));
+  };
+
+  const decrementGuests = () => {
+    const current = typeof guests === 'string' ? parseInt(guests) || 0 : guests;
+    setGuests(Math.max(1, current - 1));
   };
 
   return (
@@ -170,13 +200,37 @@ Thank you for choosing Ahmed Travel! ✈️
               <Users className="h-4 w-4" />
               Number of Guests
             </Label>
-            <Input
-              type="number"
-              min={1}
-              max={22}
-              value={guests}
-              onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 1))}
-            />
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={decrementGuests}
+                type="button"
+                className="h-10 w-10 shrink-0"
+                aria-label="Decrease guests"
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              <Input
+                type="number"
+                min={1}
+                max={500}
+                value={guests}
+                onChange={(e) => handleGuestChange(e.target.value)}
+                onBlur={handleGuestBlur}
+                className="text-center"
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={incrementGuests}
+                type="button"
+                className="h-10 w-10 shrink-0"
+                aria-label="Increase guests"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Attractions Add-on */}
