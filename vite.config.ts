@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  // DYNAMIC BASE: GitHub Pages subpath in production, root otherwise
+  // FIX: Dynamic base path for GitHub Pages support
   base: mode === "production" ? "/elevate-uae-ops/" : "/",
   server: {
     host: "::",
@@ -23,10 +23,3 @@ export default defineConfig(({ mode }) => ({
     setupFiles: "./src/frontend/test/setup.ts",
   },
 }));
-
-const resolvePath = (path: string) => {
-  const base = import.meta.env.BASE_URL;
-  // Remove leading slash from path if base already has trailing slash to avoid double //
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${base}${cleanPath}`;
-};

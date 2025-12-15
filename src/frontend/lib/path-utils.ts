@@ -1,7 +1,7 @@
-export const resolvePath = (path: string): string => {
-  const base = import.meta.env.BASE_URL || "/";
-  const cleanBase = base.endsWith("/") ? base : `${base}/`;
-  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+export const resolvePath = (path: string) => {
+  const base = import.meta.env.BASE_URL;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
   return `${cleanBase}${cleanPath}`;
 };
 
