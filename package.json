@@ -12,7 +12,10 @@
     "predeploy": "VITE_BASE_PATH=/elevate-uae-ops/ npm run build",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "preview": "vite preview",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -81,15 +84,26 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
+    "husky": "^9.1.6",
     "jest": "^30.2.0",
     "jsdom": "^27.3.0",
+    "lint-staged": "^15.2.10",
     "lovable-tagger": "^1.1.13",
     "postcss": "^8.5.6",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19",
     "vitest": "^4.0.15"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,css,md,json}": [
+      "prettier --write"
+    ],
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ]
   },
   "browserslist": [
     "> 0.5%",

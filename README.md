@@ -109,6 +109,13 @@ elevate-uae-ops/
 **Issues:** File via GitHub Issues  
 **CLI Help:** `python3 manage.py --help`
 
+## Commit & Branching Conventions
+
+- Use conventional commit prefixes: `feat`, `fix`, `chore`, `docs`, `test`, `ci`, `build`, `refactor`, `perf`, `revert`.
+- Keep subject lines under 72 characters and use imperative mood (e.g., `feat: add booking CTA`).
+- Prefer feature branches named `feature/<short-description>` or `fix/<short-description>`; squash-merge to keep history clean.
+- Run `npm run lint` and `npm test` (and `npm run format` if you touched frontend code) before opening a PR.
+
 ---
 
 **Last Updated:** 2025-12-12  
