@@ -1,7 +1,7 @@
 import type { ReactNode, MouseEventHandler } from "react";
 
 type ButtonPrimaryProps = {
-  children: ReactNode;
+  children?: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
 };
