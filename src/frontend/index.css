@@ -4,9 +4,9 @@
 /* Import Playfair Display from Google Fonts for elegance */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
   /* --- Global Theme Variables --- */
@@ -51,6 +51,7 @@
   /* --- Component Overrides (Luxurious Glassmorphism) --- */
   .glass-card {
     background-color: hsl(var(--card) / 0.5); /* Semi-transparent background */
+    -webkit-backdrop-filter: blur(8px); /* Safari/iOS support for glass effect */
     backdrop-filter: blur(8px); /* The glass effect blur */
     border: 1px solid hsl(var(--border) / 0.5); /* Subtle border */
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
