@@ -1,5 +1,17 @@
-// Inside src/frontend/App.tsx
-import AdrenalineLanding from "./pages/AdrenalineLanding"; // Add import
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdrenalineLanding from "./pages/AdrenalineLanding";
 
-// Inside Routes...
-<Route path="/landing/adrenaline-desert" element={<AdrenalineLanding />} />;
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/landing/adrenaline-desert"
+          element={<AdrenalineLanding />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
