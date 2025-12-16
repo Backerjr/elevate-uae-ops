@@ -1,9 +1,10 @@
-/**
- * Navigation Utilities
- * Types and interfaces for the Navigation component
- */
+import type { LucideIcon } from "lucide-react";
+import { Calculator, DollarSign, LayoutDashboard, Map, MessageSquare, BookOpen } from "lucide-react";
 
-export type TabId = 'dashboard' | 'tours' | 'calculator' | 'scripts' | 'pricing' | 'reference';
+/**
+ * Navigation utilities and shared types for the Playbook shell.
+ */
+export type TabId = "dashboard" | "tours" | "calculator" | "scripts" | "pricing" | "reference";
 
 export interface NavigationProps {
   activeTab: TabId;
@@ -13,6 +14,15 @@ export interface NavigationProps {
 export interface NavItem {
   id: TabId;
   label: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
   badge?: string;
 }
+
+export const navigationItems: NavItem[] = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "tours", label: "Tour Catalog", icon: Map },
+  { id: "calculator", label: "Quote Builder", icon: Calculator, badge: "Smart" },
+  { id: "scripts", label: "Scripts", icon: MessageSquare },
+  { id: "pricing", label: "Pricing Matrix", icon: DollarSign },
+  { id: "reference", label: "Quick Ref", icon: BookOpen },
+];
