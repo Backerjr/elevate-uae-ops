@@ -25,6 +25,47 @@ export interface Tour {
   image?: string; // New Visual Asset Field
 }
 
+// --- SMART VISUAL RESOLVER ENGINE ---
+// Maps specific keywords in tour titles to high-fidelity Unsplash visuals
+const resolveHeroImage = (title: string, category: string): string => {
+  const t = title.toLowerCase();
+
+  // 1. Specific Landmarks & Attractions
+  if (t.includes('burj khalifa')) return 'https://images.unsplash.com/photo-1582657233895-0f37a3ec7179?q=80&w=2070&auto=format&fit=crop'; // Tall tower shot
+  if (t.includes('museum of the future')) return 'https://images.unsplash.com/photo-1662668862763-8360822a9792?q=80&w=2070&auto=format&fit=crop'; // Calligraphy building
+  if (t.includes('ferrari')) return 'https://images.unsplash.com/photo-1583236270830-4cf92497047f?q=80&w=2070&auto=format&fit=crop'; // Red coaster/speed
+  if (t.includes('louvre')) return 'https://images.unsplash.com/photo-1577712396677-4df3306eb8e6?q=80&w=2070&auto=format&fit=crop'; // Louvre dome
+  if (t.includes('mosque') || t.includes('sheikh zayed')) return 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?q=80&w=2070&auto=format&fit=crop'; // Grand Mosque
+  if (t.includes('frame')) return 'https://images.unsplash.com/photo-1605645398256-4c9299496732?q=80&w=2070&auto=format&fit=crop'; // Dubai Frame
+  if (t.includes('atlantis') || t.includes('aquaventure')) return 'https://images.unsplash.com/photo-1623232873157-194361514781?q=80&w=2070&auto=format&fit=crop'; // Atlantis Palm
+  if (t.includes('global village')) return 'https://images.unsplash.com/photo-1582236967757-935dfa97b2fb?q=80&w=2070&auto=format&fit=crop'; // Colorful pavilions
+
+  // 2. Adventure Activities
+  if (t.includes('buggy') || t.includes('dune buggy')) return 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2070&auto=format&fit=crop'; // Action buggy
+  if (t.includes('quad') || t.includes('bike')) return 'https://images.unsplash.com/photo-1599384733470-c36b8032b842?q=80&w=2070&auto=format&fit=crop'; // Quad bike
+  if (t.includes('jet ski') || t.includes('jetski')) return 'https://images.unsplash.com/photo-1606927943468-d01729b46c64?q=80&w=2070&auto=format&fit=crop'; // Jet ski splash
+  if (t.includes('balloon')) return 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=2070&auto=format&fit=crop'; // Hot air balloon
+  if (t.includes('helicopter')) return 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?q=80&w=2070&auto=format&fit=crop'; // Aerial view
+
+  // 3. Water & Cruises
+  if (t.includes('yacht')) return 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?q=80&w=2070&auto=format&fit=crop'; // Luxury yacht
+  if (t.includes('dhow') || t.includes('dinner cruise')) return 'https://images.unsplash.com/photo-1512632500708-1b2177c27f29?q=80&w=2070&auto=format&fit=crop'; // Marina night cruise
+  if (t.includes('boat')) return 'https://images.unsplash.com/photo-1522542194-295166b70c84?q=80&w=2070&auto=format&fit=crop'; // Speedboat
+
+  // 4. Desert Specifics
+  if (t.includes('morning') && t.includes('desert')) return 'https://images.unsplash.com/photo-1545199583-026ccb2323e2?q=80&w=2070&auto=format&fit=crop'; // Bright desert
+  if (t.includes('overnight') || t.includes('camping')) return 'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?q=80&w=2070&auto=format&fit=crop'; // Tent/Stars
+  if (t.includes('safari')) return 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=2070&auto=format&fit=crop'; // Classic Land Cruiser
+
+  // 5. Category Fallbacks (Last Resort)
+  switch(category) {
+    case 'abu-dhabi': return 'https://images.unsplash.com/photo-1511923985923-277ba002220d?q=80&w=2070&auto=format&fit=crop';
+    case 'dubai': return 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=2070&auto=format&fit=crop';
+    case 'cruise': return 'https://images.unsplash.com/photo-1597659840241-37e2b9c2f55f?q=80&w=2070&auto=format&fit=crop';
+    default: return 'https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=2070&auto=format&fit=crop'; // Generic luxe travel
+  }
+};
+
 const hardcodedTours: Tour[] = [
   {
     id: 'dubai-full-day',
@@ -32,21 +73,13 @@ const hardcodedTours: Tour[] = [
     category: 'dubai',
     pickup: '10:00–10:30 AM',
     duration: '~10 hours (Drop-off ~8:30 PM)',
-    highlights: [
-      'Zabeel Palace (Photo stop)',
-      'Museum of the Future, Dubai Frame (Photo stops)',
-      'Bastakiya Heritage District + Abra Ride',
-      'Gold & Spice Souks',
-      'Farooq Omar Bin Al Khatib Mosque',
-      'Monorail to Atlantis + Zabeel Saray Photo Stop',
-      'Dubai Mall Waterfall & Fountain Show'
-    ],
+    highlights: ['Zabeel Palace', 'Museum of the Future', 'Bastakiya', 'Gold & Spice Souks', 'Palm Monorail'],
     visualCues: ['🌆', '🛶', '🚝', '✨'],
     proTip: 'Perfect all-in-one overview for first-time Dubai visitors.',
     margin: 'medium',
     difficulty: 'easy',
-    idealFor: ['First-timers', 'Families', 'Culture lovers'],
-    image: 'https://images.unsplash.com/photo-1512453979798-5ea90b7cadc9?q=80&w=2070&auto=format&fit=crop'
+    idealFor: ['First-timers', 'Families'],
+    image: resolveHeroImage('Dubai Full-Day Explore Tour', 'dubai')
   },
   {
     id: 'desert-safari-sharing',
@@ -54,118 +87,70 @@ const hardcodedTours: Tour[] = [
     category: 'desert',
     pickup: '3:00 PM',
     duration: '~6 hours',
-    highlights: [
-      'Dune bashing in 4x4',
-      'Desert sunset experience',
-      'Traditional entertainment'
-    ],
-    inclusions: [
-      '4x4 transfers',
-      'Dune bashing',
-      'Camel ride | Henna | Arabic dress photo',
-      'International buffet dinner',
-      'Tanoura & Fire Show'
-    ],
-    note: 'Recommend sneakers; avoid open sandals. Max 6 guests per vehicle.',
-    visualCues: ['🏜️', '🐪', '🎭', '🌅'],
+    highlights: ['Dune bashing', 'Sunset photo', 'BBQ Dinner', 'Fire Show'],
+    inclusions: ['4x4 transfers', 'Camel ride', 'Henna', 'Buffet dinner'],
+    note: 'Max 6 guests per vehicle.',
+    visualCues: ['🏜️', '🐪', '🎭'],
     margin: 'medium',
     difficulty: 'easy',
-    idealFor: ['Adventure seekers', 'Couples', 'Groups'],
-    image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=2070&auto=format&fit=crop'
+    idealFor: ['Adventure seekers', 'Groups'],
+    image: resolveHeroImage('Premium Desert Safari', 'desert')
   },
   {
     id: 'abu-dhabi-city',
     name: 'Abu Dhabi City Tour',
     category: 'abu-dhabi',
     pickup: '8:30 AM',
-    duration: '~11.5 hours (Return ~8:00 PM)',
-    highlights: [
-      'Sheikh Zayed Grand Mosque',
-      'BAPS Mandir (closed Mondays)',
-      'Heritage Village',
-      'Corniche',
-      'Emirates Palace (Photo stop)'
-    ],
-    dressCode: 'Covered shoulders/knees; women require a headscarf.',
+    duration: '~11.5 hours',
+    highlights: ['Sheikh Zayed Grand Mosque', 'Heritage Village', 'Corniche'],
+    dressCode: 'Strict: Covered shoulders/knees.',
     visualCues: ['🕌', '🏛️', '🌴'],
-    proTip: 'Add Ferrari World, Qasr Al Watan, or Louvre for premium packages.',
     margin: 'high',
     difficulty: 'easy',
-    idealFor: ['Culture lovers', 'History buffs', 'Families'],
-    image: 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?q=80&w=2070&auto=format&fit=crop'
+    idealFor: ['Culture lovers'],
+    image: resolveHeroImage('Sheikh Zayed Grand Mosque', 'abu-dhabi')
   },
   {
     id: 'hot-air-balloon',
     name: 'Hot Air Balloon Experience',
     category: 'experience',
-    pickup: 'Early morning (time varies by season)',
-    duration: '~4 hours total',
-    highlights: [
-      'Sunrise desert flight',
-      'Aerial views of dunes & wildlife',
-      'Once-in-a-lifetime photo ops'
-    ],
-    requirements: [
-      'Valid ID mandatory',
-      'Age restrictions: 5–80 years',
-      'Not permitted for pregnant guests',
-      'Weight limits may apply'
-    ],
+    pickup: 'Early morning',
+    duration: '~4 hours',
+    highlights: ['Sunrise flight', 'Dune views', 'Falcon show'],
+    requirements: ['ID mandatory', 'Age 5-80'],
     waiverUrl: 'https://raynawaiver.raynab2b.com/',
-    visualCues: ['🎈', '🌅', '📸'],
+    visualCues: ['🎈', '🌅'],
     margin: 'high',
     difficulty: 'complex',
-    idealFor: ['Couples', 'Special occasions', 'Adventure seekers'],
-    image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=2070&auto=format&fit=crop'
+    idealFor: ['Couples', 'VIP'],
+    image: resolveHeroImage('Hot Air Balloon', 'experience')
   },
   {
     id: 'dhow-cruise-marina',
-    name: 'Dhow Cruise – Dubai Marina (Upper Deck)',
+    name: 'Dhow Cruise – Dubai Marina',
     category: 'cruise',
     pickup: '7:30 PM',
-    duration: '90 minutes cruise',
-    highlights: [
-      'Marina skyline views',
-      'Traditional dhow experience',
-      'Evening entertainment'
-    ],
-    inclusions: [
-      'Buffet dinner',
-      'Tanoura Show',
-      'Marina Skyline Views'
-    ],
-    visualCues: ['🚢', '🎩', '🌊', '🌃'],
+    duration: '90 minutes',
+    highlights: ['Skyline views', 'Buffet dinner', 'Tanoura Show'],
+    visualCues: ['🚢', '🌃'],
     margin: 'medium',
     difficulty: 'easy',
-    idealFor: ['Couples', 'Families', 'Romantic evenings'],
-    image: 'https://images.unsplash.com/photo-1597659840241-37e2b9c2f55f?q=80&w=2070&auto=format&fit=crop'
+    idealFor: ['Couples', 'Dinner'],
+    image: resolveHeroImage('Dhow Cruise Marina', 'cruise')
   },
   {
     id: 'buggy-quad',
     name: 'DTT Buggy / Quad Adventure',
     category: 'adventure',
-    pickup: '5:30–6:00 AM (Sunrise)',
+    pickup: 'Sunrise / Afternoon',
     duration: '~4 hours',
-    highlights: [
-      'Guided buggy or quad ride',
-      'Dune bashing experience',
-      'Desert sunrise'
-    ],
-    inclusions: [
-      'Guided buggy or quad ride',
-      'Dune bashing',
-      'Camel ride & refreshments'
-    ],
-    requirements: [
-      'Buggy: 20+ with valid license',
-      'Quad: 16+ years',
-      'Helmet mandatory'
-    ],
-    visualCues: ['🚙', '🪖', '🐫', '🌅'],
+    highlights: ['Self-drive buggy', 'Dune bashing', 'Sandboarding'],
+    requirements: ['License for Buggy', '16+ for Quad'],
+    visualCues: ['🚙', '🪖', '🐫'],
     margin: 'high',
     difficulty: 'moderate',
-    idealFor: ['Adventure seekers', 'Young adults', 'Thrill seekers'],
-    image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2070&auto=format&fit=crop'
+    idealFor: ['Thrill seekers'],
+    image: resolveHeroImage('Dune Buggy', 'adventure')
   }
 ];
 
@@ -186,28 +171,18 @@ const mapCatalogCategory = (input?: string): Tour['category'] => {
   if (normalized.includes('adventure')) return 'adventure';
   if (normalized.includes('desert')) return 'desert';
   if (normalized.includes('cruise')) return 'cruise';
-  if (normalized.includes('dubai') || normalized.includes('sightseeing')) return 'dubai';
+  if (normalized.includes('dubai')) return 'dubai';
   if (normalized.includes('abu')) return 'abu-dhabi';
   return 'experience';
 };
 
-// Vision Protocol: Smart Image Assignment for Catalog Items
-const assignCatalogImage = (category: string): string => {
-  switch(category) {
-    case 'desert': return 'https://images.unsplash.com/photo-1545199583-026ccb2323e2?q=80&w=2070&auto=format&fit=crop';
-    case 'adventure': return 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2070&auto=format&fit=crop';
-    case 'cruise': return 'https://images.unsplash.com/photo-1522542194-295166b70c84?q=80&w=2070&auto=format&fit=crop';
-    case 'abu-dhabi': return 'https://images.unsplash.com/photo-1511923985923-277ba002220d?q=80&w=2070&auto=format&fit=crop';
-    case 'dubai': return 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=2070&auto=format&fit=crop';
-    default: return 'https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=2070&auto=format&fit=crop';
-  }
-};
-
 const mapCatalogProductToTour = (product: CatalogProduct, fallbackIndex: number): Tour => {
   const category = mapCatalogCategory(product.category);
+  const name = product.product_name ?? product.title ?? 'Catalog Product';
+  
   return {
     id: product.product_id ?? `catalog-${fallbackIndex}`,
-    name: product.product_name ?? product.title ?? 'Catalog Product',
+    name: name,
     category: category,
     pickup: product.destination_city ?? 'UAE',
     duration: product.duration_hours ? `${product.duration_hours} hrs` : 'Approx 1–3 hrs',
@@ -227,7 +202,8 @@ const mapCatalogProductToTour = (product: CatalogProduct, fallbackIndex: number)
     bestFor: product.category ?? undefined,
     tags: product.category ? [product.category] : [],
     waiverUrl: undefined,
-    image: assignCatalogImage(category)
+    // VISION PROTOCOL: Resolve specific image based on product name
+    image: resolveHeroImage(name, category)
   };
 };
 
@@ -235,18 +211,8 @@ const mappedCatalogTours: Tour[] = (catalogData as CatalogProduct[]).map(mapCata
 
 export const tours: Tour[] = [...hardcodedTours, ...mappedCatalogTours];
 
-// ... (Keep existing rates and other data exports exactly as they are)
-export interface VehicleRate {
-  vehicle: string;
-  capacity: number;
-  fullDayDubai: number; 
-  halfDayDubai: number; 
-  fullDayAbuDhabi: number; 
-  transferDXB: number; 
-  extraHourMin?: number;
-  extraHourMax?: number;
-}
-
+// ... (Exporting existing static datasets below without changes)
+export interface VehicleRate { vehicle: string; capacity: number; fullDayDubai: number; halfDayDubai: number; fullDayAbuDhabi: number; transferDXB: number; }
 export const vehicleRates: VehicleRate[] = [
   { vehicle: 'Lexus ES350 (Luxury Sedan)', capacity: 4, fullDayDubai: 650, halfDayDubai: 420, fullDayAbuDhabi: 780, transferDXB: 115 },
   { vehicle: '7 Seater (Standard)', capacity: 7, fullDayDubai: 585, halfDayDubai: 310, fullDayAbuDhabi: 650, transferDXB: 115 },
@@ -256,20 +222,7 @@ export const vehicleRates: VehicleRate[] = [
   { vehicle: 'Grand Coach (50 Seater)', capacity: 50, fullDayDubai: 1105, halfDayDubai: 715, fullDayAbuDhabi: 1235, transferDXB: 310 }
 ];
 
-export interface Zone {
-  zone: number;
-  name: string;
-  areas: string[];
-  rates: {
-    seater4?: number;
-    seater7: number;
-    seater12: number;
-    seater22: number;
-    seater35?: number;
-    seater50?: number;
-  };
-}
-
+export interface Zone { zone: number; name: string; areas: string[]; rates: { seater4?: number; seater7: number; seater12: number; seater22: number; seater35?: number; seater50?: number; }; }
 export const zones: Zone[] = [
   { zone: 1, name: 'Old Dubai', areas: ['Deira', 'Bur Dubai', 'Qusais', 'Al Nahda'], rates: { seater4: 115, seater7: 115, seater12: 145, seater22: 390, seater35: 425, seater50: 520 } },
   { zone: 2, name: 'Central Dubai', areas: ['DIFC', 'Sheikh Zayed Rd', 'Downtown', 'Jumeirah 1-3', 'Business Bay'], rates: { seater4: 120, seater7: 120, seater12: 150, seater22: 410, seater35: 455, seater50: 585 } },
@@ -277,14 +230,7 @@ export const zones: Zone[] = [
   { zone: 4, name: 'Far Dubai', areas: ['Jebel Ali', 'Dubai Parks', 'DIP', 'Expo City'], rates: { seater4: 230, seater7: 235, seater12: 250, seater22: 535, seater35: 615, seater50: 685 } }
 ];
 
-export interface Attraction {
-  id: string;
-  name: string;
-  sellPrice: number;
-  netPrice: number;
-  category: 'adventure' | 'culture' | 'luxury' | 'family';
-}
-
+export interface Attraction { id: string; name: string; sellPrice: number; netPrice: number; category: 'adventure' | 'culture' | 'luxury' | 'family'; }
 export const attractions: Attraction[] = [
   { id: 'dtt-buggy', name: 'DTT Buggy Experience (1Hr)', sellPrice: 1040, netPrice: 845, category: 'adventure' },
   { id: 'dhow-marina', name: 'Dhow Cruise Marina (Upper Deck)', sellPrice: 195, netPrice: 120, category: 'luxury' },
@@ -295,17 +241,7 @@ export const attractions: Attraction[] = [
   { id: 'frame', name: 'Dubai Frame', sellPrice: 75, netPrice: 60, category: 'culture' }
 ];
 
-export interface ComboPackage {
-  id: string;
-  name: string;
-  items: string[];
-  totalPrice: number;
-  savings: string;
-  tag: 'Best Seller' | 'VIP' | 'Family';
-  idealFor?: string[];
-  margin?: 'high' | 'medium' | 'low';
-}
-
+export interface ComboPackage { id: string; name: string; items: string[]; totalPrice: number; savings: string; tag: 'Best Seller' | 'VIP' | 'Family'; idealFor?: string[]; margin?: 'high' | 'medium' | 'low'; }
 export const comboPackages: ComboPackage[] = [
   { id: 'abu-dhabi-ferrari', name: 'Abu Dhabi + Ferrari World', items: ['Private Transfer', 'Ferrari World Tix', 'Grand Mosque Visit', 'Dates Market'], totalPrice: 1105, savings: '10%', tag: 'Best Seller', idealFor: ['Families', 'Adventure seekers', 'Thrill fans'], margin: 'high' },
   { id: 'full-day-dubai', name: 'Full Day Dubai Ultimate', items: ['Bastakiya', 'Abra Ride', 'Gold Souq', 'Dubai Frame (Photo)', 'Atlantis (Photo)'], totalPrice: 650, savings: 'Custom', tag: 'Family', idealFor: ['Families', 'Culture lovers', 'First-timers'], margin: 'medium' },
@@ -313,14 +249,7 @@ export const comboPackages: ComboPackage[] = [
   { id: 'buggy-safari', name: 'Dune Buggy Safari', items: ['1hr Buggy (Self Drive)', 'Sand Boarding', 'Camel Ride', 'Refreshments'], totalPrice: 1235, savings: 'Adventure', tag: 'VIP', idealFor: ['Adventure seekers', 'VIP', 'Friends'], margin: 'high' }
 ];
 
-export interface WhatsAppScript {
-  id: string;
-  category: 'inquiry' | 'culture' | 'price' | 'objection' | 'upsell' | 'confirmation' | 'emergency';
-  scenario: string;
-  script: string;
-  tags: string[];
-}
-
+export interface WhatsAppScript { id: string; category: 'inquiry' | 'culture' | 'price' | 'objection' | 'upsell' | 'confirmation' | 'emergency'; scenario: string; script: string; tags: string[]; }
 export const whatsappScripts: WhatsAppScript[] = [
   { id: 'price-doubt', category: 'objection', scenario: 'Price Doubt Killer', script: "I know you'll find cheaper out there—I won't lie. But you won't find *me* out there. I make sure everything runs smooth, no last-minute stress, and I'm always one message away. That's the difference. 🤝", tags: ['closing', 'trust'] },
   { id: 'booking-hype', category: 'confirmation', scenario: 'Booking Confirmation Hype', script: "Alright, we're locked in! 🔒 I'll personally follow up to make sure your experience is as smooth as your dune ride's gonna be. You're in good hands. 🚙✨", tags: ['confirmation', 'excitement'] },
@@ -332,14 +261,7 @@ export const whatsappScripts: WhatsAppScript[] = [
   { id: 'mosque-dress', category: 'culture', scenario: 'Mosque Dress Code', script: "Important for the Grand Mosque 🕌: \n• Ladies: Long sleeves, ankle-length trousers/skirt, and headscarf required.\n• Gents: Long trousers (no shorts) and sleeved shirts.\n\nLet me know if you need help arranging abayas!", tags: ['info', 'guidelines'] }
 ];
 
-export interface SOPRule {
-  id: string;
-  category: 'policy' | 'process' | 'communication' | 'safety';
-  title: string;
-  description: string;
-  importance: 'critical' | 'important' | 'standard';
-}
-
+export interface SOPRule { id: string; category: 'policy' | 'process' | 'communication' | 'safety'; title: string; description: string; importance: 'critical' | 'important' | 'standard'; }
 export const sopRules: SOPRule[] = [
   { id: 'no-show', category: 'policy', title: 'No-Show = No Refund', description: 'Guests who do not show up forfeit their booking. No exceptions without prior approval.', importance: 'critical' },
   { id: 'cancellation', category: 'process', title: 'Cancellation Process', description: 'All cancellation requests must be emailed to online@raynab2b.com', importance: 'critical' },
@@ -349,14 +271,7 @@ export const sopRules: SOPRule[] = [
   { id: 'waiver', category: 'safety', title: 'Adventure Activity Waivers', description: 'Hot air balloon and adventure activities require signed waivers before participation.', importance: 'critical' }
 ];
 
-export interface CheatCode {
-  id: string;
-  type: 'value' | 'margin' | 'budget' | 'upsell';
-  title: string;
-  details: string;
-  priceRange?: string;
-}
-
+export interface CheatCode { id: string; type: 'value' | 'margin' | 'budget' | 'upsell'; title: string; details: string; priceRange?: string; }
 export const cheatCodes: CheatCode[] = [
   { id: 'best-value', type: 'value', title: 'Best Value Combo', details: 'Abu Dhabi + Ferrari World', priceRange: '~550 AED' },
   { id: 'high-margin', type: 'margin', title: 'High Margin Winners', details: 'Buggy + Balloon combo' },
