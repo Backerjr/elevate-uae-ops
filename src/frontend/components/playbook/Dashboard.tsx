@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { navigationItems, type TabId } from "@/lib/navigation-utils";
 import { ArrowRight } from "lucide-react";
 
-// FIX: Update onNavigate to strictly accept 'TabId' instead of 'string'
 interface DashboardProps {
   onNavigate: (tab: TabId) => void; 
 }
@@ -38,3 +37,5 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     </div>
   );
 }
+
+export default Dashboard;
