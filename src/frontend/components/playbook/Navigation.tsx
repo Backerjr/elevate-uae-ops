@@ -1,6 +1,5 @@
 import { navigationItems, type TabId } from "@/lib/navigation-utils";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion"; // Assuming framer-motion is available, if not falling back to CSS
 
 interface NavigationProps {
   activeTab: TabId;

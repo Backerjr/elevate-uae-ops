@@ -1,5 +1,3 @@
-// Ahmed Travel | New Hire Training Playbook Data (30% retail markup applied)
-
 import catalogData from "@data/products.json";
 
 export interface Tour {
@@ -22,47 +20,49 @@ export interface Tour {
   bestFor?: string;
   tags?: string[];
   waiverUrl?: string;
-  image?: string; // New Visual Asset Field
+  image?: string;
 }
 
-// --- SMART VISUAL RESOLVER ENGINE ---
-// Maps specific keywords in tour titles to high-fidelity Unsplash visuals
+// --- PROJECT PHOENIX: HIGH-FIDELITY VISUAL RESOLVER ---
 const resolveHeroImage = (title: string, category: string): string => {
   const t = title.toLowerCase();
 
-  // 1. Specific Landmarks & Attractions
-  if (t.includes('burj khalifa')) return 'https://images.unsplash.com/photo-1582657233895-0f37a3ec7179?q=80&w=2070&auto=format&fit=crop'; // Tall tower shot
-  if (t.includes('museum of the future')) return 'https://images.unsplash.com/photo-1662668862763-8360822a9792?q=80&w=2070&auto=format&fit=crop'; // Calligraphy building
-  if (t.includes('ferrari')) return 'https://images.unsplash.com/photo-1583236270830-4cf92497047f?q=80&w=2070&auto=format&fit=crop'; // Red coaster/speed
-  if (t.includes('louvre')) return 'https://images.unsplash.com/photo-1577712396677-4df3306eb8e6?q=80&w=2070&auto=format&fit=crop'; // Louvre dome
-  if (t.includes('mosque') || t.includes('sheikh zayed')) return 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?q=80&w=2070&auto=format&fit=crop'; // Grand Mosque
-  if (t.includes('frame')) return 'https://images.unsplash.com/photo-1605645398256-4c9299496732?q=80&w=2070&auto=format&fit=crop'; // Dubai Frame
-  if (t.includes('atlantis') || t.includes('aquaventure')) return 'https://images.unsplash.com/photo-1623232873157-194361514781?q=80&w=2070&auto=format&fit=crop'; // Atlantis Palm
-  if (t.includes('global village')) return 'https://images.unsplash.com/photo-1582236967757-935dfa97b2fb?q=80&w=2070&auto=format&fit=crop'; // Colorful pavilions
+  // 1. ABU DHABI & LANDMARKS
+  if (t.includes('ferrari')) return 'https://images.unsplash.com/photo-1595792957929-106579295792?q=80&w=2000&auto=format&fit=crop'; // Ferrari Red theme
+  if (t.includes('louvre')) return 'https://images.unsplash.com/photo-1548625442-9907f79435b6?q=80&w=2000&auto=format&fit=crop'; // Louvre Dome
+  if (t.includes('sheikh zayed') || t.includes('mosque')) return 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?q=80&w=2000&auto=format&fit=crop'; // Grand Mosque
+  if (t.includes('qasr al watan')) return 'https://images.unsplash.com/photo-1629219379685-6eb722026569?q=80&w=2000&auto=format&fit=crop'; // Presidential Palace
+  if (t.includes('abu dhabi city')) return 'https://images.unsplash.com/photo-1511923985923-277ba002220d?q=80&w=2000&auto=format&fit=crop'; // AD Skyline
 
-  // 2. Adventure Activities
-  if (t.includes('buggy') || t.includes('dune buggy')) return 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2070&auto=format&fit=crop'; // Action buggy
-  if (t.includes('quad') || t.includes('bike')) return 'https://images.unsplash.com/photo-1599384733470-c36b8032b842?q=80&w=2070&auto=format&fit=crop'; // Quad bike
-  if (t.includes('jet ski') || t.includes('jetski')) return 'https://images.unsplash.com/photo-1606927943468-d01729b46c64?q=80&w=2070&auto=format&fit=crop'; // Jet ski splash
-  if (t.includes('balloon')) return 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=2070&auto=format&fit=crop'; // Hot air balloon
-  if (t.includes('helicopter')) return 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?q=80&w=2070&auto=format&fit=crop'; // Aerial view
+  // 2. DUBAI ICONS
+  if (t.includes('burj khalifa')) return 'https://images.unsplash.com/photo-1526495124232-a04e1849168c?q=80&w=2000&auto=format&fit=crop'; // Tower Close-up
+  if (t.includes('museum of the future')) return 'https://images.unsplash.com/photo-1643968662992-124699595293?q=80&w=2000&auto=format&fit=crop'; // MOTF Exterior
+  if (t.includes('frame')) return 'https://images.unsplash.com/photo-1605645398256-4c9299496732?q=80&w=2000&auto=format&fit=crop'; // Dubai Frame
+  if (t.includes('view at the palm') || t.includes('the view')) return 'https://images.unsplash.com/photo-1635332353347-160564539825?q=80&w=2000&auto=format&fit=crop'; // Palm View
+  if (t.includes('aura') || t.includes('skypool')) return 'https://images.unsplash.com/photo-1678272990666-4c9299496732?q=80&w=2000&auto=format&fit=crop'; // Infinity Pool
+  if (t.includes('miracle garden')) return 'https://images.unsplash.com/photo-1558273617-640952b36e3b?q=80&w=2000&auto=format&fit=crop'; // Flowers
+  if (t.includes('global village')) return 'https://images.unsplash.com/photo-1549221376-772922137677?q=80&w=2000&auto=format&fit=crop'; // GV Night
 
-  // 3. Water & Cruises
-  if (t.includes('yacht')) return 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?q=80&w=2070&auto=format&fit=crop'; // Luxury yacht
-  if (t.includes('dhow') || t.includes('dinner cruise')) return 'https://images.unsplash.com/photo-1512632500708-1b2177c27f29?q=80&w=2070&auto=format&fit=crop'; // Marina night cruise
-  if (t.includes('boat')) return 'https://images.unsplash.com/photo-1522542194-295166b70c84?q=80&w=2070&auto=format&fit=crop'; // Speedboat
+  // 3. DESERT & ADVENTURE
+  if (t.includes('buggy') || t.includes('dune buggy')) return 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2000&auto=format&fit=crop'; // Action Buggy
+  if (t.includes('quad')) return 'https://images.unsplash.com/photo-1599384733470-c36b8032b842?q=80&w=2000&auto=format&fit=crop'; // Quad Bike
+  if (t.includes('hot air') || t.includes('balloon')) return 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=2000&auto=format&fit=crop'; // Balloon Sunrise
+  if (t.includes('safari')) return 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=2000&auto=format&fit=crop'; // Classic Safari
+  if (t.includes('camel')) return 'https://images.unsplash.com/photo-1589886733226-764722676472?q=80&w=2000&auto=format&fit=crop'; // Camel Caravan
 
-  // 4. Desert Specifics
-  if (t.includes('morning') && t.includes('desert')) return 'https://images.unsplash.com/photo-1545199583-026ccb2323e2?q=80&w=2070&auto=format&fit=crop'; // Bright desert
-  if (t.includes('overnight') || t.includes('camping')) return 'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?q=80&w=2070&auto=format&fit=crop'; // Tent/Stars
-  if (t.includes('safari')) return 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=2070&auto=format&fit=crop'; // Classic Land Cruiser
+  // 4. WATER & CRUISE
+  if (t.includes('yacht')) return 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?q=80&w=2000&auto=format&fit=crop'; // Luxury Yacht
+  if (t.includes('dhow') || t.includes('dinner cruise')) return 'https://images.unsplash.com/photo-1512632500708-1b2177c27f29?q=80&w=2000&auto=format&fit=crop'; // Marina Night
+  if (t.includes('jet ski') || t.includes('jetski')) return 'https://images.unsplash.com/photo-1606927943468-d01729b46c64?q=80&w=2000&auto=format&fit=crop'; // Water Splash
+  if (t.includes('aquaventure') || t.includes('waterpark')) return 'https://images.unsplash.com/photo-1575424909138-4c9299496732?q=80&w=2000&auto=format&fit=crop'; // Waterpark
 
-  // 5. Category Fallbacks (Last Resort)
+  // 5. FALLBACKS BY CATEGORY
   switch(category) {
-    case 'abu-dhabi': return 'https://images.unsplash.com/photo-1511923985923-277ba002220d?q=80&w=2070&auto=format&fit=crop';
-    case 'dubai': return 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=2070&auto=format&fit=crop';
-    case 'cruise': return 'https://images.unsplash.com/photo-1597659840241-37e2b9c2f55f?q=80&w=2070&auto=format&fit=crop';
-    default: return 'https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=2070&auto=format&fit=crop'; // Generic luxe travel
+    case 'desert': return 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=2000&auto=format&fit=crop'; // Generic Dunes
+    case 'cruise': return 'https://images.unsplash.com/photo-1522542194-295166b70c84?q=80&w=2000&auto=format&fit=crop'; // Generic Boat
+    case 'adventure': return 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2000&auto=format&fit=crop'; // Generic Action
+    case 'abu-dhabi': return 'https://images.unsplash.com/photo-1511923985923-277ba002220d?q=80&w=2000&auto=format&fit=crop'; // AD Generic
+    default: return 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=2000&auto=format&fit=crop'; // Dubai Skyline
   }
 };
 
@@ -72,14 +72,14 @@ const hardcodedTours: Tour[] = [
     name: 'Dubai Full-Day Explore Tour',
     category: 'dubai',
     pickup: '10:00–10:30 AM',
-    duration: '~10 hours (Drop-off ~8:30 PM)',
+    duration: '~10 hours',
     highlights: ['Zabeel Palace', 'Museum of the Future', 'Bastakiya', 'Gold & Spice Souks', 'Palm Monorail'],
     visualCues: ['🌆', '🛶', '🚝', '✨'],
     proTip: 'Perfect all-in-one overview for first-time Dubai visitors.',
     margin: 'medium',
     difficulty: 'easy',
     idealFor: ['First-timers', 'Families'],
-    image: resolveHeroImage('Dubai Full-Day Explore Tour', 'dubai')
+    image: 'https://images.unsplash.com/photo-1512453979798-5ea90b7cadc9?q=80&w=2070&auto=format&fit=crop' // Burj Khalifa Daytime
   },
   {
     id: 'desert-safari-sharing',
@@ -94,7 +94,7 @@ const hardcodedTours: Tour[] = [
     margin: 'medium',
     difficulty: 'easy',
     idealFor: ['Adventure seekers', 'Groups'],
-    image: resolveHeroImage('Premium Desert Safari', 'desert')
+    image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=2070&auto=format&fit=crop' // Red Dunes
   },
   {
     id: 'abu-dhabi-city',
@@ -108,7 +108,7 @@ const hardcodedTours: Tour[] = [
     margin: 'high',
     difficulty: 'easy',
     idealFor: ['Culture lovers'],
-    image: resolveHeroImage('Sheikh Zayed Grand Mosque', 'abu-dhabi')
+    image: 'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?q=80&w=2070&auto=format&fit=crop' // Grand Mosque
   },
   {
     id: 'hot-air-balloon',
@@ -123,7 +123,7 @@ const hardcodedTours: Tour[] = [
     margin: 'high',
     difficulty: 'complex',
     idealFor: ['Couples', 'VIP'],
-    image: resolveHeroImage('Hot Air Balloon', 'experience')
+    image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=2070&auto=format&fit=crop' // Balloon
   },
   {
     id: 'dhow-cruise-marina',
@@ -136,7 +136,7 @@ const hardcodedTours: Tour[] = [
     margin: 'medium',
     difficulty: 'easy',
     idealFor: ['Couples', 'Dinner'],
-    image: resolveHeroImage('Dhow Cruise Marina', 'cruise')
+    image: 'https://images.unsplash.com/photo-1512632500708-1b2177c27f29?q=80&w=2070&auto=format&fit=crop' // Marina Night
   },
   {
     id: 'buggy-quad',
@@ -150,10 +150,11 @@ const hardcodedTours: Tour[] = [
     margin: 'high',
     difficulty: 'moderate',
     idealFor: ['Thrill seekers'],
-    image: resolveHeroImage('Dune Buggy', 'adventure')
+    image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=2070&auto=format&fit=crop' // Buggy
   }
 ];
 
+// ... (Rest of the file logic for Catalog mapping, Rates, Zones, etc. remains unchanged)
 type CatalogProduct = {
   product_id?: string;
   product_name?: string;
@@ -211,7 +212,7 @@ const mappedCatalogTours: Tour[] = (catalogData as CatalogProduct[]).map(mapCata
 
 export const tours: Tour[] = [...hardcodedTours, ...mappedCatalogTours];
 
-// ... (Exporting existing static datasets below without changes)
+// ... (Existing Exports: VehicleRate, vehicleRates, Zone, zones, Attraction, attractions, ComboPackage, comboPackages, WhatsAppScript, whatsappScripts, SOPRule, sopRules, CheatCode, cheatCodes, brandPillars)
 export interface VehicleRate { vehicle: string; capacity: number; fullDayDubai: number; halfDayDubai: number; fullDayAbuDhabi: number; transferDXB: number; }
 export const vehicleRates: VehicleRate[] = [
   { vehicle: 'Lexus ES350 (Luxury Sedan)', capacity: 4, fullDayDubai: 650, halfDayDubai: 420, fullDayAbuDhabi: 780, transferDXB: 115 },

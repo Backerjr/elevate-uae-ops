@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { tours, type Tour } from '@/data/playbook-data';
-import { ChevronDown, ChevronUp, Clock, MapPin, Search, Filter, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, MapPin, Search, Filter, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,34 @@ const getDifficultyColor = (diff: string) => {
   }
 };
 
+// --- Featured Hero Component ---
+const FeaturedHero = ({ tour }: { tour: Tour }) => (
+  <div className="relative w-full h-80 md:h-96 rounded-3xl overflow-hidden mb-12 group border border-white/10 shadow-2xl">
+    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
+    <img 
+      src={tour.image} 
+      alt={tour.name} 
+      className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[2s] ease-out"
+    />
+    <div className="absolute bottom-0 left-0 p-8 z-20 max-w-3xl">
+      <div className="flex items-center gap-3 mb-3">
+        <Badge className="bg-amber-500 text-black font-bold animate-pulse">
+          <Star className="w-3 h-3 mr-1 fill-black" /> FEATURED EXPERIENCE
+        </Badge>
+        <Badge variant="outline" className="text-white border-white/30 backdrop-blur-md uppercase tracking-wider">
+          {tour.category}
+        </Badge>
+      </div>
+      <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 drop-shadow-xl font-display">
+        {tour.name}
+      </h2>
+      <p className="text-white/80 text-lg line-clamp-2 max-w-2xl mb-6">
+        {tour.proTip || tour.highlights.join(' • ')}
+      </p>
+    </div>
+  </div>
+);
+
 // --- Tour Card Component ---
 const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -25,18 +53,17 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
       {/* Hero Section */}
       <div className="relative h-56 overflow-hidden">
         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
-        {/* VISION PROTOCOL: Direct Asset Rendering */}
         <img
           src={tour.image || '/assets/placeholders/hero.svg'}
           alt={tour.name}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-          loading="lazy"
+          loading={typeof HTMLImageElement !== 'undefined' && 'loading' in HTMLImageElement.prototype ? 'lazy' : undefined}
         />
         
         {/* Margin Badge (Top Right) */}
         <div className="absolute top-4 right-4 z-20">
           {tour.margin === 'high' && (
-            <Badge className="bg-amber-500/90 hover:bg-amber-500 text-black border-none shadow-lg shadow-amber-500/20 backdrop-blur-sm animate-pulse-slow">
+            <Badge className="bg-amber-500/90 hover:bg-amber-500 text-black border-none shadow-lg shadow-amber-500/20 backdrop-blur-sm">
               <Sparkles className="w-3 h-3 mr-1" /> High Margin
             </Badge>
           )}
@@ -172,18 +199,26 @@ export const TourCatalog: React.FC = () => {
     });
   }, [filterCategory, searchQuery]);
 
+  // Featured Tour Logic (Rotate randomly or pick highest margin)
+  const featuredTour = useMemo(() => {
+    return tours.find(t => t.margin === 'high' && t.category === 'desert') || tours[0];
+  }, []);
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
+      {/* Featured Hero Section */}
+      {filterCategory === 'all' && !searchQuery && <FeaturedHero tour={featuredTour} />}
+
       {/* Controls Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card/30 p-4 rounded-2xl border border-white/5 backdrop-blur-sm">
+      <div className="sticky top-20 z-30 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-black/80 p-4 rounded-2xl border border-white/10 backdrop-blur-xl shadow-2xl">
         
         {/* Search Bar */}
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
             placeholder="Search tours, highlights..." 
-            className="pl-10 bg-black/20 border-white/10 focus:border-primary/50 transition-all"
+            className="pl-10 bg-white/5 border-white/10 focus:border-primary/50 transition-all text-white placeholder:text-white/40"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -199,7 +234,7 @@ export const TourCatalog: React.FC = () => {
               className={cn(
                 "px-4 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap border",
                 filterCategory === cat
-                  ? "bg-primary text-black border-primary shadow-glow"
+                  ? "bg-primary text-black border-primary shadow-glow scale-105"
                   : "bg-transparent text-muted-foreground border-transparent hover:bg-white/5 hover:text-foreground"
               )}
             >
