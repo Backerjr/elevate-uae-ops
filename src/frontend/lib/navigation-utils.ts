@@ -1,4 +1,4 @@
-import { LayoutDashboard, Car, Calculator, FileText, ShieldAlert, BadgeDollarSign, BookOpen, GitCompare, ThumbsUp, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Car, Calculator, FileText, ShieldAlert, BadgeDollarSign, BookOpen, GitCompare, ThumbsUp, MessageSquare, type LucideIcon } from "lucide-react";
 
 // FIX: Add all the new tab IDs to this union type
 export type TabId = 
@@ -16,7 +16,7 @@ export type TabId =
 export interface NavigationItem {
   id: TabId;
   label: string;
-  icon: any; // Using any for Lucide icons to avoid complex type matching
+  icon: LucideIcon; // Use LucideIcon type from lucide-react
 }
 
 export const navigationItems: NavigationItem[] = [
