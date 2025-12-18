@@ -6,13 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { vehicleRates, zones, attractions, comboPackages } from '@/data/playbook-data';
-import { Calculator, Car, MapPin, Ticket, Package, Copy, Check, Users, Minus, Plus } from 'lucide-react';
+import { Calculator, Car, MapPin, Ticket, Package, Copy, Check, Users, Minus, Plus, RefreshCcw } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function QuoteCalculator() {
   const [vehicle, setVehicle] = useState<string>('');
   const [zone, setZone] = useState<string>('');
-  const [tourType, setTourType] = useState<'full-dubai' | 'full-abudhabi' | 'half-dubai'>('full-dubai');
+  const [tourType, setTourType] = useState<'full-dubai' | 'full-abudhabi' | 'half-dubai' | 'transfer'>('full-dubai');
   const [guests, setGuests] = useState<number | ''>(1);
   const [selectedAttractions, setSelectedAttractions] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
@@ -23,7 +23,7 @@ export function QuoteCalculator() {
   // Derived value for calculations (fallback to 1 if empty)
   const safeGuests = typeof guests === 'number' && guests > 0 ? guests : 1;
 
-  // --- Handlers for Guest Input ---
+  // --- Handlers ---
 
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -32,9 +32,7 @@ export function QuoteCalculator() {
       return;
     }
     const parsed = parseInt(val, 10);
-    if (!isNaN(parsed)) {
-      setGuests(parsed);
-    }
+    if (!isNaN(parsed)) setGuests(parsed);
   };
 
   const handleGuestBlur = () => {
@@ -44,14 +42,16 @@ export function QuoteCalculator() {
     setGuests(val);
   };
 
-  const incrementGuests = () => {
-    const current = typeof guests === 'number' ? guests : 0;
-    setGuests(Math.min(500, current + 1));
-  };
+  const incrementGuests = () => setGuests(Math.min(500, (typeof guests === 'number' ? guests : 0) + 1));
+  const decrementGuests = () => setGuests(Math.max(1, (typeof guests === 'number' ? guests : 1) - 1));
 
-  const decrementGuests = () => {
-    const current = typeof guests === 'number' ? guests : 1;
-    setGuests(Math.max(1, current - 1));
+  const resetForm = () => {
+    setVehicle('');
+    setZone('');
+    setTourType('full-dubai');
+    setGuests(1);
+    setSelectedAttractions([]);
+    toast.info('Calculator reset');
   };
 
   // --- Calculations ---
@@ -59,62 +59,60 @@ export function QuoteCalculator() {
   const calculation = useMemo(() => {
     if (!selectedVehicle || !selectedZone) return null;
 
-    const guestCount = typeof guests === 'string' ? parseInt(guests, 10) || 1 : guests;
-
+    // Determine Rate Key based on capacity
     const rateKey =
-      selectedVehicle.capacity <= 4
-        ? 'seater4'
-        : selectedVehicle.capacity <= 7
-          ? 'seater7'
-          : selectedVehicle.capacity <= 12
-            ? 'seater12'
-            : selectedVehicle.capacity <= 22
-              ? 'seater22'
-              : selectedVehicle.capacity <= 35
-                ? 'seater35'
-                : 'seater50';
+      selectedVehicle.capacity <= 4 ? 'seater4' :
+      selectedVehicle.capacity <= 7 ? 'seater7' :
+      selectedVehicle.capacity <= 12 ? 'seater12' :
+      selectedVehicle.capacity <= 22 ? 'seater22' :
+      selectedVehicle.capacity <= 35 ? 'seater35' : 'seater50';
+    
+    // Zone Rate (This is the transfer/pickup cost)
     const pickupRate = selectedZone.rates[rateKey] ?? selectedZone.rates.seater7 ?? 0;
 
-    const vehicleRate = tourType === 'full-dubai' 
-      ? selectedVehicle.fullDayDubai 
-      : tourType === 'full-abudhabi'
-        ? selectedVehicle.fullDayAbuDhabi
-        : selectedVehicle.halfDayDubai;
+    // Vehicle Rate (Base rental cost)
+    let vehicleRate = 0;
+    if (tourType === 'full-dubai') vehicleRate = selectedVehicle.fullDayDubai;
+    else if (tourType === 'full-abudhabi') vehicleRate = selectedVehicle.fullDayAbuDhabi;
+    else if (tourType === 'half-dubai') vehicleRate = selectedVehicle.halfDayDubai;
+    else if (tourType === 'transfer') vehicleRate = 0; // Transfer is just the zone rate
 
+    // Attractions
     const attractionsCost = selectedAttractions.reduce((sum, id) => {
       const attr = attractions.find(a => a.id === id);
       return sum + (attr ? attr.sellPrice * safeGuests : 0);
     }, 0);
 
     const subtotal = vehicleRate + pickupRate + attractionsCost;
-    const total = subtotal;
-    const perPerson = Math.ceil(total / safeGuests);
-
+    
     return {
       vehicleRate,
-      pickupRate,
+      pickupRate, // For transfers, this is the main cost
       attractionsCost,
-      subtotal,
-      total,
-      perPerson,
+      total: subtotal,
+      perPerson: Math.ceil(subtotal / safeGuests),
     };
-  }, [selectedVehicle, selectedZone, tourType, selectedAttractions, safeGuests, guests]);
+  }, [selectedVehicle, selectedZone, tourType, selectedAttractions, safeGuests]);
 
   const copyQuote = () => {
     if (!calculation) return;
+
+    let tourLabel = 'Full Day Dubai';
+    if (tourType === 'full-abudhabi') tourLabel = 'Full Day Abu Dhabi';
+    if (tourType === 'half-dubai') tourLabel = 'Half Day Dubai';
+    if (tourType === 'transfer') tourLabel = 'One-Way Transfer (Drop-off)';
 
     const quote = `
 🌟 Ahmed Travel Quote
 ━━━━━━━━━━━━━━━━━━
 
-📍 Tour: ${tourType === 'full-dubai' ? 'Full Day Dubai' : tourType === 'full-abudhabi' ? 'Full Day Abu Dhabi' : 'Half Day Dubai'}
+📍 Service: ${tourLabel}
 🚐 Vehicle: ${vehicle}
-📍 Pickup Zone: Zone ${zone} (${selectedZone?.name})
+📍 Zone: Zone ${zone} (${selectedZone?.name})
 👥 Guests: ${safeGuests}
 
 💰 Breakdown:
-• Vehicle: AED ${calculation.vehicleRate}
-• Pickup: AED ${calculation.pickupRate}
+${tourType !== 'transfer' ? `• Vehicle Rental: AED ${calculation.vehicleRate}\n` : ''}• Transfer/Logistics: AED ${calculation.pickupRate}
 ${calculation.attractionsCost > 0 ? `• Attractions: AED ${calculation.attractionsCost}` : ''}
 
 ━━━━━━━━━━━━━━━━━━
@@ -131,33 +129,39 @@ Thank you for choosing Ahmed Travel! ✈️
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Calculator Form */}
       <Card variant="elevated">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-5 w-5 text-primary" />
-            Smart Quote Builder
-          </CardTitle>
-          <CardDescription>
-            Build professional quotes in seconds with automatic zone pricing
-          </CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Calculator className="h-5 w-5 text-primary" />
+              Smart Quote Builder
+            </CardTitle>
+            <CardDescription>
+              Instant quotes for Tours & Transfers
+            </CardDescription>
+          </div>
+          <Button variant="ghost" size="icon" onClick={resetForm} title="Reset Form">
+            <RefreshCcw className="h-4 w-4 text-muted-foreground hover:text-primary" />
+          </Button>
         </CardHeader>
         <CardContent className="space-y-5">
           {/* Tour Type */}
           <div className="space-y-2">
-            <Label>Tour Type</Label>
+            <Label>Service Type</Label>
             <Select
               value={tourType}
-              onValueChange={(v) => setTourType(v as 'full-dubai' | 'full-abudhabi' | 'half-dubai')}
+              onValueChange={(v: 'full-dubai' | 'full-abudhabi' | 'half-dubai' | 'transfer') => setTourType(v)}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select tour type" />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select service type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="full-dubai">Full Day Dubai</SelectItem>
-                <SelectItem value="full-abudhabi">Full Day Abu Dhabi</SelectItem>
-                <SelectItem value="half-dubai">Half Day Dubai</SelectItem>
+                <SelectItem value="full-dubai">Full Day Dubai Tour</SelectItem>
+                <SelectItem value="full-abudhabi">Full Day Abu Dhabi Tour</SelectItem>
+                <SelectItem value="half-dubai">Half Day Dubai Tour</SelectItem>
+                <SelectItem value="transfer">Airport Transfer / One-Way</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -169,7 +173,7 @@ Thank you for choosing Ahmed Travel! ✈️
               Vehicle Type
             </Label>
             <Select value={vehicle} onValueChange={setVehicle}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select vehicle" />
               </SelectTrigger>
               <SelectContent>
@@ -186,37 +190,30 @@ Thank you for choosing Ahmed Travel! ✈️
           <div className="space-y-2">
             <Label className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4" />
-              Pickup Zone
+              {tourType === 'transfer' ? 'Pickup/Drop-off Zone' : 'Pickup Zone'}
             </Label>
             <Select value={zone} onValueChange={setZone}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select pickup zone" />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select zone" />
               </SelectTrigger>
               <SelectContent>
                 {zones.map(z => (
                   <SelectItem key={z.zone} value={z.zone.toString()}>
-                    Zone {z.zone} - {z.name}
+                    <span className="font-medium">Zone {z.zone}</span> - <span className="text-muted-foreground">{z.name}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Guests Input with Stepper */}
+          {/* Guests Input */}
           <div className="space-y-2">
             <Label className="flex items-center gap-1.5">
               <Users className="h-4 w-4" />
               Number of Guests
             </Label>
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={decrementGuests}
-                type="button"
-                className="h-10 w-10 shrink-0"
-                aria-label="Decrease guests"
-              >
+              <Button variant="outline" size="icon" onClick={decrementGuests} className="h-10 w-10 shrink-0">
                 <Minus className="h-4 w-4" />
               </Button>
               <Input
@@ -228,14 +225,7 @@ Thank you for choosing Ahmed Travel! ✈️
                 onBlur={handleGuestBlur}
                 className="text-center font-medium"
               />
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={incrementGuests}
-                type="button"
-                className="h-10 w-10 shrink-0"
-                aria-label="Increase guests"
-              >
+              <Button variant="outline" size="icon" onClick={incrementGuests} className="h-10 w-10 shrink-0">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
@@ -253,17 +243,15 @@ Thank you for choosing Ahmed Travel! ✈️
                   key={attr.id}
                   variant={selectedAttractions.includes(attr.id) ? 'gold' : 'outline'}
                   size="sm"
-                  className="justify-start text-xs h-auto py-2 transition-all duration-200 hover:scale-105 hover:shadow-soft"
+                  className="justify-start text-xs h-auto py-2 transition-all duration-200"
                   onClick={() => {
                     setSelectedAttractions(prev =>
-                      prev.includes(attr.id)
-                        ? prev.filter(id => id !== attr.id)
-                        : [...prev, attr.id]
+                      prev.includes(attr.id) ? prev.filter(id => id !== attr.id) : [...prev, attr.id]
                     );
                   }}
                 >
-                  <span className="truncate">{attr.name}</span>
-                  <Badge variant="muted" className="ml-auto text-xs">
+                  <span className="truncate text-left">{attr.name}</span>
+                  <Badge variant="muted" className="ml-auto text-[10px] shrink-0">
                     {attr.sellPrice}
                   </Badge>
                 </Button>
@@ -275,44 +263,45 @@ Thank you for choosing Ahmed Travel! ✈️
 
       {/* Quote Preview */}
       <div className="space-y-4">
-        <Card variant="navy">
+        <Card variant="navy" className="border-amber-500/30 shadow-2xl">
           <CardHeader>
-            <CardTitle className="text-sidebar-foreground">Quote Preview</CardTitle>
+            <CardTitle className="text-white">Quote Preview</CardTitle>
           </CardHeader>
           <CardContent>
             {calculation ? (
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sidebar-foreground/80">
-                    <span>Vehicle ({tourType.replace('-', ' ')})</span>
-                    <span>AED {calculation.vehicleRate}</span>
-                  </div>
-                  <div className="flex justify-between text-sidebar-foreground/80">
-                    <span>Pickup (Zone {zone})</span>
+                <div className="space-y-2 text-sm text-gray-300">
+                  {tourType !== 'transfer' && (
+                    <div className="flex justify-between">
+                      <span>Vehicle Rental</span>
+                      <span>AED {calculation.vehicleRate}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>{tourType === 'transfer' ? 'Transfer Cost' : 'Logistics Surcharge'} (Zone {zone})</span>
                     <span>AED {calculation.pickupRate}</span>
                   </div>
                   {calculation.attractionsCost > 0 && (
-                    <div className="flex justify-between text-sidebar-foreground/80">
+                    <div className="flex justify-between text-amber-400/80">
                       <span>Attractions ({safeGuests}x)</span>
                       <span>AED {calculation.attractionsCost}</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="border-t border-sidebar-border pt-4">
-                  <div className="flex justify-between text-lg font-semibold text-sidebar-foreground">
+                <div className="border-t border-white/10 pt-4">
+                  <div className="flex justify-between text-xl font-bold text-white">
                     <span>Total</span>
-                    <span className="text-primary">AED {calculation.total}</span>
+                    <span className="text-amber-500 font-mono">AED {calculation.total}</span>
                   </div>
-                  <div className="flex justify-between text-sm text-sidebar-foreground/70 mt-1">
+                  <div className="flex justify-between text-xs text-gray-400 mt-1">
                     <span>Per Person ({safeGuests} guests)</span>
                     <span>AED {calculation.perPerson}</span>
                   </div>
                 </div>
 
                 <Button 
-                  variant="gold" 
-                  className="w-full mt-4 shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-105"
+                  className="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-black font-bold"
                   onClick={copyQuote}
                 >
                   {copied ? (
@@ -323,9 +312,10 @@ Thank you for choosing Ahmed Travel! ✈️
                 </Button>
               </div>
             ) : (
-              <p className="text-sidebar-foreground/60 text-center py-8">
-                Select vehicle and zone to see quote
-              </p>
+              <div className="text-center py-12 text-gray-500 border-2 border-dashed border-white/10 rounded-xl">
+                <Car className="h-10 w-10 mx-auto mb-3 opacity-20" />
+                <p>Select a vehicle and zone to generate a quote.</p>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -335,7 +325,7 @@ Thank you for choosing Ahmed Travel! ✈️
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Package className="h-4 w-4 text-primary" />
-              Quick Combo Packages
+              Quick Combos
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -343,15 +333,18 @@ Thank you for choosing Ahmed Travel! ✈️
               {comboPackages.slice(0, 3).map(combo => (
                 <div 
                   key={combo.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors border border-transparent hover:border-primary/10 cursor-pointer"
+                  onClick={() => {
+                    toast.success(`Copied ${combo.name} details!`);
+                    navigator.clipboard.writeText(`Package: ${combo.name}\nIncludes: ${combo.items.join(', ')}\nPrice: AED ${combo.totalPrice}`);
+                  }}
                 >
-                  <div>
-                    <p className="font-medium text-sm">{combo.name}</p>
-                    <p className="text-xs text-muted-foreground">{combo.items.join(' + ')}</p>
+                  <div className="overflow-hidden">
+                    <p className="font-medium text-sm truncate">{combo.name}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{combo.items.join(' + ')}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-primary">AED {combo.totalPrice}</p>
-                    <Badge variant="success" className="text-xs">Save {combo.savings}</Badge>
+                  <div className="text-right shrink-0 ml-2">
+                    <p className="font-bold text-primary text-sm">AED {combo.totalPrice}</p>
                   </div>
                 </div>
               ))}
