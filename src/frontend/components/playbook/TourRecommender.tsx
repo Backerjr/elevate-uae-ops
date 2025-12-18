@@ -1,11 +1,11 @@
-// APOTHEOSIS PROTOCOL: RECTIFICATION INITIATED
 import { useState } from 'react';
 import { tours, type Tour } from '@/data/playbook-data';
-import { Send, Sparkles, Loader2, Zap, Heart, Wind, Clock, Moon, Sun } from 'lucide-react';
+import { Send, Sparkles, Loader2, Zap, Heart, Wind, Clock, Moon, Sun, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 // --- THE FORESIGHT ENGINE ---
 // Advanced Heuristics to Map Abstract Desire to Operational Reality
@@ -13,14 +13,14 @@ const manifestItinerary = (input: string): Tour[] => {
   const text = input.toLowerCase();
   
   // 1. Deconstruct the Dream (Identify Core Vectors)
-  const wantsSpeed = text.match(/(fast|speed|thrill|adrenaline|rush|race|drive|buggy|quad|ferrari)/);
-  const wantsSilence = text.match(/(quiet|silence|peace|calm|serene|private|relax|slow|gentle)/);
-  const wantsRomance = text.match(/(love|romantic|couple|dinner|date|intimate)/);
-  const wantsCulture = text.match(/(history|culture|museum|art|mosque|heritage|old)/);
+  const wantsSpeed = text.match(/(fast|speed|thrill|adrenaline|rush|race|drive|buggy|quad|ferrari|action)/);
+  const wantsSilence = text.match(/(quiet|silence|peace|calm|serene|private|relax|slow|gentle|stars|escape)/);
+  const wantsRomance = text.match(/(love|romantic|couple|dinner|date|intimate|proposal)/);
+  const wantsCulture = text.match(/(history|culture|museum|art|mosque|heritage|old|traditional)/);
   
   // 2. Identify Temporal Anchors
-  const timeMorning = text.match(/(morning|sunrise|early|day|am)/);
-  const timeNight = text.match(/(night|evening|sunset|dinner|pm|dark|stars)/);
+  const timeMorning = text.match(/(morning|sunrise|early|day|am|dawn)/);
+  const timeNight = text.match(/(night|evening|sunset|dinner|pm|dark|dusk)/);
 
   const scores = tours.map(tour => {
     let score = 0;
@@ -44,12 +44,14 @@ const manifestItinerary = (input: string): Tour[] => {
     // Silence/Serenity Vector
     if (wantsSilence) {
       if (meta.includes('balloon') || meta.includes('cruise') || meta.includes('private') || meta.includes('view')) score += 5;
-      if (meta.includes('desert') && !meta.includes('bash')) score += 3; // Quiet desert
+      // Boost desert dinners but penalize loud dune bashing if silence is explicitly requested
+      if (meta.includes('desert') && !meta.includes('bash')) score += 4; 
+      if (meta.includes('overnight') || meta.includes('camping')) score += 6;
     }
 
     // Romance Vector
     if (wantsRomance) {
-      if (meta.includes('dinner') || meta.includes('dhow') || meta.includes('sunset') || meta.includes('couple')) score += 5;
+      if (meta.includes('dinner') || meta.includes('dhow') || meta.includes('sunset') || meta.includes('couple') || meta.includes('private')) score += 5;
     }
 
     // Culture Vector
@@ -61,17 +63,19 @@ const manifestItinerary = (input: string): Tour[] => {
     
     // If user asked for Morning, boost Morning tours
     if (timeMorning) {
-      if (meta.includes('sunrise') || meta.includes('morning') || meta.includes('10:00')) score += 4;
+      if (meta.includes('sunrise') || meta.includes('morning') || meta.includes('10:00') || meta.includes('5:30')) score += 5;
     }
 
     // If user asked for Night, boost Night tours
     if (timeNight) {
-      if (meta.includes('evening') || meta.includes('night') || meta.includes('sunset') || meta.includes('dinner') || meta.includes('7:30 pm')) score += 4;
+      if (meta.includes('evening') || meta.includes('night') || meta.includes('sunset') || meta.includes('dinner') || meta.includes('7:30 pm')) score += 5;
     }
 
-    // --- CONTEXTUAL RESONANCE ---
-    // If the query is complex (Speed AND Silence), we need to make sure we don't punish "Speed" tours for not being "Silent"
-    // The scorer allows high-scoring matches for *parts* of the query to bubble up.
+    // --- RESONANCE AMPLIFIER ---
+    // If a tour matches BOTH a requested vector AND a requested time, amplify it significantly.
+    // Example: "Speed" (Buggy) + "Morning" (Sunrise) -> Massive Boost
+    if (wantsSpeed && timeMorning && (meta.includes('buggy') && meta.includes('sunrise'))) score += 10;
+    if (wantsSilence && timeNight && (meta.includes('dinner') || meta.includes('cruise'))) score += 10;
 
     return { tour, score };
   });
@@ -275,3 +279,5 @@ export function TourRecommender() {
     </div>
   );
 }
+
+export default TourRecommender; 
