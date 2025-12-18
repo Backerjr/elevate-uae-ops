@@ -21,27 +21,35 @@ const analyzeIntent = (input: string): Tour[] => {
       ...(tour.tags || [])
     ].join(' ').toLowerCase();
 
-    // Thrill Vectors
-    if (text.includes('fast') || text.includes('speed') || text.includes('thrill')) {
+    // 1. Thrill Vectors
+    if (text.includes('fast') || text.includes('speed') || text.includes('thrill') || text.includes('adventure')) {
       if (metadata.includes('buggy') || metadata.includes('ferrari')) score += 5;
-      if (metadata.includes('jet')) score += 3;
+      if (metadata.includes('jet') || metadata.includes('quad')) score += 3;
     }
 
-    // Romance/Serenity Vectors
-    if (text.includes('quiet') || text.includes('romantic') || text.includes('love') || text.includes('couple')) {
+    // 2. Romance/Serenity Vectors (Added 'silence', 'peace')
+    if (text.includes('quiet') || text.includes('romantic') || text.includes('love') || text.includes('couple') || text.includes('silence') || text.includes('peace')) {
       if (metadata.includes('balloon') || metadata.includes('dinner') || metadata.includes('private')) score += 5;
-      if (metadata.includes('sunset')) score += 3;
+      if (metadata.includes('sunset') || metadata.includes('star')) score += 3;
     }
 
-    // Culture Vectors
-    if (text.includes('history') || text.includes('culture') || text.includes('museum')) {
+    // 3. Culture Vectors
+    if (text.includes('history') || text.includes('culture') || text.includes('museum') || text.includes('art')) {
       if (metadata.includes('mosque') || metadata.includes('louvre') || metadata.includes('heritage')) score += 5;
     }
 
-    // Luxury Vectors
+    // 4. Luxury Vectors
     if (text.includes('luxury') || text.includes('vip') || text.includes('expensive')) {
       if (tour.margin === 'high') score += 3;
       if (metadata.includes('yacht') || metadata.includes('limo')) score += 4;
+    }
+
+    // 5. Temporal Vectors (Morning vs Night)
+    if (text.includes('morning') || text.includes('sunrise')) {
+      if (metadata.includes('morning') || metadata.includes('sunrise')) score += 4;
+    }
+    if (text.includes('night') || text.includes('evening') || text.includes('dinner')) {
+      if (metadata.includes('evening') || metadata.includes('dinner') || metadata.includes('sunset')) score += 4;
     }
 
     return { tour, score };
@@ -50,7 +58,7 @@ const analyzeIntent = (input: string): Tour[] => {
   return scores
     .filter(s => s.score > 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
+    .slice(0, 3) // Return top 3 matches
     .map(s => s.tour);
 };
 
@@ -97,7 +105,7 @@ export function TourRecommender() {
             </h1>
             <p className="text-lg text-white/50 font-light max-w-lg mx-auto leading-relaxed">
               Don't search. Just tell me what you feel. <br />
-              "I want speed in the morning and silence at night."
+              <span className="italic text-white/80">"I want speed in the morning and silence at night."</span>
             </p>
           </div>
 
@@ -193,7 +201,10 @@ export function TourRecommender() {
               ))
             ) : (
               <div className="col-span-full text-center py-20">
-                <p className="text-white/40">My vision is clouded. Try a different desire.</p>
+                <p className="text-white/40 text-lg">My vision is clouded. Try a different desire.</p>
+                <Button variant="link" onClick={() => { setStep('idle'); setQuery(''); }} className="text-amber-500 mt-4">
+                  Reset Vision
+                </Button>
               </div>
             )}
           </div>
