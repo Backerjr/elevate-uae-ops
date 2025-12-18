@@ -47,12 +47,22 @@ const Index = () => {
     }
   };
 
-  // Dynamic Moods
+  // Dynamic Moods (Gradients)
   const getAtmosphere = () => {
     switch (timeOfDay) {
       case 'morning': return 'from-blue-950 via-slate-900 to-black';
       case 'day': return 'from-amber-950/40 via-black to-black';
       case 'evening': return 'from-purple-950/30 via-[#02040A] to-[#02040A]'; 
+    }
+  };
+
+  // Dynamic Hero Image Source
+  const getHeroImageSrc = () => {
+    switch (timeOfDay) {
+      case 'morning': return 'https://images.unsplash.com/photo-1545199583-026ccb2323e2?q=80&w=2000';
+      case 'day': return 'https://images.unsplash.com/photo-1512453979798-5ea90b7cadc9?q=80&w=2000';
+      case 'evening': return 'https://images.unsplash.com/photo-1512632500708-1b2177c27f29?q=80&w=2000';
+      default: return 'https://images.unsplash.com/photo-1512453979798-5ea90b7cadc9?q=80&w=2000';
     }
   };
 
@@ -96,14 +106,14 @@ const Index = () => {
         {/* HERO SECTION (Dashboard Only) */}
         {activeTab === 'dashboard' && (
           <div className="relative mb-20 overflow-hidden rounded-[2.5rem] border border-white/10 p-1 group">
-            {/* Parallax Background */}
-            <div className="absolute inset-0 bg-black z-0">
-              <div className={cn(
-                "absolute inset-0 bg-cover bg-center opacity-60 mix-blend-overlay transition-all duration-[3s] scale-105 group-hover:scale-100",
-                timeOfDay === 'morning' ? "bg-[url('https://images.unsplash.com/photo-1545199583-026ccb2323e2?q=80&w=2000')]" :
-                timeOfDay === 'day' ? "bg-[url('https://images.unsplash.com/photo-1512453979798-5ea90b7cadc9?q=80&w=2000')]" :
-                "bg-[url('https://images.unsplash.com/photo-1512632500708-1b2177c27f29?q=80&w=2000')]"
-              )} />
+            {/* Parallax Background - OPTIMIZED FOR LCP */}
+            <div className="absolute inset-0 bg-black z-0 overflow-hidden rounded-[2.4rem]">
+              <img 
+                src={getHeroImageSrc()}
+                alt="Atmospheric Background"
+                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay transition-transform duration-[5s] scale-105 group-hover:scale-100"
+                loading="eager"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
             </div>
             

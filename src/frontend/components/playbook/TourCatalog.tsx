@@ -48,8 +48,14 @@ const FeaturedHero = ({ tour }: { tour: Tour }) => (
         <div className="flex flex-col items-end">
           <span className="text-sm font-medium text-amber-400 uppercase tracking-widest mb-1">Starting From</span>
           <div className="text-5xl font-black text-white font-mono tracking-tighter">
-            <span className="text-2xl align-top mr-1 opacity-50">AED</span>
-            {tour.priceRange?.min || '---'}
+            {tour.priceRange && tour.priceRange.min > 0 ? (
+              <>
+                <span className="text-2xl align-top mr-1 opacity-50">AED</span>
+                {tour.priceRange.min}
+              </>
+            ) : (
+              <span className="text-3xl">INQUIRE</span>
+            )}
           </div>
           <Button className="mt-4 bg-white text-black hover:bg-amber-500 hover:text-black font-bold text-lg px-8 py-6 w-full md:w-auto transition-all transform hover:-translate-y-1">
             Book Experience
@@ -126,10 +132,16 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
             <div>
               <p className="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Price / Person</p>
               <div className="flex items-baseline gap-1">
-                <span className="text-sm text-amber-500 font-bold">AED</span>
-                <span className="text-3xl font-black text-white font-mono tracking-tighter">
-                  {tour.priceRange?.min || 'N/A'}
-                </span>
+                {tour.priceRange && tour.priceRange.min > 0 ? (
+                  <>
+                    <span className="text-sm text-amber-500 font-bold">AED</span>
+                    <span className="text-3xl font-black text-white font-mono tracking-tighter">
+                      {tour.priceRange.min}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-xl font-bold text-white/60">Ask Concierge</span>
+                )}
               </div>
             </div>
             <Button size="icon" variant="outline" className="border-white/10 hover:bg-amber-500 hover:text-black hover:border-amber-500 rounded-full w-12 h-12 transition-all">
