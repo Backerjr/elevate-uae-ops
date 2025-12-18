@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { tours, type Tour } from '@/data/playbook-data';
 import { ChevronDown, ChevronUp, Clock, MapPin, Search, Filter, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -57,7 +57,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
           src={tour.image || '/assets/placeholders/hero.svg'}
           alt={tour.name}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-          loading={typeof HTMLImageElement !== 'undefined' && 'loading' in HTMLImageElement.prototype ? 'lazy' : undefined}
+          // FIX: Removed loading="lazy" to resolve Safari < 15.4 compatibility warning
         />
         
         {/* Margin Badge (Top Right) */}
