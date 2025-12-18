@@ -1,186 +1,241 @@
-/* src/frontend/components/playbook/TourCatalog.tsx */
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Clock, MapPin, Tag } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { tours, type Tour } from '@/data/playbook-data';
+import { ChevronDown, ChevronUp, Clock, MapPin, Search, Filter, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
-// --- Type Definitions for Tour Data ---
-interface Inclusion {
-  id: number;
-  name: string;
-}
+// --- Assets Logic ---
+const getCategoryPlaceholder = (category: string) => {
+  switch (category) {
+    case 'desert': return '/assets/placeholders/hero_desert_1.jpg';
+    case 'cruise': return '/assets/placeholders/hero_water_3.jpg';
+    case 'adventure': return '/assets/placeholders/hero.svg'; // Fallback to generic hero
+    case 'abu-dhabi': return '/assets/placeholders/hero_city_2.jpg';
+    default: return '/assets/placeholders/hero.svg';
+  }
+};
 
-interface TourHighlight {
-  id: number;
-  name: string;
-}
+const getDifficultyColor = (diff: string) => {
+  switch (diff) {
+    case 'easy': return 'bg-green-500/10 text-green-500 border-green-500/20';
+    case 'moderate': return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
+    case 'complex': return 'bg-red-500/10 text-red-500 border-red-500/20';
+    default: return 'bg-primary/10 text-primary';
+  }
+};
 
-interface Tour {
-  id: string;
-  title: string;
-  description: string;
-  status: 'active' | 'archived' | 'pending';
-  destination: string;
-  duration: string;
-  heroImageUrl?: string;
-  highlights: TourHighlight[];
-  inclusions: Inclusion[];
-}
-
-// --- Mock Data (for demonstration purposes) ---
-const mockTours: Tour[] = [
-  {
-    id: 'T1001',
-    title: 'Arabian Sands Adventure',
-    description: 'Experience the majesty of the desert with a thrilling 4x4 dune bashing adventure and a serene sunset camel ride.',
-    status: 'active',
-    destination: 'Dubai Desert Conservation Reserve',
-    duration: '6 hours',
-    heroImageUrl: '/assets/placeholders/hero_desert_1.jpg',
-    highlights: [{ id: 1, name: 'Private Dune Buggy' }, { id: 2, name: 'Sunset Camel Ride' }],
-    inclusions: [{ id: 1, name: 'Gourmet Dinner' }, { id: 2, name: 'Transportation' }],
-  },
-  {
-    id: 'T1002',
-    title: 'Opulent Cityscape Tour',
-    description: 'A luxurious journey through Dubai\'s iconic landmarks, from the Burj Khalifa to the Palm Jumeirah.',
-    status: 'pending',
-    destination: 'Downtown Dubai',
-    duration: '4 hours',
-    heroImageUrl: '/assets/placeholders/hero_city_2.jpg',
-    highlights: [{ id: 1, name: 'Burj Khalifa Access' }, { id: 2, name: 'Luxury Yacht Cruise' }],
-    inclusions: [{ id: 1, name: 'Personal Photographer' }, { id: 2, name: 'Champagne Toast' }],
-  },
-  {
-    id: 'T1003',
-    title: 'Underwater Sanctuary',
-    description: 'Discover the vibrant marine life of the Arabian Gulf. Snorkeling or diving in crystal clear waters.',
-    status: 'active',
-    destination: 'Fujairah Coast',
-    duration: 'Full Day',
-    heroImageUrl: '/assets/placeholders/hero_water_3.jpg',
-    highlights: [{ id: 1, name: 'Guided Snorkeling Tour' }, { id: 2, name: 'PADI Certified Instructors' }],
-    inclusions: [{ id: 1, name: 'Equipment Rental' }, { id: 2, name: 'Beachfront Lunch' }],
-  },
-];
-
-// --- Tour Card Component (Redesigned) ---
+// --- Tour Card Component ---
 const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  // Define hover styles for glassmorphism and gold glow
-  const cardStyles = `
-    glass-card rounded-xl overflow-hidden
-    transition-all duration-300 ease-in-out
-    hover:scale-[1.02] hover:shadow-primary/50 hover:shadow-2xl
-  `;
-
-  // Determine badge style based on status
-  const badgeClass = tour.status === 'active'
-    ? 'border-primary text-primary'
-    : 'border-white/50 text-white/70';
+  const heroImage = getCategoryPlaceholder(tour.category);
 
   return (
-    <div className={cardStyles}>
-      {/* --- Card Header: Hero Image with Gold Overlay --- */}
-      <div className="relative h-64">
+    <div className="group relative bg-card/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 ease-out flex flex-col h-full">
+      {/* Hero Section */}
+      <div className="relative h-56 overflow-hidden">
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
         <img
-          src={tour.heroImageUrl || '/assets/placeholders/hero.svg'} // Placeholder image
-          alt={tour.title}
-          className="w-full h-full object-cover"
+          src={heroImage}
+          alt={tour.name}
+          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
         />
-        {/* Gold Accent Overlay and Status Badge */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60"></div>
-        <div className="absolute bottom-0 left-0 p-4 w-full flex justify-between items-end">
-          <span className={`px-4 py-1 text-sm font-semibold rounded-full border ${badgeClass}`}>
-            {tour.status}
-          </span>
+        
+        {/* Margin Badge (Top Right) */}
+        <div className="absolute top-4 right-4 z-20">
+          {tour.margin === 'high' && (
+            <Badge className="bg-amber-500/90 hover:bg-amber-500 text-black border-none shadow-lg shadow-amber-500/20 backdrop-blur-sm animate-pulse-slow">
+              <Sparkles className="w-3 h-3 mr-1" /> High Margin
+            </Badge>
+          )}
+        </div>
+
+        {/* Category Badge (Bottom Left) */}
+        <div className="absolute bottom-4 left-4 z-20">
+          <Badge variant="outline" className="bg-black/60 backdrop-blur-md text-white border-white/20 capitalize">
+            {tour.category.replace('-', ' ')}
+          </Badge>
         </div>
       </div>
 
-      {/* --- Card Content --- */}
-      <div className="p-6">
-        {/* Tour Title - Use font-display for luxury aesthetic */}
-        <h3 className="text-3xl font-display text-primary mb-2 leading-tight">
-          {tour.title}
-        </h3>
-        {/* Tour Description */}
-        <p className="text-white/80 line-clamp-3 mb-4">{tour.description}</p>
-
-        {/* --- Key Details (Iconography) --- */}
-        <div className="space-y-3 mb-4 text-white/90">
-          <div className="flex items-center space-x-3">
-            <MapPin className="w-5 h-5 text-primary" />
-            <span className="text-sm">{tour.destination}</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Clock className="w-5 h-5 text-primary" />
-            <span className="text-sm">{tour.duration}</span>
+      {/* Content Section */}
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="mb-4">
+          <h3 className="text-xl font-display font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
+            {tour.name}
+          </h3>
+          
+          {/* Quick Stats Row */}
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-3">
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-4 h-4 text-primary/80" />
+              <span>{tour.duration}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-primary/80" />
+              <span>{tour.pickup}</span>
+            </div>
           </div>
         </div>
 
-        {/* --- Collapsible Details Area --- */}
-        {isExpanded && (
-          <div className="space-y-4 pt-4 border-t border-muted">
-            {/* Highlights Section */}
-            <div>
-              <h4 className="text-md font-display text-primary mb-2">Highlights</h4>
-              <ul className="grid grid-cols-2 gap-y-2 text-sm text-white/80">
-                {tour.highlights.map(h => (
-                  <li key={h.id} className="flex items-center">
-                    <div className="w-1 h-1 bg-primary rounded-full mr-2"></div>
-                    {h.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Inclusions Section */}
-            <div>
-              <h4 className="text-md font-display text-primary mb-2">Inclusions</h4>
-              <ul className="grid grid-cols-2 gap-y-2 text-sm text-white/80">
-                {tour.inclusions.map(i => (
-                  <li key={i.id} className="flex items-center">
-                    <div className="w-1 h-1 bg-primary rounded-full mr-2"></div>
-                    {i.name}
-                  </li>
-                ))}
-              </ul>
+        {/* Highlights Preview */}
+        <div className="flex-grow space-y-3">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Highlights</p>
+          <ul className="space-y-2">
+            {tour.highlights.slice(0, 3).map((highlight, idx) => (
+              <li key={idx} className="flex items-start text-sm text-foreground/80">
+                <span className="mr-2 text-primary">•</span>
+                <span className="line-clamp-1">{highlight}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Collapsible Details */}
+        <div className={cn(
+          "grid transition-all duration-300 ease-in-out overflow-hidden",
+          isExpanded ? "grid-rows-[1fr] opacity-100 mt-6 pt-6 border-t border-white/10" : "grid-rows-[0fr] opacity-0"
+        )}>
+          <div className="min-h-0 space-y-6">
+            {/* Pro Tip Box */}
+            {tour.proTip && (
+              <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 relative">
+                <div className="absolute -top-2 -left-2 bg-primary text-black text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                  Pro Tip
+                </div>
+                <p className="text-sm text-primary/90 italic">"{tour.proTip}"</p>
+              </div>
+            )}
+
+            {/* Inclusions */}
+            {tour.inclusions && tour.inclusions.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2" />
+                  What's Included
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {tour.inclusions.map((inc, i) => (
+                    <span key={i} className="text-xs bg-muted/50 px-2.5 py-1 rounded-md text-muted-foreground border border-white/5">
+                      {inc}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Difficulty & Ideal For */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-xs text-muted-foreground block mb-1">Difficulty</span>
+                <Badge variant="outline" className={getDifficultyColor(tour.difficulty)}>
+                  {tour.difficulty}
+                </Badge>
+              </div>
+              <div>
+                <span className="text-xs text-muted-foreground block mb-1">Ideal For</span>
+                <div className="text-xs font-medium text-foreground">
+                  {tour.idealFor.join(', ')}
+                </div>
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* --- Expand/Collapse Toggle Button --- */}
-        <button
+        {/* Toggle Button */}
+        <Button
+          variant="ghost"
+          className="w-full mt-4 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 h-8"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full mt-4 flex justify-center items-center text-sm font-semibold text-primary/80 hover:text-primary transition-colors duration-200"
         >
           {isExpanded ? (
-            <>
-              Show Less <ChevronUp className="w-4 h-4 ml-2" />
-            </>
+            <span className="flex items-center">Close Details <ChevronUp className="ml-2 w-3 h-3" /></span>
           ) : (
-            <>
-              Show More <ChevronDown className="w-4 h-4 ml-2" />
-            </>
+            <span className="flex items-center">View Full Details <ChevronDown className="ml-2 w-3 h-3" /></span>
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );
 };
 
-// --- Tour Catalog Component ---
-/**
- * Exported as both a named and default export so consumers can import it either way:
- * - `import TourCatalog from ...`
- * - `import { TourCatalog } from ...`
- */
+// --- Main Catalog Component ---
 export const TourCatalog: React.FC = () => {
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Extract unique categories for tabs
+  const categories = useMemo(() => {
+    const cats = new Set(tours.map(t => t.category));
+    return ['all', ...Array.from(cats)];
+  }, []);
+
+  // Filter Logic
+  const filteredTours = useMemo(() => {
+    return tours.filter(tour => {
+      const matchesCategory = filterCategory === 'all' || tour.category === filterCategory;
+      const matchesSearch = tour.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            tour.highlights.some(h => h.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [filterCategory, searchQuery]);
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Grid Layout: 1 column on mobile, 2 on tablet, 3 on desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {mockTours.map(tour => (
-          <TourCard key={tour.id} tour={tour} />
-        ))}
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
+      {/* Controls Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card/30 p-4 rounded-2xl border border-white/5 backdrop-blur-sm">
+        
+        {/* Search Bar */}
+        <div className="relative w-full md:w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input 
+            placeholder="Search tours, highlights..." 
+            className="pl-10 bg-black/20 border-white/10 focus:border-primary/50 transition-all"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* Category Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar mask-gradient-x">
+          <Filter className="w-4 h-4 text-muted-foreground mr-2 shrink-0" />
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setFilterCategory(cat)}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap border",
+                filterCategory === cat
+                  ? "bg-primary text-black border-primary shadow-glow"
+                  : "bg-transparent text-muted-foreground border-transparent hover:bg-white/5 hover:text-foreground"
+              )}
+            >
+              {cat === 'all' ? 'All Tours' : cat.charAt(0).toUpperCase() + cat.slice(1).replace('-', ' ')}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grid Display */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredTours.length > 0 ? (
+          filteredTours.map((tour) => (
+            <TourCard key={tour.id} tour={tour} />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-20 text-muted-foreground">
+            <p className="text-lg">No tours found matching your criteria.</p>
+            <Button 
+              variant="link" 
+              onClick={() => { setFilterCategory('all'); setSearchQuery(''); }}
+              className="mt-2 text-primary"
+            >
+              Clear filters
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
