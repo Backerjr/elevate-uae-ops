@@ -6,17 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
-// --- Assets Logic ---
-const getCategoryPlaceholder = (category: string) => {
-  switch (category) {
-    case 'desert': return '/assets/placeholders/hero_desert_1.jpg';
-    case 'cruise': return '/assets/placeholders/hero_water_3.jpg';
-    case 'adventure': return '/assets/placeholders/hero.svg'; // Fallback to generic hero
-    case 'abu-dhabi': return '/assets/placeholders/hero_city_2.jpg';
-    default: return '/assets/placeholders/hero.svg';
-  }
-};
-
+// --- Visual Logic ---
 const getDifficultyColor = (diff: string) => {
   switch (diff) {
     case 'easy': return 'bg-green-500/10 text-green-500 border-green-500/20';
@@ -29,17 +19,18 @@ const getDifficultyColor = (diff: string) => {
 // --- Tour Card Component ---
 const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const heroImage = getCategoryPlaceholder(tour.category);
 
   return (
     <div className="group relative bg-card/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 ease-out flex flex-col h-full">
       {/* Hero Section */}
       <div className="relative h-56 overflow-hidden">
         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
+        {/* VISION PROTOCOL: Direct Asset Rendering */}
         <img
-          src={heroImage}
+          src={tour.image || '/assets/placeholders/hero.svg'}
           alt={tour.name}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+          loading="lazy"
         />
         
         {/* Margin Badge (Top Right) */}
