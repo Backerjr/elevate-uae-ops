@@ -1,28 +1,33 @@
-import type { LucideIcon } from "lucide-react";
-import { Calculator, DollarSign, LayoutDashboard, Map, MessageSquare, BookOpen } from "lucide-react";
+import { LayoutDashboard, Car, Calculator, FileText, ShieldAlert, BadgeDollarSign, BookOpen, GitCompare, ThumbsUp, MessageSquare } from "lucide-react";
 
-/**
- * Navigation utilities and shared types for the Playbook shell.
- */
-export type TabId = "dashboard" | "tours" | "calculator" | "scripts" | "pricing" | "reference";
+// FIX: Add all the new tab IDs to this union type
+export type TabId = 
+  | 'dashboard' 
+  | 'tours' 
+  | 'calculator' 
+  | 'scripts' 
+  | 'objections' 
+  | 'pricing' 
+  | 'quick-ref' 
+  | 'comparison' 
+  | 'recommender' 
+  | 'communication';
 
-export interface NavigationProps {
-  activeTab: TabId;
-  onTabChange: (tab: TabId) => void;
-}
-
-export interface NavItem {
+export interface NavigationItem {
   id: TabId;
   label: string;
-  icon: LucideIcon;
-  badge?: string;
+  icon: any; // Using any for Lucide icons to avoid complex type matching
 }
 
-export const navigationItems: NavItem[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "tours", label: "Tour Catalog", icon: Map },
-  { id: "calculator", label: "Quote Builder", icon: Calculator, badge: "Smart" },
-  { id: "scripts", label: "Scripts", icon: MessageSquare },
-  { id: "pricing", label: "Pricing Matrix", icon: DollarSign },
-  { id: "reference", label: "Quick Ref", icon: BookOpen },
+export const navigationItems: NavigationItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'tours', label: 'Tours', icon: Car },
+  { id: 'calculator', label: 'Quote', icon: Calculator },
+  { id: 'scripts', label: 'Scripts', icon: FileText },
+  { id: 'objections', label: 'Objections', icon: ShieldAlert },
+  { id: 'pricing', label: 'Pricing', icon: BadgeDollarSign },
+  { id: 'quick-ref', label: 'Quick Ref', icon: BookOpen },
+  { id: 'comparison', label: 'Compare', icon: GitCompare },
+  { id: 'recommender', label: 'Match', icon: ThumbsUp },
+  { id: 'communication', label: 'Comm', icon: MessageSquare },
 ];

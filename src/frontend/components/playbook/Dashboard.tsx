@@ -1,28 +1,39 @@
-/* src/frontend/components/playbook/Dashboard.tsx */
-import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { navigationItems, type TabId } from "@/lib/navigation-utils";
+import { ArrowRight } from "lucide-react";
 
-// Props interface remains the same
+// FIX: Update onNavigate to strictly accept 'TabId' instead of 'string'
 interface DashboardProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (tab: TabId) => void; 
 }
 
-/**
- * Main Dashboard Component
- * Serves as the central navigation hub for the agent.
- *
- * NOTE: Changed to a named export `export function Dashboard` to fix build errors.
- */
 export function Dashboard({ onNavigate }: DashboardProps) {
+  // Filter out the dashboard itself so we don't show a card for the current page
+  const tools = navigationItems.filter(item => item.id !== 'dashboard');
+
   return (
-    <div className="glass-card p-6 rounded-lg">
-      <h3 className="text-2xl font-display text-primary mb-4">Agent Dashboard</h3>
-      <p className="text-white/80 mb-4">
-        Quick access to your most used tools and resources.
-      </p>
-      <div className="grid grid-cols-2 gap-4">
-        {/* Example navigation buttons */}
-        <button onClick={() => onNavigate('tour-catalog')} className="text-primary hover:underline">View Tour Catalog</button>
-        <button onClick={() => onNavigate('pricing-matrix')} className="text-primary hover:underline">Open Pricing Matrix</button>
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {tools.map((tool) => (
+          <Card 
+            key={tool.id} 
+            className="group hover:shadow-lg transition-all duration-300 border-border/50 cursor-pointer bg-card/50 backdrop-blur-sm"
+            onClick={() => onNavigate(tool.id)}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-lg font-medium group-hover:text-primary transition-colors">
+                {tool.label}
+              </CardTitle>
+              <tool.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center text-sm text-muted-foreground mt-2">
+                <span>Open tool</span>
+                <ArrowRight className="h-4 w-4 ml-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
