@@ -106,13 +106,13 @@ const Index = () => {
         {/* HERO SECTION (Dashboard Only) */}
         {activeTab === 'dashboard' && (
           <div className="relative mb-20 overflow-hidden rounded-[2.5rem] border border-white/10 p-1 group">
-            {/* Parallax Background - OPTIMIZED FOR LCP */}
+            {/* Parallax Background - OPTIMIZED FOR LCP & COMPATIBILITY */}
             <div className="absolute inset-0 bg-black z-0 overflow-hidden rounded-[2.4rem]">
               <img 
                 src={getHeroImageSrc()}
                 alt="Atmospheric Background"
                 className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay transition-transform duration-[5s] scale-105 group-hover:scale-100"
-                loading="eager"
+                // FIX: Removed loading="eager" for Safari compatibility
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
             </div>
