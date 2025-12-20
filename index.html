@@ -23,6 +23,16 @@
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/frontend/main.tsx"></script>
+    <script>
+      (function () {
+        // Detect support for the "noModule" indicator (modern browsers that understand modules)
+        var supportsNoModule = 'noModule' in document.createElement('script');
+        var script = document.createElement('script');
+        // If the browser supports modules, load the module entry; otherwise load the legacy build.
+        script.src = supportsNoModule ? '/src/frontend/main.tsx' : '/src/frontend/main.legacy.js';
+        script.defer = true;
+        document.head.appendChild(script);
+      })();
+    </script>
   </body>
 </html>
